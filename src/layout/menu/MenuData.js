@@ -1,0 +1,157 @@
+const menu = [
+  {
+    heading: "Dashboards",
+  },
+  {
+    icon: "cpu",
+    text: "Devices",
+    link: "/devices",
+    page: 1,
+  },
+  {
+    icon: "plus-round-fill",
+    text: "Add New Device",
+    link: "/add-device",
+    page: 2,
+  },
+  {
+    icon: "ticket-fill",
+    text: "Add Validator",
+    link: "add-validator",
+    page: 8,
+  },
+  {
+    icon: "cc-alt2-fill",
+    text: "City Setup",
+    link: "/gtfs",
+    page: 3,
+  },
+  {
+    icon: "user-list-fill",
+    text: "Client Approval",
+    link: "/clients",
+    page: 4,
+  },
+  {
+    icon: "user-list-fill",
+    text: "Client Setup",
+    link: "/client-setup",
+    page: 5,
+  },
+  {
+    icon: "contact-fill",
+    text: "Venues",
+    link: "/museum-data",
+    page: 12,
+  },
+  {
+    icon: "coffee",
+    text: "Add Products",
+    link: "/add-beverages",
+    page: 9,
+  },
+  {
+    icon: "coffee",
+    text: "Beverage",
+    link: "/Beverage-c1",
+    page: 6,
+  },
+  {
+    icon: "ticket-fill",
+    text: "Tickets",
+    link: "/Tickets",
+    page: 7,
+  },
+  {
+    icon: "map",
+    text: "Transit Data",
+    link: "/transit-data",
+    page: 10,
+  },
+  {
+    icon: "map",
+    text: "Transit Approval",
+    link: "/transit-approval",
+    page: 11,
+  },
+
+  {
+    icon: "alert-circle-fill",
+    text: "Alerts",
+    link: "/alerts",
+    page: 13,
+  },
+  {
+    icon: "map",
+    text: "Asset Management",
+    link: "/asset-management",
+    page: 14,
+  },
+  {
+    icon: "map",
+    text: "Add Tracker",
+    link: "/add-tracker",
+    page: 16,
+  },
+  {
+    icon: "map",
+    text: "Add Ride",
+    link: "/rideinfotwo",
+    page: 17,
+  },
+  {
+    icon: "coins",
+    text: "Payment",
+    link: "/Payment",
+    page: 17,
+  },
+  {
+    icon: "property",
+    text: "Beverage History",
+    link: "/Transactions",
+    page: 17,
+  },
+  {
+    icon: "wallet-out",
+    text: "Transactions",
+    link: "/Transactions2",
+    page: 17,
+  },
+  {
+    icon: "help-fill",
+    text: "Support",
+    link: "/support",
+    page: 17,
+  },
+  {
+    icon: "user-list",
+    text: "Visitor History",
+    link: "/visitorhistory",
+    page: 17,
+  },
+  {
+    icon: "property",
+    text: "Beverage List",
+    link: "/counterlist",
+    page: 17,
+  },
+  {
+    icon: "user-alt",
+    text: "Visitors",
+    link: "/visitors",
+    page: 17,
+  },
+  {
+    icon: "user-alt-fill",
+    text: "Visitors VIP",
+    link: "/visitorsvip",
+    page: 17,
+  },
+  {
+    icon: "users",
+    text: "Users",
+    link: "/users",
+    page: 17,
+  },
+];
+export default menu;
