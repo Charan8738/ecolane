@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "http://ecolane-api.zig-web.com/api/";
+axios.defaults.baseURL = "https://ecolane-api.zig-web.com/api/";
 axios.interceptors.request.use(function (config) {
   const accessToken = sessionStorage.getItem("accessToken");
   const refreshToken = sessionStorage.getItem("refreshToken");
