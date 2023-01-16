@@ -9,11 +9,11 @@ const initialState = {
 };
 export const fetchTickets = createAsyncThunk("getTickets", async (data) => {
   const { startDate, endDate, client_id } = data;
-  
+
   // console.log(user_id);
-  const axiosInstanceRemote = axios.create();
-  const response = await axiosInstanceRemote.get(
-    `https://cloud.zig-web.com/api/ZIGShuttle/GetAllTicketHistory?startDate=${startDate}&endDate=${endDate}&client_id=${client_id}`
+  // const axiosInstanceRemote = axios.create();
+  const response = await axios.get(
+    `ZIGShuttle/GetAllTicketHistory?startDate=${startDate}&endDate=${endDate}&client_id=${client_id}`
   );
 
   // const response = await axiosInstanceRemote.get(

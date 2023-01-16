@@ -9,11 +9,11 @@ const initialState = {
 };
 export const fetchTickets = createAsyncThunk("getTickets", async (data) => {
   const { startDate, endDate, client_id } = data;
-  
+
   // console.log(user_id);
   const axiosInstanceRemote = axios.create();
   const response = await axiosInstanceRemote.get(
-    `https://zig-web.com/Zigsmartweb/api/ZIGShuttle/AdmitUser?TicketID=29734694`
+    `https://zig-app.com/Zigsmartweb/api/ZIGShuttle/AdmitUser?TicketID=29734694`
   );
 
   // const response = await axiosInstanceRemote.get(

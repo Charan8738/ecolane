@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
-import './total.css'
+import "./total.css";
 import "moment-timezone";
 
 import Moment from "react-moment";
@@ -16,9 +16,7 @@ import {
   selectAPICount,
 } from "../redux/ticketsSlice";
 
-
 import {
-
   Block,
   BlockHead,
   BlockTitle,
@@ -35,15 +33,12 @@ import {
   PaginationComponent,
 } from "../components/Component";
 import { user_id } from "../redux/userSlice";
-import {
-  Card,
-  Spinner,
-} from "reactstrap";
+import { Card, Spinner } from "reactstrap";
+import axios from "axios";
 const Venue = () => {
   const status = useSelector(getTicketsStatus);
   const dispatch = useDispatch(); //dispatch to change values in store
- 
-  
+
   const client_id = useSelector(user_id);
   const date = new Date();
   const daysAgo = new Date(date.getTime());
@@ -73,24 +68,38 @@ const Venue = () => {
         rangeDate.start.getFullYear() + "-" + (rangeDate.start.getMonth() + 1) + "-" + rangeDate.start.getDate();
       const endDate =
         rangeDate.end.getFullYear() + "-" + (rangeDate.end.getMonth() + 1) + "-" + rangeDate.end.getDate();
-      dispatch(fetchTickets({ startDate: startDate, endDate: endDate }));
+      const url = `https://ecolane-api.zig-web.com/api/Zigshuttle/GetPurchaseticket?startDate=${startDate}&endDate=${endDate}&client_id=${client_id}`;
+      const fetchData = async () => {
+        try {
+          const response = await fetch(url);
+          const json = await response.json();
+          console.log(response.purchasetickets);
+          //data = json.purchasetickets;
+          setData(json.purchasetickets);
+          initialData.current = [...json.purchasetickets];
+        } catch (error) {
+          console.log("error", error);
+        }
+      };
+
       intervalId = setInterval(() => {
-        getTickets(startDate, endDate);
+        fetchData();
+        // getTickets(startDate, endDate);
       }, 3000);
     }
 
     return () => clearTimeout(intervalId);
   }, [dispatch, rangeDate]);
-  const getTickets = (start, end) => {
-    if (status !== "loading") dispatch(fetchTickets({ startDate: start, endDate: end }));
-  };
+  // const getTickets = (start, end) => {
+  //   if (status !== "loading") dispatch(fetchTickets({ startDate: start, endDate: end }));
+  // };
   //const data = [];
   const [onSearchText, setSearchText] = useState("");
   const initialData = useRef([]);
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemPerPage] = useState(7);
+  const [itemPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
@@ -99,24 +108,27 @@ const Venue = () => {
   const onFilterChange = (e) => {
     setSearchText(e.target.value);
   };
+  // useEffect(() => {
+  //   const startDate =
+  //     rangeDate.start.getFullYear() + "-" + (rangeDate.start.getMonth() + 1) + "-" + rangeDate.start.getDate();
+  //   const endDate = rangeDate.end.getFullYear() + "-" + (rangeDate.end.getMonth() + 1) + "-" + rangeDate.end.getDate();
+  //   const url = `https://zig-app.com/ZIGSmartWeb/api/Zigshuttle/GetPurchaseticket?startDate=${startDate}&endDate=${endDate}&Clientid=${client_id}`;
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(url);
+  //       const json = await response.json();
+  //       console.log(json.purchasetickets);
+  //       //data = json.purchasetickets;
+  //       setData(json.purchasetickets);
+  //       initialData.current = [...json.purchasetickets];
+  //     } catch (error) {
+  //       console.log("error", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
   useEffect(() => {
-    const url = "https://zig-web.com/ZIGSmartWeb/api/Zigshuttle/GetPurchaseticket?startDate=2022-11-14&endDate=2022-11-15&Clientid=90&_=1665576048143";
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url);
-        const json = await response.json();
-        console.log(json.purchasetickets);
-        //data = json.purchasetickets;
-        setData(json.purchasetickets);
-        initialData.current = [...json.purchasetickets];
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    fetchData();
-  }, []);
-  useEffect(() => {
-    if (onSearchText !=="") {
+    if (onSearchText !== "") {
       const filteredObject = data.filter((items) => {
         return items.TicketID.toString().toLowerCase().includes(onSearchText.toLowerCase());
       });
@@ -129,9 +141,9 @@ const Venue = () => {
   function onChangeDateHandler(value) {
     setStartDate(value);
   }
-  let sum_value = data.reduce((sum, current)=>{
-    return sum + current.Amount
-}, 0);
+  let sum_value = data.reduce((sum, current) => {
+    return sum + current.Amount;
+  }, 0);
   return (
     <React.Fragment>
       <Head title="Venues"></Head>
@@ -140,15 +152,10 @@ const Venue = () => {
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">
-
-                  Payment History
-                </div>
+                <div className="title">Payment History</div>
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
-                
-                
 
                 <div className="picker">
                   <DatePicker
@@ -160,20 +167,17 @@ const Venue = () => {
                     className="form-control date-picker"
                   />
                 </div>
-                
-
-
-
               </BlockTitle>
             </BlockHeadContent>
 
             <BlockHeadContent>
-              <div className="total" >
-                <h5>Total:
+              <div className="total">
+                <h5>
+                  Total:
                   <span>{data.length}</span>
                 </h5>
               </div>
-              <div className="totalamount" style={{paddingLeft:23}}>
+              <div className="totalamount" style={{ paddingLeft: 23 }}>
                 <h5>Total Amount: ${sum_value}</h5>
               </div>
 
@@ -191,7 +195,6 @@ const Venue = () => {
                 <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
                   <ul className="nk-block-tools g-3">
                     <li>
-
                       <div className="form-control-wrap">
                         <div className="form-icon form-icon-right">
                           <Icon name="search"></Icon>
@@ -201,28 +204,19 @@ const Venue = () => {
                           pattern="[0-9]*"
                           className="form-control"
                           id="default-04"
-                          placeholder="Search by Ticket ID"              
+                          placeholder="Search by Ticket ID"
                           onChange={(e) => onFilterChange(e)}
                         />
                       </div>
                     </li>
-                    <li>
-
-
-
-
-
-                    </li>
-
-
+                    <li></li>
                   </ul>
                 </div>
               </div>
             </BlockHeadContent>
-
           </BlockBetween>
         </BlockHead>
-        <Block >
+        <Block>
           <Card>
             <DataTableBody>
               <DataTableHead>
@@ -243,36 +237,34 @@ const Venue = () => {
                 </DataTableRow>
               </DataTableHead>
               {currentItems.length > 0
-                ? currentItems.map((item,id) => {
-                  return (
-                    <DataTableItem key={id}>
+                ? currentItems.map((item, id) => {
+                    return (
+                      <DataTableItem key={id}>
+                        <DataTableRow>
+                          <span className="tb-sub"> {item.TicketID}</span>
+                        </DataTableRow>
+                        <DataTableRow size="sm">
+                          <span className="tb-product">
+                            <span className="title">{item.TransactionId}</span>
+                          </span>
+                        </DataTableRow>
+                        <DataTableRow size="md">
+                          <span className="tb-sub">{item.Amount}</span>
+                        </DataTableRow>
 
-                      <DataTableRow>
-                        <span className="tb-sub"> {item.TicketID}</span>
-                      </DataTableRow>
-                      <DataTableRow size="sm">
-                        <span className="tb-product">
-                          <span className="title">{item.TransactionId}</span>
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow size="md">
-                        <span className="tb-sub">{item.Amount}</span>
-                      </DataTableRow>
-
-
-                      <DataTableRow size="md">
-                        <span className="tb-sub">{item.Fareid}</span>
-                      </DataTableRow>
-                      <DataTableRow>
-                        <span className="tb-sub">
-                          <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                                  {item.PurchasedDate}
-                                </Moment>
-                        </span>
-                      </DataTableRow>
-                    </DataTableItem>
-                  );
-                })
+                        <DataTableRow size="md">
+                          <span className="tb-sub">{item.Fareid}</span>
+                        </DataTableRow>
+                        <DataTableRow>
+                          <span className="tb-sub">
+                            <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                              {item.PurchasedDate}
+                            </Moment>
+                          </span>
+                        </DataTableRow>
+                      </DataTableItem>
+                    );
+                  })
                 : null}
             </DataTableBody>
             <div className="card-inner">

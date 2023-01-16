@@ -115,7 +115,7 @@ const Venue = () => {
   };
 
   useEffect(() => {
-    const url = "https://zig-web.com/Zigsmartandroid/api/FirmwareV2/GetRideInfo";
+    const url = "https://zig-app.com/Zigsmartandroid/api/FirmwareV2/GetRideInfo";
     const fetchData = async () => {
       try {
         const response = await fetch(url);

@@ -42,7 +42,7 @@ const BeverageTable = ({ isCompact }) => {
   const callYourAPI = async (event, Id) => {
     const axiosInstanceRemote = axios.create();
     const response = await axiosInstanceRemote.get(
-      "https://zig-web.com/Zigsmartv3ios/api/Admin/UpdatebeverageStatusadmin?id=" + Id + "&Status=2"
+      "https://zig-app.com/Zigsmartv3ios/api/Admin/UpdatebeverageStatusadmin?id=" + Id + "&Status=2"
     );
     // console.log(Id);
     // setLogs(response.data);
@@ -143,7 +143,7 @@ const BeverageTable = ({ isCompact }) => {
                   </td>
                   <td className="tb-odr-info">
                     <Button onClick={(event) => callYourAPI(event, item.Id)} color="danger">
-                      Click 
+                      Click
                     </Button>
                   </td>
                 </tr>

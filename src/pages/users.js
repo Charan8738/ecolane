@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
 import exportFromJSON from "export-from-json";
-import './total.css'
+import "./total.css";
 import "moment-timezone";
 
 import DatePicker from "react-datepicker";
@@ -33,14 +33,11 @@ import {
   PaginationComponent,
 } from "../components/Component";
 import { user_id } from "../redux/userSlice";
-import {
-  Card,
-  Spinner,
-} from "reactstrap";
+import { Card, Spinner } from "reactstrap";
 import PaginationComponenttwo from "../components/pagination/paginationtwo";
 const Venue = () => {
   const status = useSelector(getTicketsStatus);
-  
+
   const tickets = useSelector(selectAllTickets);
   const [ticketData, setTicketData] = useState(tickets);
   const dispatch = useDispatch(); //dispatch to change values in store
@@ -93,7 +90,7 @@ const Venue = () => {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemPerPage] = useState(7);
+  const [itemPerPage] = useState(25);
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
@@ -103,7 +100,7 @@ const Venue = () => {
     setSearchText(e.target.value);
   };
   useEffect(() => {
-    const url = "https://zig-web.com/ZIGSmartWeb/api/ZIGShuttle/Getuserslist?startDate=20220913&endDate=20221013&agency=0&_=1665575262576";
+    const url = "https://zig-app.com/ZIGSmartWeb/api/ZIGShuttle/Getuserslist";
     const fetchData = async () => {
       try {
         const response = await fetch(url);
@@ -132,10 +129,8 @@ const Venue = () => {
   function onChangeDateHandler(value) {
     setStartDate(value);
   }
-  
 
   return (
-    
     <React.Fragment>
       <Head title="Venues"></Head>
       <Content>
@@ -143,17 +138,13 @@ const Venue = () => {
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">
-                  Users 
-                </div>
+                <div className="title">Users</div>
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
-                
-          
+
                 <div className="picker">
-                  
-                  <DatePicker 
+                  <DatePicker
                     selected={rangeDate.start}
                     startDate={rangeDate.start}
                     onChange={onRangeChange}
@@ -162,10 +153,6 @@ const Venue = () => {
                     className="form-control date-picker"
                   />
                 </div>
-                
-
-
-
               </BlockTitle>
             </BlockHeadContent>
 
@@ -173,7 +160,6 @@ const Venue = () => {
               <div className="total">
                 <h5>Total:{data.length}</h5>
               </div>
-             
 
               <div className="toggle-wrap nk-block-tools-toggle">
                 <a
@@ -202,15 +188,14 @@ const Venue = () => {
                         />
                       </div>
                     </li>
-                    <li>
-                 </li>
+                    <li></li>
                   </ul>
                 </div>
               </div>
             </BlockHeadContent>
           </BlockBetween>
         </BlockHead>
-        <Block >
+        <Block>
           <Card>
             <DataTableBody>
               <DataTableHead>
@@ -219,31 +204,30 @@ const Venue = () => {
                 </DataTableRow>
                 <DataTableRow>
                   <span>Registered Date</span>
-                </DataTableRow>               
+                </DataTableRow>
               </DataTableHead>
               {currentItems.length > 0
                 ? currentItems.map((item) => {
-                  return (
-                    <DataTableItem key={item}>
-
-                      <DataTableRow>
-                        <span className="tb-sub"> {item.EmailId}</span>
-                      </DataTableRow>
-                      <DataTableRow size="sm">
-                        <span className="tb-product">
-                          <span className="title">
-                          <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                                  {item.Createddate}
-                                </Moment>
+                    return (
+                      <DataTableItem key={item}>
+                        <DataTableRow>
+                          <span className="tb-sub"> {item.EmailId}</span>
+                        </DataTableRow>
+                        <DataTableRow size="sm">
+                          <span className="tb-product">
+                            <span className="title">
+                              <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                                {item.Createddate}
+                              </Moment>
+                            </span>
                           </span>
-                        </span>
-                      </DataTableRow>
-                    </DataTableItem>
-                  );
-                })
+                        </DataTableRow>
+                      </DataTableItem>
+                    );
+                  })
                 : null}
             </DataTableBody>
-            <div >
+            <div>
               {data.length > 0 ? (
                 <PaginationComponenttwo
                   itemPerPage={itemPerPage}
@@ -260,9 +244,7 @@ const Venue = () => {
           </Card>
         </Block>
       </Content>
-      
     </React.Fragment>
-    
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
-import './total.css'
+import "./total.css";
 import "moment-timezone";
 
 import DatePicker from "react-datepicker";
@@ -16,9 +16,7 @@ import {
   selectAPICount,
 } from "../redux/ticketsSlice";
 
-
 import {
-
   Block,
   BlockHead,
   BlockTitle,
@@ -35,16 +33,11 @@ import {
   PaginationComponent,
 } from "../components/Component";
 import { user_id } from "../redux/userSlice";
-import {
-  Card,
-  Spinner,
-  Badge,
-} from "reactstrap";
+import { Card, Spinner, Badge } from "reactstrap";
 const Venue = () => {
   const status = useSelector(getTicketsStatus);
   const dispatch = useDispatch(); //dispatch to change values in store
- 
-  
+
   const client_id = useSelector(user_id);
   const date = new Date();
   const daysAgo = new Date(date.getTime());
@@ -101,7 +94,8 @@ const Venue = () => {
     setSearchText(e.target.value);
   };
   useEffect(() => {
-    const url = "https://zig-web.com/Zigsmartv3ios/api/Beverage/GetBeveragePerMacaddress?Status=1&Macaddress=F5:A0:B3:41:84:8B";
+    const url =
+      "https://zig-web.com/Zigsmartv3ios/api/Beverage/GetBeveragePerMacaddress?Status=1&Macaddress=F5:A0:B3:41:84:8B";
     const fetchData = async () => {
       try {
         const response = await fetch(url);
@@ -130,11 +124,9 @@ const Venue = () => {
   function onChangeDateHandler(value) {
     setStartDate(value);
   }
-  let sum_value = data.reduce((sum, current)=>{
-    return sum + current.Beveragecount
-}, 0);
-
-
+  let sum_value = data.reduce((sum, current) => {
+    return sum + current.Beveragecount;
+  }, 0);
 
   return (
     <React.Fragment>
@@ -144,15 +136,10 @@ const Venue = () => {
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">
-
-                  Beverage History
-                </div>
+                <div className="title">Beverage History</div>
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
-                
-                
 
                 <div className="picker">
                   <DatePicker
@@ -164,10 +151,6 @@ const Venue = () => {
                     className="form-control date-picker"
                   />
                 </div>
-                
-
-
-
               </BlockTitle>
             </BlockHeadContent>
 
@@ -193,7 +176,6 @@ const Venue = () => {
                 <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
                   <ul className="nk-block-tools g-3">
                     <li>
-
                       <div className="form-control-wrap">
                         <div className="form-icon form-icon-right">
                           <Icon name="search"></Icon>
@@ -207,23 +189,14 @@ const Venue = () => {
                         />
                       </div>
                     </li>
-                    <li>
-
-
-
-
-
-                    </li>
-
-
+                    <li></li>
                   </ul>
                 </div>
               </div>
             </BlockHeadContent>
-
           </BlockBetween>
         </BlockHead>
-        <Block >
+        <Block>
           <Card>
             <DataTableBody>
               <DataTableHead>
@@ -245,45 +218,43 @@ const Venue = () => {
               </DataTableHead>
               {currentItems.length > 0
                 ? currentItems.map((item) => {
-                  return (
-                    <DataTableItem key={item}>
+                    return (
+                      <DataTableItem key={item}>
+                        <DataTableRow>
+                          <span className="tb-sub"> {item.Name}</span>
+                        </DataTableRow>
+                        <DataTableRow size="sm">
+                          <span className="tb-product">
+                            <span className="title">{item.Beveragename}</span>
+                          </span>
+                        </DataTableRow>
+                        <DataTableRow size="md">
+                          <span className="tb-sub">{item.Beveragecount}</span>
+                        </DataTableRow>
 
-                      <DataTableRow>
-                        <span className="tb-sub"> {item.Name}</span>
-                      </DataTableRow>
-                      <DataTableRow size="sm">
-                        <span className="tb-product">
-                          <span className="title">{item.Beveragename}</span>
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow size="md">
-                        <span className="tb-sub">{item.Beveragecount}</span>
-                      </DataTableRow>
-
-
-                      <DataTableRow size="md">
-                        <span className="tb-sub">
-                          <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                                  {item.Updateddate}
-                                </Moment>
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow>
-                       <span className="tb-sub">
-                          {item.Status ? (
-                            <Badge pill color="success">
-                              Served
-                            </Badge>
-                          ) : (
-                            <Badge pill color="danger">
-                              Pending
-                            </Badge>
-                          )}
-                        </span>
-                      </DataTableRow>
-                    </DataTableItem>
-                  );
-                })
+                        <DataTableRow size="md">
+                          <span className="tb-sub">
+                            <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                              {item.Updateddate}
+                            </Moment>
+                          </span>
+                        </DataTableRow>
+                        <DataTableRow>
+                          <span className="tb-sub">
+                            {item.Status ? (
+                              <Badge pill color="success">
+                                Served
+                              </Badge>
+                            ) : (
+                              <Badge pill color="danger">
+                                Pending
+                              </Badge>
+                            )}
+                          </span>
+                        </DataTableRow>
+                      </DataTableItem>
+                    );
+                  })
                 : null}
             </DataTableBody>
             <div className="card-inner">

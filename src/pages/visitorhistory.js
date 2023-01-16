@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
 
-import './total.css'
+import "./total.css";
 import "moment-timezone";
 
 import DatePicker from "react-datepicker";
@@ -17,9 +17,7 @@ import {
   selectAPICount,
 } from "../redux/ticketsSlice";
 
-
 import {
-
   Block,
   BlockHead,
   BlockTitle,
@@ -36,16 +34,11 @@ import {
   PaginationComponent,
 } from "../components/Component";
 import { user_id } from "../redux/userSlice";
-import {
-  Card,
-  Spinner,
-  Badge,
-} from "reactstrap";
+import { Card, Spinner, Badge } from "reactstrap";
 const Venue = () => {
   const status = useSelector(getTicketsStatus);
   const dispatch = useDispatch(); //dispatch to change values in store
- 
-  
+
   const client_id = useSelector(user_id);
   const date = new Date();
   const daysAgo = new Date(date.getTime());
@@ -102,7 +95,8 @@ const Venue = () => {
     setSearchText(e.target.value);
   };
   useEffect(() => {
-    const url = "https://zig-web.com/ZIGSmartWeb/api/ZIGShuttle/Getusersinoutnew?Startdate=2022-10-10&Enddate=2022-10-12&_=1665575496360";
+    const url =
+      "https://zig-app.com/ZIGSmartWeb/api/ZIGShuttle/Getusersinoutnew?Startdate=2022-10-10&Enddate=2022-10-12&_=1665575496360";
     const fetchData = async () => {
       try {
         const response = await fetch(url);
@@ -132,9 +126,6 @@ const Venue = () => {
     setStartDate(value);
   }
 
-
-
-
   return (
     <React.Fragment>
       <Head title="Venues"></Head>
@@ -143,15 +134,10 @@ const Venue = () => {
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">
-
-                  Visitor History
-                </div>
+                <div className="title">Visitor History</div>
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
-                
-                
 
                 <div className="picker">
                   <DatePicker
@@ -163,20 +149,16 @@ const Venue = () => {
                     className="form-control date-picker"
                   />
                 </div>
-                
-
-
-
               </BlockTitle>
             </BlockHeadContent>
 
             <BlockHeadContent>
               <div className="total">
-                <h5>Total:
+                <h5>
+                  Total:
                   <span>{data.length}</span>
                 </h5>
               </div>
-             
 
               <div className="toggle-wrap nk-block-tools-toggle">
                 <a
@@ -192,7 +174,6 @@ const Venue = () => {
                 <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
                   <ul className="nk-block-tools g-3">
                     <li>
-
                       <div className="form-control-wrap">
                         <div className="form-icon form-icon-right">
                           <Icon name="search"></Icon>
@@ -206,16 +187,14 @@ const Venue = () => {
                         />
                       </div>
                     </li>
-                    <li>
-                    </li>
+                    <li></li>
                   </ul>
                 </div>
               </div>
             </BlockHeadContent>
-
           </BlockBetween>
         </BlockHead>
-        <Block >
+        <Block>
           <Card>
             <DataTableBody>
               <DataTableHead>
@@ -225,27 +204,24 @@ const Venue = () => {
                 <DataTableRow>
                   <span>IN Time</span>
                 </DataTableRow>
-                
               </DataTableHead>
               {currentItems.length > 0
                 ? currentItems.map((item) => {
-                  return (
-                    <DataTableItem key={item}>
-
-                      <DataTableRow>
-                        <span className="tb-sub"> {item.EmailId}</span>
-                      </DataTableRow>
-                      <DataTableRow size="sm">
-                        <span className="tb-product">
-                        <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                                  {item.Intime}
-                                </Moment>
-                        </span>
-                      </DataTableRow>
-                     
-                    </DataTableItem>
-                  );
-                })
+                    return (
+                      <DataTableItem key={item}>
+                        <DataTableRow>
+                          <span className="tb-sub"> {item.EmailId}</span>
+                        </DataTableRow>
+                        <DataTableRow size="sm">
+                          <span className="tb-product">
+                            <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                              {item.Intime}
+                            </Moment>
+                          </span>
+                        </DataTableRow>
+                      </DataTableItem>
+                    );
+                  })
                 : null}
             </DataTableBody>
             <div className="card-inner">
@@ -258,7 +234,7 @@ const Venue = () => {
                 />
               ) : (
                 <div className="text-center">
-                  <span className="text-silent">{isLoading ? <Spinner /> : "No Transactions found"}</span>
+                  <span className="text-silent">{isLoading ? <Spinner /> : "No visitor history found"}</span>
                 </div>
               )}
             </div>
