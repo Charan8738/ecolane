@@ -42,7 +42,7 @@ export const userSlice = createSlice({
   },
 });
 export const userAuthStatus = (state) => state.user.status;
-export const userPages = (state) => state.user.pages;
+export const userPages = (state) => [...state.user.pages, 18];
 export const role = (state) => state.user.role;
 export const user_id = (state) => state.user.user_id;
 export const username = (state) => state.user.username;

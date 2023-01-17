@@ -153,5 +153,11 @@ const menu = [
     link: "/users",
     page: 17,
   },
+  {
+    icon: "property-alt",
+    text: "Analytics",
+    link: "/analytics",
+    page: 18,
+  },
 ];
 export default menu;
