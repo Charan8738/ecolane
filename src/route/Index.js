@@ -31,6 +31,7 @@ const counterlist = React.lazy(() => import("../pages/counterlist"));
 const visitors = React.lazy(() => import("../pages/visitors"));
 const visitorsvip = React.lazy(() => import("../pages/visitorsvip"));
 const users = React.lazy(() => import("../pages/users"));
+const Analytics = React.lazy(() => import("../pages/Analytics"));
 const Pages = ({ currentAccess }) => {
   const homepage = useSelector(selectHomepage) || currentAccess[0];
   const rolesRoutePages = [
@@ -60,6 +61,7 @@ const Pages = ({ currentAccess }) => {
     { page: 17, pathname: "visitors", component: visitors },
     { page: 17, pathname: "visitorsvip", component: visitorsvip },
     { page: 17, pathname: "users", component: users },
+    { page: 18, pathname: "analytics", component: Analytics },
   ];
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -70,7 +72,7 @@ const Pages = ({ currentAccess }) => {
         <Route path={`${process.env.PUBLIC_URL}/device/:id`} component={DeviceConfig}></Route>
         {rolesRoutePages.map(
           (route) =>
-            [...currentAccess, 14, 15, 16].includes(route.page) && (
+            [...currentAccess, 14, 15, 16, 18].includes(route.page) && (
               <Route
                 key={route.page}
                 page={route.page}
