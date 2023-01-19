@@ -249,7 +249,7 @@ const Venue = () => {
                           </span>
                         </DataTableRow>
                         <DataTableRow size="md">
-                          <span className="tb-sub">{item.Amount}</span>
+                          <strong className="tb-sub">$ {item.Amount}.00</strong>
                         </DataTableRow>
 
                         <DataTableRow size="md">
