@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 const Head = ({ ...props }) => {
   return (
     <Helmet>
-      <title>Zig Admin Panel</title>
+      <title>Ecolane Admin Panel</title>
       {props.children}
     </Helmet>
   );
