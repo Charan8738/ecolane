@@ -1,5 +1,5 @@
 import React from "react";
-import LogoDark2x from "../../images/ZED-Logo.png";
+import LogoDark2x from "../../images/Ecolane-Logo.png";
 
 import { Link } from "react-router-dom";
 

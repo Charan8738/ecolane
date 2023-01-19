@@ -1,7 +1,7 @@
 {
-  "name": "Zig Admin",
+  "name": "Ecolane Admin Panel",
   "proxy": "https://cloud.zig-web.com/",
-  "homepage": "https://adminpanel.zig-web.com/",
+  "homepage": "https://ecolane.zig-app.com/",
   "version": "1.3.0",
   "private": true,
   "dependencies": {

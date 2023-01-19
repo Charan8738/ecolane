@@ -101,7 +101,7 @@ const Login = () => {
               <BlockContent>
                 <BlockTitle tag="h4">Sign-In</BlockTitle>
                 <BlockDes>
-                  <p>Access Zig Admin Panel using your email and passcode.</p>
+                  <p>Access Ecolane Admin Panel using your email and passcode.</p>
                 </BlockDes>
               </BlockContent>
             </BlockHead>
