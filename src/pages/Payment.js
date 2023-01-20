@@ -144,6 +144,7 @@ const Venue = () => {
   let sum_value = data.reduce((sum, current) => {
     return sum + current.Amount;
   }, 0);
+  currentItems.sort((a, b) => b.PurchasedDate.localeCompare(a.PurchasedDate));
   return (
     <React.Fragment>
       <Head title="Venues"></Head>
