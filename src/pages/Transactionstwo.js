@@ -366,7 +366,7 @@ const Venue = () => {
                           <span className="tb-sub">{item.Txn_ref_no}</span>
                         </DataTableRow>
                         <DataTableRow>
-                          <strong className="tb-sub">$ {item.Amount}.00</strong>
+                          <strong className="tb-sub">$ {item.Amount.toFixed(2)}</strong>
                         </DataTableRow>
                         <DataTableRow>
                           <span className="tb-odr-date">
