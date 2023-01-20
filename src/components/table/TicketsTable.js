@@ -352,11 +352,11 @@ const TicketsTable = ({ pagination, expandableRows, actions, className, selectab
 export default TicketsTable;
 
 const columns = [
-  {
-    name: "Status",
-    selector: (row) => row.Status,
-    sortable: true,
-  },
+  // {
+  //   name: "Status",
+  //   selector: (row) => row.Status,
+  //   sortable: true,
+  // },
   {
     name: "Email",
     selector: (row) => row.EmailId,
