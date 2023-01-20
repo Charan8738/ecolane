@@ -377,7 +377,7 @@ const columns = [
   {
     name: "Purchased Date",
     selector: (row) => (
-      <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+      <Moment tz="America/New_York" format="MMMM Do YYYY, h:mm a">
         {row.PurchasedDate}
       </Moment>
     ),
