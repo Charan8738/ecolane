@@ -75,8 +75,9 @@ const Venue = () => {
           const json = await response.json();
           console.log(response.purchasetickets);
           //data = json.purchasetickets;
-          setData(json.purchasetickets);
-          initialData.current = [...json.purchasetickets];
+          let sortedData = [...json.purchasetickets].sort((a, b) => b.PurchasedDate.localeCompare(a.PurchasedDate));
+          setData(sortedData);
+          initialData.current = sortedData;
         } catch (error) {
           console.log("error", error);
         }
