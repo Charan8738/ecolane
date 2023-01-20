@@ -370,7 +370,7 @@ const Venue = () => {
                         </DataTableRow>
                         <DataTableRow>
                           <span className="tb-odr-date">
-                            <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                            <Moment tz="America/New_York" format="MMMM Do YYYY, h:mm a">
                               {item.Updateddate}
                             </Moment>
                           </span>
