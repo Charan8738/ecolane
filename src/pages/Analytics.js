@@ -10,7 +10,7 @@ const Analytics = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     setLoading(true);
-    window.location.replace("https://zig-app.com/Analytics/Homepage");
+    window.location.replace("https://zig-app.com/Analytics/loginreport?fromurl=true");
     axios
       .get("https://zig-app.com/Analyticsapi/api/Homepage/Getanalytics")
       .then((res) => {
