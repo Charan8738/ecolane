@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Content from "../layout/content/Content";
 import Moment from "react-moment";
 import Head from "../layout/head/Head";
-import './total.css'
+import "./total.css";
 import "moment-timezone";
 
 import DatePicker from "react-datepicker";
@@ -16,9 +16,7 @@ import {
   selectAPICount,
 } from "../redux/ticketsSlice";
 
-
 import {
-
   Block,
   BlockHead,
   BlockTitle,
@@ -35,15 +33,11 @@ import {
   PaginationComponent,
 } from "../components/Component";
 import { user_id } from "../redux/userSlice";
-import {
-  Card,
-  Spinner,
-} from "reactstrap";
+import { Card, Spinner } from "reactstrap";
 const Venue = () => {
   const status = useSelector(getTicketsStatus);
   const dispatch = useDispatch(); //dispatch to change values in store
- 
-  
+
   const client_id = useSelector(user_id);
   const date = new Date();
   const daysAgo = new Date(date.getTime());
@@ -96,13 +90,14 @@ const Venue = () => {
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const [sm, updateSm] = useState(false); // ----> Responsivenes
-  
+
   const onFilterChange = (e) => {
     setSearchText(e.target.value);
   };
-  
+
   useEffect(() => {
-    const url = "https://zig-web.com/ZIGSmartWeb/api/ZIGShuttle/GetAllusersinoutMOCA?Startdate=2022-10-10&Enddate=2022-10-12&Clientid=90&_=1665575496360";
+    const url =
+      "https://zig-app.com/ZIGSmartWeb/api/ZIGShuttle/GetAllusersinoutMOCA?Startdate=2023-03-01&Enddate=2023-03-14&Clientid=33";
     const fetchData = async () => {
       try {
         const response = await fetch(url);
@@ -132,9 +127,6 @@ const Venue = () => {
     }
   }, [onSearchText]);
 
-
-
-
   return (
     <React.Fragment>
       <Head title="Venues"></Head>
@@ -143,10 +135,7 @@ const Venue = () => {
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">
-
-                  Visitors 
-                </div>
+                <div className="title">Visitors</div>
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
@@ -181,7 +170,6 @@ const Venue = () => {
                 <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
                   <ul className="nk-block-tools g-3">
                     <li>
-
                       <div className="form-control-wrap">
                         <div className="form-icon form-icon-right">
                           <Icon name="search"></Icon>
@@ -195,23 +183,14 @@ const Venue = () => {
                         />
                       </div>
                     </li>
-                    <li>
-
-
-
-
-
-                    </li>
-
-
+                    <li></li>
                   </ul>
                 </div>
               </div>
             </BlockHeadContent>
-
           </BlockBetween>
         </BlockHead>
-        <Block >
+        <Block>
           <Card>
             <DataTableBody>
               <DataTableHead>
@@ -233,39 +212,37 @@ const Venue = () => {
               </DataTableHead>
               {currentItems.length > 0
                 ? currentItems.map((item) => {
-                  return (
-                    <DataTableItem key={item}>
+                    return (
+                      <DataTableItem key={item}>
+                        <DataTableRow>
+                          <span className="tb-sub"> {item.UserName}</span>
+                        </DataTableRow>
+                        <DataTableRow size="sm">
+                          <span className="tb-product">
+                            <span className="title">{item.EmailId}</span>
+                          </span>
+                        </DataTableRow>
+                        <DataTableRow size="md">
+                          <span className="tb-sub">{item.Phone}</span>
+                        </DataTableRow>
 
-                      <DataTableRow>
-                        <span className="tb-sub"> {item.UserName}</span>
-                      </DataTableRow>
-                      <DataTableRow size="sm">
-                        <span className="tb-product">
-                          <span className="title">{item.EmailId}</span>
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow size="md">
-                        <span className="tb-sub">{item.Phone}</span>
-                      </DataTableRow>
-
-
-                      <DataTableRow size="md">
-                        <span className="tb-sub">
-                        <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                                  {item.Intime}
-                                </Moment>
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow>
-                        <span className="tb-sub">
-                        <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                                  {item.Outtime}
-                                </Moment>
-                        </span>
-                      </DataTableRow>
-                    </DataTableItem>
-                  );
-                })
+                        <DataTableRow size="md">
+                          <span className="tb-sub">
+                            <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                              {item.Intime}
+                            </Moment>
+                          </span>
+                        </DataTableRow>
+                        <DataTableRow>
+                          <span className="tb-sub">
+                            <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                              {item.Outtime}
+                            </Moment>
+                          </span>
+                        </DataTableRow>
+                      </DataTableItem>
+                    );
+                  })
                 : null}
             </DataTableBody>
             <div className="card-inner">

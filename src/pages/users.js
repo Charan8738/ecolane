@@ -216,9 +216,7 @@ const Venue = () => {
                         <DataTableRow size="sm">
                           <span className="tb-product">
                             <span className="title">
-                              <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                                {item.Createddate}
-                              </Moment>
+                              <Moment format="MMMM Do YYYY, h:mm a">{item.CreatedDate}</Moment>
                             </span>
                           </span>
                         </DataTableRow>
