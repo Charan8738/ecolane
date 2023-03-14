@@ -98,10 +98,11 @@ const ExpandableRowComponent = ({ data }) => {
         <span className="dtr-title">Coach #</span> <span className="dtr-data">{data.name ?? "NA"}</span>
       </li>
       <li style={{ padding: "0.25rem", borderBottom: "1px solid #ebeef2" }}>
-        <span className="dtr-title">From</span> <span className="dtr-data">-</span>
+        <span className="dtr-title">From</span>
+        <span className="dtr-data">{data.FromAddress} </span>
       </li>
       <li style={{ padding: "0.25rem", borderBottom: "1px solid #ebeef2" }}>
-        <span className="dtr-title">To</span> <span className="dtr-data">-</span>
+        <span className="dtr-title">To</span> <span className="dtr-data">{data.DestinationAddress}</span>
       </li>
       <li style={{ padding: "0.25rem" }}>
         <span className="dtr-title">Username</span> <span className="dtr-data">{data.Username}</span>
@@ -159,7 +160,7 @@ const TicketsTable = ({ pagination, expandableRows, actions, className, selectab
       dispatch(fetchTickets({ startDate: startDate, endDate: endDate, client_id: client_id }));
       intervalId = setInterval(() => {
         getTickets(startDate, endDate);
-      }, 3000);
+      }, 10000);
     }
 
     return () => clearTimeout(intervalId);
