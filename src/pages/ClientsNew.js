@@ -159,7 +159,7 @@ const ClientsNew = () => {
   useEffect(() => {
     if (onSearchText !== "") {
       const filteredObject = data.filter((item) => {
-        return item.userName.toLowerCase().includes(onSearchText.toLowerCase());
+        return item.username.toLowerCase().includes(onSearchText.toLowerCase());
       });
       setData([...filteredObject]);
     } else {

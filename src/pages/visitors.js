@@ -119,7 +119,9 @@ const Venue = () => {
   useEffect(() => {
     if (onSearchText !== "") {
       const filteredObject = data.filter((items) => {
-        return items.UserName.toLowerCase().includes(onSearchText.toLowerCase());
+        if (items.UserName != null) {
+          return items.UserName.toLowerCase().includes(onSearchText.toLowerCase());
+        }
       });
       setData([...filteredObject]);
     } else {
