@@ -225,7 +225,7 @@ const Venue = () => {
                         </DataTableRow>
                         <DataTableRow size="sm">
                           <span className="tb-product">
-                            <span className="title">{item.Beveragename}</span>
+                            <span className="title" dangerouslySetInnerHTML={{ __html: item.Beveragename }}></span>
                           </span>
                         </DataTableRow>
                         <DataTableRow size="md">

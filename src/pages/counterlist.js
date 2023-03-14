@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
-import './total.css';
+import "./total.css";
 import "moment-timezone";
 
 import Moment from "react-moment";
@@ -14,12 +14,9 @@ import {
   getTicketsStatus,
   selectAllTickets,
   selectAPICount,
-
 } from "../redux/ticketsSlice";
 
-
 import {
-
   Block,
   BlockHead,
   BlockTitle,
@@ -36,15 +33,10 @@ import {
   PaginationComponent,
 } from "../components/Component";
 import { user_id } from "../redux/userSlice";
-import {
-  Card,
-  Spinner,
-  Badge,
-} from "reactstrap";
+import { Card, Spinner, Badge } from "reactstrap";
 const Venue = () => {
   const status = useSelector(getTicketsStatus);
   const dispatch = useDispatch(); //dispatch to change values in store
-
 
   const client_id = useSelector(user_id);
   const date = new Date();
@@ -103,7 +95,8 @@ const Venue = () => {
     setSearchText(e.target.value);
   };
   useEffect(() => {
-    const url = "https://zig-web.com/Zigsmartv3ios/api/Beverage/GetBeveragePerMacaddress?Status=1&Macaddress=F5:A0:B3:41:84:8B";
+    const url =
+      "https://zig-web.com/Zigsmartv3ios/api/Beverage/GetBeveragePerMacaddress?Status=1&Macaddress=F5:A0:B3:41:84:8B";
     const fetchData = async () => {
       try {
         const response = await fetch(url);
@@ -157,11 +150,10 @@ const Venue = () => {
   function onChangeDateHandler(value) {
     setStartDate(value);
   }
-  let sum_value = data.reduce((sum, current)=>{
-    return sum + current.Beveragecount
-}, 0);
-  
-  
+  let sum_value = data.reduce((sum, current) => {
+    return sum + current.Beveragecount;
+  }, 0);
+
   return (
     <React.Fragment>
       <Head title="Venues"></Head>
@@ -170,10 +162,7 @@ const Venue = () => {
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">
-
-                  Beverages
-                </div>
+                <div className="title">Beverages</div>
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
@@ -191,17 +180,15 @@ const Venue = () => {
             </BlockHeadContent>
 
             <BlockHeadContent>
-              <div className="total" >
-                <h5 style={{"padding-right":"50px"}}>Total:
-                  <span >
-                    {data.length}
-                  </span>
+              <div className="total">
+                <h5 style={{ "padding-right": "50px" }}>
+                  Total:
+                  <span>{data.length}</span>
                 </h5>
               </div>
               <div className="totalamount">
                 <h5>Total Amount: ${sum_value}</h5>
               </div>
-
 
               <div className="toggle-wrap nk-block-tools-toggle">
                 <a
@@ -217,7 +204,6 @@ const Venue = () => {
                 <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
                   <ul className="nk-block-tools g-3">
                     <li>
-
                       <div className="form-control-wrap">
                         <div className="form-icon form-icon-right">
                           <Icon name="search"></Icon>
@@ -231,124 +217,111 @@ const Venue = () => {
                         />
                       </div>
                     </li>
-                    <li>
-
-
-
-
-
-                    </li>
-
-
+                    <li></li>
                   </ul>
                 </div>
               </div>
             </BlockHeadContent>
-
           </BlockBetween>
         </BlockHead>
-        <Block >
+        <Block>
           <Card>
-          <div className="card-inner-group">
+            <div className="card-inner-group">
               <div className="card-inner p-0">
-            <DataTableBody>
-              <DataTableHead>
-                <DataTableRow size="sm">
-                  <span>Name</span>
-                </DataTableRow>
-                <DataTableRow>
-                  <span>Beverage</span>
-                </DataTableRow>
-                <DataTableRow>
-                  <span>Count</span>
-                </DataTableRow>
-                <DataTableRow>
-                  <span>Payment</span>
-                </DataTableRow>
-                <DataTableRow size="md">
-                  <span>Date Time</span>
-                </DataTableRow>
-                <DataTableRow size="md">
-                  <span> Email</span>
-                </DataTableRow>
-                <DataTableRow size="md">
-                  <span>Phone</span>
-                </DataTableRow>
-                <DataTableRow size="md">
-                  <span> Served</span>
-                </DataTableRow>
-              </DataTableHead>
-              {currentItems.length > 0
-                ? currentItems.map((item, id) => {
-                  return (
-                    <DataTableItem key={id}>
+                <DataTableBody>
+                  <DataTableHead>
+                    <DataTableRow size="sm">
+                      <span>Name</span>
+                    </DataTableRow>
+                    <DataTableRow>
+                      <span>Beverage</span>
+                    </DataTableRow>
+                    <DataTableRow>
+                      <span>Count</span>
+                    </DataTableRow>
+                    <DataTableRow>
+                      <span>Payment</span>
+                    </DataTableRow>
+                    <DataTableRow size="md">
+                      <span>Date Time</span>
+                    </DataTableRow>
+                    <DataTableRow size="md">
+                      <span> Email</span>
+                    </DataTableRow>
+                    <DataTableRow size="md">
+                      <span>Phone</span>
+                    </DataTableRow>
+                    <DataTableRow size="md">
+                      <span> Served</span>
+                    </DataTableRow>
+                  </DataTableHead>
+                  {currentItems.length > 0
+                    ? currentItems.map((item, id) => {
+                        return (
+                          <DataTableItem key={id}>
+                            <DataTableRow size="sm">
+                              <span>
+                                <span className="tb-sub"> {item.Name}</span>
+                              </span>
+                            </DataTableRow>
+                            <DataTableRow size="sm">
+                              <span className="tb-product">
+                                <span className="title" dangerouslySetInnerHTML={{ __html: item.Beveragename }}></span>
+                              </span>
+                            </DataTableRow>
+                            <DataTableRow size="md">
+                              <span className="tb-sub">{item.Beveragecount}</span>
+                            </DataTableRow>
 
-                      <DataTableRow size="sm">
-                        <span>
-                          <span className="tb-sub"> {item.Name}</span>
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow size="sm">
-                        <span className="tb-product">
-                          <span className="title">{item.Beveragename}</span>
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow size="md">
-                        <span className="tb-sub">{item.Beveragecount}</span>
-                      </DataTableRow>
-
-
-                      <DataTableRow size="md">
-                        <span className="tb-sub">
-                          {item.Cost}
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow>
-                        <span className="tb-odr-date">
-                          <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                            {item.Createddate}
-                          </Moment>
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow size="md">
-                        <span className="tb-sub">{item.Emailaddress}</span>
-                      </DataTableRow>
-                      <DataTableRow size="md">
-                        <span className="tb-sub">{item.phone}</span>
-                      </DataTableRow>
-                      <DataTableRow size="md">
-                        <span className="tb-sub">
-                          {item.status ? (
-                            <Badge pill color="success">
-                              Approved
-                            </Badge>
-                          ) : (
-                            <Badge pill color="danger">
-                              Pending
-                            </Badge>
-                          )}
-                        </span>
-                      </DataTableRow>
-                    </DataTableItem>
-                  );
-                })
-                : null}
-            </DataTableBody>
-            <div className="card-inner">
-              {data.length > 0 ? (
-                <PaginationComponent
-                  itemPerPage={itemPerPage}
-                  totalItems={data.length}
-                  paginate={paginate}
-                  currentPage={currentPage}
-                />
-              ) : (
-                <div className="text-center">
-                  <span className="text-silent">{isLoading ? <Spinner /> : "No Transactions found"}</span>
+                            <DataTableRow size="md">
+                              <span className="tb-sub">{item.Cost}</span>
+                            </DataTableRow>
+                            <DataTableRow>
+                              <span className="tb-odr-date">
+                                <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                                  {item.Createddate}
+                                </Moment>
+                              </span>
+                            </DataTableRow>
+                            <DataTableRow size="md">
+                              <span className="tb-sub">{item.Emailaddress}</span>
+                            </DataTableRow>
+                            <DataTableRow size="md">
+                              <span className="tb-sub">{item.phone}</span>
+                            </DataTableRow>
+                            <DataTableRow size="md">
+                              <span className="tb-sub">
+                                {item.status ? (
+                                  <Badge pill color="success">
+                                    Approved
+                                  </Badge>
+                                ) : (
+                                  <Badge pill color="danger">
+                                    Pending
+                                  </Badge>
+                                )}
+                              </span>
+                            </DataTableRow>
+                          </DataTableItem>
+                        );
+                      })
+                    : null}
+                </DataTableBody>
+                <div className="card-inner">
+                  {data.length > 0 ? (
+                    <PaginationComponent
+                      itemPerPage={itemPerPage}
+                      totalItems={data.length}
+                      paginate={paginate}
+                      currentPage={currentPage}
+                    />
+                  ) : (
+                    <div className="text-center">
+                      <span className="text-silent">{isLoading ? <Spinner /> : "No Transactions found"}</span>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-            </div>
+              </div>
             </div>
           </Card>
         </Block>
