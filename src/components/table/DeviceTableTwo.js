@@ -13,50 +13,7 @@ const DeviceTable = ({ deviceStatus, devices, status, error, addValidator }) => 
     else history.push(`/device/${item.DeviceId}`);
   };
   const DropdownTrans = () => {
-    return (
-      <UncontrolledDropdown>
-        <DropdownToggle tag="a" className="text-soft dropdown-toggle btn btn-icon btn-trigger">
-          <Icon name="more-h"></Icon>
-        </DropdownToggle>
-        <DropdownMenu right>
-          <ul className="link-list-plain">
-            <li>
-              <DropdownItem
-                tag="a"
-                href="#dropdownitem"
-                onClick={(ev) => {
-                  ev.preventDefault();
-                }}
-              >
-                View
-              </DropdownItem>
-            </li>
-            <li>
-              <DropdownItem
-                tag="a"
-                href="#dropdownitem"
-                onClick={(ev) => {
-                  ev.preventDefault();
-                }}
-              >
-                Invoice
-              </DropdownItem>
-            </li>
-            <li>
-              <DropdownItem
-                tag="a"
-                href="#dropdownitem"
-                onClick={(ev) => {
-                  ev.preventDefault();
-                }}
-              >
-                Print
-              </DropdownItem>
-            </li>
-          </ul>
-        </DropdownMenu>
-      </UncontrolledDropdown>
-    );
+    return <UncontrolledDropdown></UncontrolledDropdown>;
   };
   const emptyTable = (
     <Card>

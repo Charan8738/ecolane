@@ -4,7 +4,7 @@ import { RedirectAs404 } from "../utils/Utils";
 import { useSelector } from "react-redux";
 import { selectHomepage } from "../redux/userSlice";
 import AddTracker from "../pages/AddTracker";
-
+import TrackerInfo from "../pages/TrackerInfo";
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
 const Homepage = React.lazy(() => import("../pages/Devices"));
 const AddNewDevice = React.lazy(() => import("../pages/AddNewDevice"));
@@ -69,6 +69,7 @@ const Pages = ({ currentAccess }) => {
   return (
     <Suspense fallback={<div />}>
       <Switch>
+        <Route path={`/tracker-info`} component={TrackerInfo} />
         <Route path={`${process.env.PUBLIC_URL}/device/:id`} component={DeviceConfig}></Route>
         {rolesRoutePages.map(
           (route) =>

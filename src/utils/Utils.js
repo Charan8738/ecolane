@@ -175,3 +175,20 @@ export const failure = (msg) => {
     focusConfirm: true,
   });
 };
+export const successAlert = (msg, position) => {
+  Swal.fire({
+    position: position ?? "top-end",
+    icon: "success",
+    title: msg,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+};
+export const failureAlert = (msg) => {
+  Swal.fire({
+    icon: "error",
+    title: "Oops...",
+    text: msg,
+    focusConfirm: true,
+  });
+};
