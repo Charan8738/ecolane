@@ -60,24 +60,6 @@ const Venue = () => {
     setRangeDate({ start: start, end: end });
   };
 
-  useEffect(() => {
-    let intervalId;
-    if (rangeDate.start && rangeDate.end) {
-      const startDate =
-        rangeDate.start.getFullYear() + "-" + (rangeDate.start.getMonth() + 1) + "-" + rangeDate.start.getDate();
-      const endDate =
-        rangeDate.end.getFullYear() + "-" + (rangeDate.end.getMonth() + 1) + "-" + rangeDate.end.getDate();
-      dispatch(fetchTickets({ startDate: startDate, endDate: endDate }));
-      intervalId = setInterval(() => {
-        getTickets(startDate, endDate);
-      }, 3000);
-    }
-
-    return () => clearTimeout(intervalId);
-  }, [dispatch, rangeDate]);
-  const getTickets = (start, end) => {
-    if (status !== "loading") dispatch(fetchTickets({ startDate: start, endDate: end }));
-  };
   //const data = [];
   const [onSearchText, setSearchText] = useState("");
   const initialData = useRef([]);
@@ -96,22 +78,36 @@ const Venue = () => {
   };
 
   useEffect(() => {
-    const url =
-      "https://zig-app.com/ZIGSmartWeb/api/ZIGShuttle/GetAllusersinoutMOCA?Startdate=2023-03-01&Enddate=2023-03-14&Clientid=33";
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url);
-        const json = await response.json();
-        console.log(json);
-        //data = json.purchasetickets;
-        setData(json);
-        initialData.current = [...json];
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    fetchData();
-  }, []);
+    let intervalId;
+    if (rangeDate.start && rangeDate.end) {
+      const startDate =
+        rangeDate.start.getFullYear() + "-" + (rangeDate.start.getMonth() + 1) + "-" + rangeDate.start.getDate();
+      const endDate =
+        rangeDate.end.getFullYear() + "-" + (rangeDate.end.getMonth() + 1) + "-" + rangeDate.end.getDate();
+      const url =
+        "https://zig-app.com/ZIGSmartWeb/api/ZIGShuttle/GetAllusersinoutMOCA?Startdate=" +
+        startDate +
+        "&Enddate=" +
+        endDate +
+        "&Clientid=33";
+      const fetchData = async () => {
+        try {
+          const response = await fetch(url);
+          const json = await response.json();
+          console.log(json);
+          //data = json.purchasetickets;
+          setData(json);
+          initialData.current = [...json];
+        } catch (error) {
+          console.log("error", error);
+        }
+      };
+      intervalId = setInterval(() => {
+        fetchData();
+      }, 3000);
+    }
+    return () => clearTimeout(intervalId);
+  }, [dispatch, rangeDate]);
   const [startDate, setStartDate] = useState(new Date());
   function onChangeDateHandler(value) {
     setStartDate(value);
@@ -257,7 +253,7 @@ const Venue = () => {
                 />
               ) : (
                 <div className="text-center">
-                  <span className="text-silent">{isLoading ? <Spinner /> : "No payments found"}</span>
+                  <span className="text-silent">{isLoading ? <Spinner /> : "No visitors found"}</span>
                 </div>
               )}
             </div>
