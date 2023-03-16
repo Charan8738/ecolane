@@ -49,7 +49,7 @@ const AddTracker = () => {
   const [sm, updateSm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [diagnoseImei, setDiagnoseImei] = useState();
-  const [itemPerPage] = useState(7);
+  const [itemPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItems = trackers.slice(indexOfFirstItem, indexOfLastItem);

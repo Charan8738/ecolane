@@ -23,7 +23,7 @@ const LiveMap = ({ vehicleType, imei }) => {
   const getlastGpsdata = () => {
     setLoading(true);
     axios
-      .get("http://127.0.0.1:5000/api/gpsdata")
+      .get("https://gps.zig-app.com/api/getlastGpsdata/350317170478121")
       .then((res) => {
         setGpsData(res.data);
       })
