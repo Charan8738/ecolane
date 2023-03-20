@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { Card, Input, FormGroup, Label, Spinner } from "reactstrap";
+import { Card, CardBody, CardTitle, Input, FormGroup, Label, Spinner } from "reactstrap";
+import Speedometer, { Arc, Background, Needle, Progress, Marks, Indicator } from "react-speedometer";
 import {
   Block,
   BlockHead,
@@ -18,12 +19,27 @@ import { useLocation, Redirect } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import LiveMap from "./components/CustomWidgets/Widgets/LiveMap";
+const SpeedometerWiddget = ({ value }) => {
+  return (
+    <div style={{ height: 130, width: 150 }}>
+      <Speedometer value={value} max={100} angle={180} min={0} height={150} width={150}>
+        <Background opacity={0.8} />
+        <Arc />
+        <Needle />
+        <Progress />
+        <Marks />
+        <Indicator fontSize={35} />
+      </Speedometer>
+    </div>
+  );
+};
 const TrackerInfo = () => {
   const location = useLocation();
 
   const [isLoading, setLoading] = useState(false);
   const [viewOption, setViewOption] = useState("realtime");
   const [gpsData, setGpsData] = useState();
+  const [odoData, setOdoData] = useState();
   const imei = location.state?.Macaddress;
   const vehicleType = 5;
   console.log("Vehicle Type " + vehicleType);
@@ -31,23 +47,48 @@ const TrackerInfo = () => {
   useEffect(() => {
     const getGpsData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/api/gpsdata");
+        const response = await axios.get("gpsdata?WifiMacAddress=" + imei);
         return response.data;
       } catch (err) {
         throw err;
       }
     };
     setLoading(true);
-    getGpsData()
-      .then((res) => {
-        setGpsData({ ...res });
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    const timer = setInterval(() => {
+      getGpsData()
+        .then((res) => {
+          setGpsData({ ...res });
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 5000);
+  }, []);
+  useEffect(() => {
+    const getOdoData = async () => {
+      try {
+        const response = await axios.get("odometer?WifiMacAddress=" + imei);
+        return response.data;
+      } catch (err) {
+        throw err;
+      }
+    };
+    setLoading(true);
+    const timer = setInterval(() => {
+      getOdoData()
+        .then((odoRes) => {
+          setOdoData({ ...odoRes });
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 15000);
   }, []);
   if (!imei) return <Redirect to="/" />;
 
@@ -93,13 +134,56 @@ const TrackerInfo = () => {
 
         <Block>
           <Row className="gy-5">
-            <Col sm="4">
-              <FormGroup>
-                <Label className="form-label">View Options</Label>
-                <div className="form-control-wrap">
-                  <div className="form-control-select"></div>
-                </div>
-              </FormGroup>
+            <Col lg="4">
+              <Card>
+                <CardBody className="card-inner">
+                  <CardTitle className="text-primary" tag="h6">
+                    Speed (mph)
+                  </CardTitle>
+                  <div className="center">
+                    <SpeedometerWiddget value={gpsData?.Speed} />
+                  </div>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="4">
+              <Card>
+                <CardBody className="card-inner">
+                  <CardTitle className="text-primary centre" tag="h6">
+                    Battery Voltage
+                  </CardTitle>
+                  <div className="center">
+                    <SpeedometerWiddget value={gpsData?.Speed} />
+                  </div>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="4">
+              <Card className="">
+                <CardBody className="card-inner">
+                  <CardTitle className="text-primary" tag="h6">
+                    Total Miles
+                  </CardTitle>
+                  <CardTitle className="center ff-mono" tag="h4">
+                    {odoData?.Odometerfinalvalue.toFixed(2)}
+                  </CardTitle>
+                  <br></br>
+                  <CardTitle className="text-primary" tag="h6">
+                    Tripmeter (miles)
+                  </CardTitle>
+                  <CardTitle className="center ff-mono" tag="h4">
+                    {odoData?.Odometerfinalvalue.toFixed(2)}
+                  </CardTitle>
+                </CardBody>
+                {/* <CardBody>
+                  <CardTitle className="text-primary" tag="h6">
+                    Tripmeter (miles)
+                  </CardTitle>
+                  <CardTitle className="center ff-mono" tag="h4">
+                    {odoData?.Odometerfinalvalue.toFixed(2)}
+                  </CardTitle>
+                </CardBody> */}
+              </Card>
             </Col>
             <Col sm="12">
               <div style={{ width: "100%", height: "522px" }}>

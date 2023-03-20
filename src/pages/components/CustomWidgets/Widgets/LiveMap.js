@@ -9,6 +9,13 @@ import redBike from "../../../../assets/images/redBike.jpg";
 import { PreviewCard } from "../../../../components/Component";
 import { Spinner } from "reactstrap";
 import "./maps.scss";
+const RecenterAutomatically = ({ lat, lng }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.setView([lat, lng]);
+  }, [lat, lng]);
+  return null;
+};
 const LiveMap = ({ vehicleType, imei }) => {
   const VEHICLE_TYPES = { 1: redTruck, 2: redCar, 3: redCar, 4: redBike, 5: redBus };
   const [gpsData, setGpsData] = useState();
@@ -24,7 +31,7 @@ const LiveMap = ({ vehicleType, imei }) => {
   const getlastGpsdata = () => {
     setLoading(true);
     axios
-      .get("https://gps.zig-app.com/api/getlastGpsdata/350317170478121")
+      .get("gpsdata?WifiMacAddress=" + imei)
       .then((res) => {
         setGpsData(res.data);
       })
@@ -53,7 +60,7 @@ const LiveMap = ({ vehicleType, imei }) => {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-
+            <RecenterAutomatically lat={gpsData.Latitude} lng={gpsData.Longitude} />
             <Marker position={[gpsData.Latitude, gpsData.Longitude]} icon={busIcon}></Marker>
           </MapContainer>
         </div>
