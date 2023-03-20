@@ -20,15 +20,14 @@ import axios from "axios";
 import LiveMap from "./components/CustomWidgets/Widgets/LiveMap";
 const TrackerInfo = () => {
   const location = useLocation();
-  const initialDate = new Date();
-  const [startDate, setStartDate] = useState(new Date());
+
   const [isLoading, setLoading] = useState(false);
   const [viewOption, setViewOption] = useState("realtime");
   const [gpsData, setGpsData] = useState();
   const imei = location.state?.Macaddress;
   const vehicleType = 5;
   console.log("Vehicle Type " + vehicleType);
-
+  console.log("IMEI " + imei);
   useEffect(() => {
     const getGpsData = async () => {
       try {

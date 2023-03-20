@@ -8,6 +8,7 @@ import redCar from "../../../../assets/images/redCar.png";
 import redBike from "../../../../assets/images/redBike.jpg";
 import { PreviewCard } from "../../../../components/Component";
 import { Spinner } from "reactstrap";
+import "./maps.scss";
 const LiveMap = ({ vehicleType, imei }) => {
   const VEHICLE_TYPES = { 1: redTruck, 2: redCar, 3: redCar, 4: redBike, 5: redBus };
   const [gpsData, setGpsData] = useState();
