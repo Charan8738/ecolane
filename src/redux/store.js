@@ -6,6 +6,7 @@ import ticketReducer from "./ticketsSlice";
 import UserReducer from "./userSlice";
 import addDeviceReducer from "./addDeviceSlice";
 import gpsDataReducer from "./gpsSlice";
+import tripsReducer from "./tripsSlice";
 export const store = configureStore({
   reducer: {
     device: deviceReducer,
@@ -15,5 +16,6 @@ export const store = configureStore({
     user: UserReducer,
     addDevice: addDeviceReducer,
     gps: gpsDataReducer,
+    trip: tripsReducer,
   },
 });

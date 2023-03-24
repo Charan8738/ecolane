@@ -138,7 +138,7 @@ const AddTracker = () => {
   useEffect(() => {
     if (onSearchText !== "") {
       const filteredObject = trackers.filter((item) => {
-        return item.DeviceStatus.toLowerCase().includes(onSearchText.toLowerCase());
+        return item.Bus_no.toLowerCase().includes(onSearchText.toLowerCase());
       });
 
       setTrackers([...filteredObject]);
