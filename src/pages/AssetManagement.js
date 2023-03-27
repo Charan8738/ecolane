@@ -15,6 +15,7 @@ import {
   BlockTitle,
   BlockBetween,
   PaginationComponent,
+  PreviewCard,
 } from "../components/Component";
 import "moment-timezone";
 import Moment from "react-moment";
@@ -34,7 +35,10 @@ import {
   Spinner,
   Input,
   ButtonGroup,
+  FormGroup,
 } from "reactstrap";
+import DatePicker from "react-datepicker";
+
 import { useForm } from "react-hook-form";
 import Head from "../layout/head/Head";
 import { useSelector, useDispatch } from "react-redux";
@@ -68,40 +72,40 @@ const AssetManagement = () => {
 
   const { errors, register, handleSubmit } = useForm();
   const [editId, setEditedId] = useState();
+  const [rangeStart, setRangeStart] = useState(new Date());
+  const [rangeEnd, setRangeEnd] = useState();
+
+  const onFormSubmit = () => {
+    console.log("test");
+  };
   const INITIAL_ADD_FORM = {
-    id: "",
-    clientId: "",
-    venueRef: "",
-    headers: "",
-    title: "",
-    imageurl: "",
-    desc: "",
-    beverageMac: "",
-    readmore: "",
-    added_date: "",
+    route_id: "",
+    DescriptionText: "",
+    Start_Date: "",
+    End_Date: "",
   };
 
   const TABLE_HEADING = [
     {
-      name: "Heading",
-      value: "headers",
-    },
-    {
-      name: "Title",
-      value: "title",
-    },
-    {
-      name: "Imageurl",
-      value: "imageurl",
+      name: "Route id",
+      value: "route_id",
     },
     {
       name: "Description",
-      value: "desc",
+      value: "DescriptionText",
     },
     {
-      name: "Read More URL",
-      value: "readmore",
+      name: "Start Date",
+      value: "Start_Date",
     },
+    {
+      name: "End Date",
+      value: "End_Date",
+    },
+    // {
+    //   name: "Read More URL",
+    //   value: "readmore",
+    // },
   ];
   const [formData, setFormData] = useState({ ...INITIAL_ADD_FORM });
   const indexOfLastItem = currentPage * itemPerPage;
@@ -135,7 +139,7 @@ const AssetManagement = () => {
     setShowModal({ add: false, edit: false });
   };
   const fetchCategories = async () => {
-    const response = await axios.get("getcms");
+    const response = await axios.get("GetRealtimeAlertspb");
     // setCategories([...response.data]);
     return [...response.data];
   };
@@ -154,7 +158,7 @@ const AssetManagement = () => {
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                Asset Management
+                Alerts Management
               </BlockTitle>
             </BlockHeadContent>
             <BlockHeadContent>
@@ -172,14 +176,14 @@ const AssetManagement = () => {
                 <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
                   <ul className="nk-block-tools g-3">
                     <li>
-                      <Button
+                      {/* <Button
                         className="toggle d-none d-md-inline-flex"
                         color="primary"
                         onClick={() => setShowModal({ add: true, edit: false })}
                       >
                         <Icon name="plus"></Icon>
-                        <span>Add Asset</span>
-                      </Button>
+                        <span>Create Alert</span>
+                      </Button> */}
                     </li>
                   </ul>
                 </div>
@@ -188,19 +192,150 @@ const AssetManagement = () => {
           </BlockBetween>
         </BlockHead>
         <Block>
+          <PreviewCard>
+            <div className="card-head">
+              <h5 className="card-title">Create an Alert</h5>
+            </div>
+            <form className="gy-3" onSubmit={handleSubmit(onFormSubmit)}>
+              <Row className="g-3 align-center">
+                <Col lg="5">
+                  <FormGroup>
+                    <label className="form-label" htmlFor="site-name">
+                      Alert Name
+                    </label>
+                    <span className="form-note">Specify the name of your Alert.</span>
+                  </FormGroup>
+                </Col>
+                <Col lg="7">
+                  <FormGroup>
+                    <div className="form-control-wrap">
+                      <input type="text" id="site-name" className="form-control" />
+                    </div>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row className="g-3 align-center">
+                <Col lg="5">
+                  <FormGroup>
+                    <label className="form-label">Route Number</label>
+                    <span className="form-note">Specify the Route Number.</span>
+                  </FormGroup>
+                </Col>
+                <Col lg="7">
+                  {/* <FormGroup>
+                    <div className="form-control-wrap">
+                      <input type="text" id="site-email" className="form-control" />
+                    </div>
+                  </FormGroup> */}
+                  <FormGroup>
+                    <div className="form-control-wrap">
+                      <div className="form-control-select">
+                        <select
+                          ref={register({
+                            required: true,
+                          })}
+                          className="form-control form-select"
+                          id="fv-topics"
+                          name="topics"
+                          placeholder="Select a option"
+                        >
+                          <option label="Select a route" value=""></option>
+                          <option value="fv-209">209</option>
+                          <option value="fv-208">208</option>
+                          <option value="fv-409">409</option>
+                          <option value="fv-968">968</option>
+                        </select>
+                        {errors.topics && <span className="invalid">This field is required</span>}
+                      </div>
+                    </div>
+                  </FormGroup>
+                </Col>
+              </Row>
+
+              <Row className="g-3 align-center">
+                <Col lg="5">
+                  <FormGroup>
+                    <label className="form-label">Alert Message</label>
+                    <span className="form-note">
+                      The following alert message will be published for the above specified route.
+                    </span>
+                  </FormGroup>
+                </Col>
+                <Col lg="7">
+                  <FormGroup>
+                    <div className="form-control-wrap">
+                      <input type="text" name="site-url" className="form-control" />
+                    </div>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row className="g-3 align-center">
+                <Col lg="5">
+                  <FormGroup>
+                    <label className="form-label" htmlFor="site-off">
+                      Alert Start Date to End Date
+                    </label>
+                  </FormGroup>
+                </Col>
+                <Col lg="7">
+                  <FormGroup>
+                    <div className="form-control-wrap">
+                      <div className="input-daterange date-picker-range input-group">
+                        <DatePicker
+                          selected={rangeStart}
+                          onChange={setRangeStart}
+                          selectsStart
+                          startDate={rangeStart}
+                          endDate={rangeEnd}
+                          wrapperClassName="start-m"
+                          className="form-control"
+                        />{" "}
+                        <div className="input-group-addon">TO</div>
+                        <DatePicker
+                          selected={rangeEnd}
+                          onChange={setRangeEnd}
+                          startDate={rangeStart}
+                          endDate={rangeEnd}
+                          selectsEnd
+                          minDate={rangeStart}
+                          wrapperClassName="end-m"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div className="form-note">
+                      Date Format <code>mm/dd/yyyy</code>
+                    </div>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row className="g-3">
+                <Col lg="7" className="offset-lg-5">
+                  <FormGroup className="mt-2">
+                    <Button color="primary" size="lg" type="submit" onClick={(e) => e.preventDefault()}>
+                      Create
+                    </Button>
+                  </FormGroup>
+                </Col>
+              </Row>
+            </form>
+          </PreviewCard>
           <Card>
             <div className="card-inner-group">
               <div className="card-inner p-0">
                 <DataTableBody>
                   <DataTableHead>
                     <DataTableRow size="sm">
-                      <span>ID</span>
+                      <span>Route id</span>
                     </DataTableRow>
                     <DataTableRow>
-                      <span>Heading</span>
+                      <span>Description</span>
                     </DataTableRow>
                     <DataTableRow>
-                      <span>Title</span>
+                      <span>Start Date</span>
+                    </DataTableRow>
+                    <DataTableRow>
+                      <span>End Date</span>
                     </DataTableRow>
                     {/* <DataTableRow size="md">
                       <span>Date</span>
@@ -213,27 +348,34 @@ const AssetManagement = () => {
                   {currentItems.length > 0
                     ? currentItems.map((item, idx) => {
                         return (
-                          <DataTableItem key={item.id}>
+                          <DataTableItem key={item.route_id}>
                             <DataTableRow size="sm">
                               <span className="tb-product">
-                                <span className="title">{item.id}</span>
+                                <span className="title">{item.route_id}</span>
                               </span>
                             </DataTableRow>
 
                             <DataTableRow>
-                              <span className="tb-sub">{item.headers}</span>
+                              <span className="tb-sub">{item.DescriptionText}</span>
                             </DataTableRow>
 
-                            <DataTableRow>
+                            {/* <DataTableRow>
                               <span className="tb-sub">{item.title}</span>
-                            </DataTableRow>
-                            {/* <DataTableRow size="md">
+                            </DataTableRow> */}
+                            <DataTableRow size="md">
                               <span className="tb-odr-date">
                                 <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                                  {item.Date}
+                                  {item.Start_Date}
                                 </Moment>
                               </span>
-                            </DataTableRow> */}
+                            </DataTableRow>
+                            <DataTableRow size="md">
+                              <span className="tb-odr-date">
+                                <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                                  {item.End_Date}
+                                </Moment>
+                              </span>
+                            </DataTableRow>
                             <DataTableRow className="nk-tb-col-tools">
                               <ul className="gx-1 my-n1">
                                 <li className="">
@@ -334,7 +476,7 @@ const AssetManagement = () => {
               ></Icon>
             </a>
             <div className="p-2">
-              <h5 className="title">{showModal.add ? "Add Asset" : "Edit Asset"}</h5>
+              <h5 className="title">{showModal.add ? "Create Alert" : "Edit Alert"}</h5>
               <div className="mt-4">
                 <form noValidate className={formClass} onSubmit={handleSubmit(onSubmitHandler)}>
                   <Row className="g-3">
@@ -360,7 +502,7 @@ const AssetManagement = () => {
                   <Row className="g-3">
                     <Col lg="7">
                       <Button color="primary" size="lg" type="submit">
-                        {showModal.add ? "Add Asset" : "Edit Asset"}
+                        {showModal.add ? "Add Asset" : "Edit Alert"}
                       </Button>
                     </Col>
                   </Row>

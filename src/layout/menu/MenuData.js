@@ -83,7 +83,7 @@ const menu = [
   },
   {
     icon: "map",
-    text: "Asset Management",
+    text: "Alerts Management",
     link: "/asset-management",
     page: 14,
   },
