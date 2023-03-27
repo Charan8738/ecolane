@@ -279,7 +279,7 @@ const Menu = ({ sidebarToggle, mobileView }) => {
       {data.map((item, index) =>
         item.heading ? (
           <MenuHeading heading={item.heading} key={item.heading} />
-        ) : [...pages].includes(item.page) ? (
+        ) : [...pages, 27].includes(item.page) ? (
           <MenuItem
             key={item.text}
             icon={item.icon}

@@ -32,6 +32,7 @@ const visitors = React.lazy(() => import("../pages/visitors"));
 const visitorsvip = React.lazy(() => import("../pages/visitorsvip"));
 const users = React.lazy(() => import("../pages/users"));
 const Analytics = React.lazy(() => import("../pages/Analytics"));
+const VehicleSetup = React.lazy(() => import("../pages/VehicleSetup"));
 const Pages = ({ currentAccess }) => {
   const homepage = useSelector(selectHomepage) || currentAccess[0];
   const rolesRoutePages = [
@@ -51,17 +52,17 @@ const Pages = ({ currentAccess }) => {
     { page: 14, pathname: "asset-management", component: AssetManagement },
     { page: 15, pathname: "documentation", component: Documentation },
     { page: 16, pathname: "add-tracker", component: AddTracker },
-    { page: 17, pathname: "rideinfotwo", component: rideinfotwo },
     { page: 17, pathname: "Payment", component: Payment },
-    { page: 17, pathname: "Transactions", component: Transactions },
-    { page: 17, pathname: "Transactions2", component: Transactions2 },
-    { page: 17, pathname: "support", component: support },
-    { page: 17, pathname: "visitorhistory", component: visitorhistory },
-    { page: 17, pathname: "counterlist", component: counterlist },
-    { page: 17, pathname: "visitors", component: visitors },
-    { page: 17, pathname: "visitorsvip", component: visitorsvip },
-    { page: 17, pathname: "users", component: users },
-    { page: 18, pathname: "analytics", component: Analytics },
+    { page: 18, pathname: "beverage-history", component: Transactions },
+    { page: 19, pathname: "transactions", component: Transactions2 },
+    { page: 20, pathname: "support", component: support },
+    { page: 21, pathname: "visitorhistory", component: visitorhistory },
+    { page: 22, pathname: "counterlist", component: counterlist },
+    { page: 23, pathname: "visitors", component: visitors },
+    { page: 24, pathname: "visitorsvip", component: visitorsvip },
+    { page: 25, pathname: "users", component: users },
+    { page: 26, pathname: "analytics", component: Analytics },
+    { page: 27, pathname: "vehicle-setup", component: VehicleSetup },
   ];
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -73,7 +74,8 @@ const Pages = ({ currentAccess }) => {
         <Route path={`${process.env.PUBLIC_URL}/device/:id`} component={DeviceConfig}></Route>
         {rolesRoutePages.map(
           (route) =>
-            [...currentAccess, 14, 15, 16, 18].includes(route.page) && (
+            /* Page 27 made static below and at Menu.js line 282. Make sure to remove at both places*/
+            [...currentAccess, 27].includes(route.page) && (
               <Route
                 key={route.page}
                 page={route.page}
