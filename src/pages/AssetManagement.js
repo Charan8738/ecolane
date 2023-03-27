@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   Icon,
   BlockHead,
-  OverlineTitle,
   Row,
   Col,
   Button,
@@ -21,38 +20,25 @@ import "moment-timezone";
 import Moment from "react-moment";
 import Content from "../layout/content/Content";
 import classNames from "classnames";
-import { user_id } from "..//redux/userSlice";
-import { fetchDevices, selectAllDevices, getDevicesStatus } from "../redux/deviceSlice";
 import {
   Card,
   DropdownItem,
   UncontrolledDropdown,
   DropdownMenu,
   DropdownToggle,
-  Badge,
   Modal,
   ModalBody,
   Spinner,
-  Input,
-  ButtonGroup,
   FormGroup,
 } from "reactstrap";
 import DatePicker from "react-datepicker";
 
 import { useForm } from "react-hook-form";
 import Head from "../layout/head/Head";
-import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Swal from "sweetalert2";
-const Success = (msg) => {
-  Swal.fire({
-    position: "top-end",
-    icon: "success",
-    title: msg,
-    showConfirmButton: false,
-    timer: 1500,
-  });
-};
+import { successAlert } from "../utils/Utils";
+
 const failure = (msg) => {
   Swal.fire({
     icon: "error",
@@ -61,30 +47,11 @@ const failure = (msg) => {
     focusConfirm: true,
   });
 };
-const DUMMY_DATA = [{ ID: "1", Serial: "S12", Vehicle: "Vehicle 1", Notes: "Sample Notes", Date: new Date() }];
 const AssetManagement = () => {
-  const [sm, updateSm] = useState(false);
-  const [showModal, setShowModal] = useState({ add: false, edit: false });
-  const [data, setData] = useState([]);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemPerPage] = useState(7);
-
-  const { errors, register, handleSubmit } = useForm();
-  const [editId, setEditedId] = useState();
-  const [rangeStart, setRangeStart] = useState(new Date());
-  const [rangeEnd, setRangeEnd] = useState();
-
-  const onFormSubmit = () => {
-    console.log("test");
-  };
   const INITIAL_ADD_FORM = {
     route_id: "",
     DescriptionText: "",
-    Start_Date: "",
-    End_Date: "",
   };
-
   const TABLE_HEADING = [
     {
       name: "Route id",
@@ -94,20 +61,19 @@ const AssetManagement = () => {
       name: "Description",
       value: "DescriptionText",
     },
-    {
-      name: "Start Date",
-      value: "Start_Date",
-    },
-    {
-      name: "End Date",
-      value: "End_Date",
-    },
-    // {
-    //   name: "Read More URL",
-    //   value: "readmore",
-    // },
   ];
+  const [showModal, setShowModal] = useState(false);
+  const [data, setData] = useState([]);
+  const [routes, setRoutes] = useState([]);
   const [formData, setFormData] = useState({ ...INITIAL_ADD_FORM });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemPerPage] = useState(7);
+
+  const { errors, register, handleSubmit } = useForm();
+  const [editId, setEditedId] = useState();
+  const [rangeStart, setRangeStart] = useState(new Date());
+  const [rangeEnd, setRangeEnd] = useState(new Date());
+
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
@@ -116,39 +82,58 @@ const AssetManagement = () => {
     "form-validate": true,
     "is-alter": true,
   });
+
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
-  const onSubmitHandler = () => {
-    console.log(formData);
-    const response = axios.put("EditAdmincms", formData);
-    if (showModal.add) {
-      let newArr = [...data];
-      newArr.push({ ...formData, Date: new Date() });
-      setData(newArr);
-      Success("Added Successfully");
-    } else {
-      let newData = [...data];
-      newData[editId] = { ...formData };
-      setData([...newData]);
-      if (response.status === 201) {
-        Success("Edited Successfully");
-      }
-    }
-    setShowModal({ add: false, edit: false });
+  const resetForm = () => {
+    setFormData(INITIAL_ADD_FORM);
+    setRangeStart(new Date());
+    setRangeEnd(new Date());
   };
-  const fetchCategories = async () => {
+  const onCreateAlertHandler = () => {
+    const newAlert = { ...formData, Start_Date: rangeStart.toISOString(), End_Date: rangeEnd.toISOString() };
+    axios
+      .post("AddAlerts", { ...newAlert })
+      .then((res) => {
+        if (res.status === 200) {
+          setData((prev) => [...prev, res.data]);
+          resetForm();
+          successAlert("Alert created successfully");
+        } else {
+          throw new Error(res.data);
+        }
+      })
+      .catch((err) => {
+        window.alert("Error in creating alerts");
+        console.log(err);
+      });
+  };
+  const onEditAlertHandler = () => {};
+
+  const fetchAlerts = async () => {
     const response = await axios.get("GetRealtimeAlertspb");
-    // setCategories([...response.data]);
+    return [...response.data];
+  };
+  const fetchRoutes = async () => {
+    const response = await axios.get("lima/GetStandardBusLines");
     return [...response.data];
   };
   useEffect(() => {
-    fetchCategories().then((res) => {
-      setFormData(res[0]);
-      console.log(res[0]);
+    fetchAlerts().then((res) => {
       setData(res);
     });
+  }, []);
+  useEffect(() => {
+    fetchRoutes()
+      .then((res) => {
+        setRoutes(res);
+        setFormData((prev) => ({ ...prev, route_id: res.length > 0 ? res[0]?.RouteName : null }));
+      })
+      .catch((err) => {
+        console.log("Error in fetiching route list");
+      });
   }, []);
   return (
     <React.Fragment>
@@ -161,34 +146,6 @@ const AssetManagement = () => {
                 Alerts Management
               </BlockTitle>
             </BlockHeadContent>
-            <BlockHeadContent>
-              <div className="toggle-wrap nk-block-tools-toggle">
-                <a
-                  href="#more"
-                  className="btn btn-icon btn-trigger toggle-expand mr-n1"
-                  onClick={(ev) => {
-                    ev.preventDefault();
-                    updateSm(!sm);
-                  }}
-                >
-                  <Icon name="more-v"></Icon>
-                </a>
-                <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
-                  <ul className="nk-block-tools g-3">
-                    <li>
-                      {/* <Button
-                        className="toggle d-none d-md-inline-flex"
-                        color="primary"
-                        onClick={() => setShowModal({ add: true, edit: false })}
-                      >
-                        <Icon name="plus"></Icon>
-                        <span>Create Alert</span>
-                      </Button> */}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </BlockHeadContent>
           </BlockBetween>
         </BlockHead>
         <Block>
@@ -196,11 +153,11 @@ const AssetManagement = () => {
             <div className="card-head">
               <h5 className="card-title">Create an Alert</h5>
             </div>
-            <form className="gy-3" onSubmit={handleSubmit(onFormSubmit)}>
-              <Row className="g-3 align-center">
+            <form className="gy-3" onSubmit={handleSubmit(onCreateAlertHandler)}>
+              {/*  <Row className="g-3 align-center">
                 <Col lg="5">
                   <FormGroup>
-                    <label className="form-label" htmlFor="site-name">
+                    <label className="form-label" htmlFor="alert-name">
                       Alert Name
                     </label>
                     <span className="form-note">Specify the name of your Alert.</span>
@@ -209,24 +166,19 @@ const AssetManagement = () => {
                 <Col lg="7">
                   <FormGroup>
                     <div className="form-control-wrap">
-                      <input type="text" id="site-name" className="form-control" />
+                      <input type="text" id="alert-name" className="form-control" required />
                     </div>
                   </FormGroup>
                 </Col>
-              </Row>
+              </Row>*/}
               <Row className="g-3 align-center">
                 <Col lg="5">
                   <FormGroup>
-                    <label className="form-label">Route Number</label>
-                    <span className="form-note">Specify the Route Number.</span>
+                    <label className="form-label">Route Name</label>
+                    <span className="form-note">Specify the Route Name.</span>
                   </FormGroup>
                 </Col>
                 <Col lg="7">
-                  {/* <FormGroup>
-                    <div className="form-control-wrap">
-                      <input type="text" id="site-email" className="form-control" />
-                    </div>
-                  </FormGroup> */}
                   <FormGroup>
                     <div className="form-control-wrap">
                       <div className="form-control-select">
@@ -234,18 +186,20 @@ const AssetManagement = () => {
                           ref={register({
                             required: true,
                           })}
+                          value={formData.route_id}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, route_id: e.target.value }))}
                           className="form-control form-select"
-                          id="fv-topics"
-                          name="topics"
-                          placeholder="Select a option"
+                          id="route-id"
+                          name="route_id"
+                          disabled={routes.length === 0}
                         >
-                          <option label="Select a route" value=""></option>
-                          <option value="fv-209">209</option>
-                          <option value="fv-208">208</option>
-                          <option value="fv-409">409</option>
-                          <option value="fv-968">968</option>
+                          {" "}
+                          {routes.map((route) => (
+                            <option key={route.RouteID} value={route.RouteName}>
+                              {route.RouteName}
+                            </option>
+                          ))}
                         </select>
-                        {errors.topics && <span className="invalid">This field is required</span>}
                       </div>
                     </div>
                   </FormGroup>
@@ -264,7 +218,16 @@ const AssetManagement = () => {
                 <Col lg="7">
                   <FormGroup>
                     <div className="form-control-wrap">
-                      <input type="text" name="site-url" className="form-control" />
+                      <input
+                        type="text"
+                        id="alert-msg"
+                        required
+                        value={formData.DescriptionText}
+                        className="form-control"
+                        onChange={(e) => {
+                          setFormData((prev) => ({ ...prev, DescriptionText: e.target.value }));
+                        }}
+                      />
                     </div>
                   </FormGroup>
                 </Col>
@@ -312,7 +275,7 @@ const AssetManagement = () => {
               <Row className="g-3">
                 <Col lg="7" className="offset-lg-5">
                   <FormGroup className="mt-2">
-                    <Button color="primary" size="lg" type="submit" onClick={(e) => e.preventDefault()}>
+                    <Button color="primary" size="lg" type="submit">
                       Create
                     </Button>
                   </FormGroup>
@@ -326,7 +289,7 @@ const AssetManagement = () => {
                 <DataTableBody>
                   <DataTableHead>
                     <DataTableRow size="sm">
-                      <span>Route id</span>
+                      <span>Route ID</span>
                     </DataTableRow>
                     <DataTableRow>
                       <span>Description</span>
@@ -337,9 +300,7 @@ const AssetManagement = () => {
                     <DataTableRow>
                       <span>End Date</span>
                     </DataTableRow>
-                    {/* <DataTableRow size="md">
-                      <span>Date</span>
-                    </DataTableRow> */}
+
                     <DataTableRow className="nk-tb-col-tools">
                       <span>Actions</span>
                     </DataTableRow>
@@ -359,9 +320,6 @@ const AssetManagement = () => {
                               <span className="tb-sub">{item.DescriptionText}</span>
                             </DataTableRow>
 
-                            {/* <DataTableRow>
-                              <span className="tb-sub">{item.title}</span>
-                            </DataTableRow> */}
                             <DataTableRow size="md">
                               <span className="tb-odr-date">
                                 <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
@@ -399,12 +357,12 @@ const AssetManagement = () => {
                                               setEditedId(idx);
                                               setFormData((prev) => ({
                                                 ...prev,
-                                                ID: item.ID,
-                                                Serial: item.Serial,
-                                                Vehicle: item.Vehicle,
-                                                Notes: item.Notes,
+                                                route_id: item.route_id,
+                                                DescriptionText: item.DescriptionText,
                                               }));
-                                              setShowModal({ add: false, edit: true });
+                                              setRangeStart(new Date(item.Start_Date));
+                                              setRangeEnd(new Date(item.End_Date));
+                                              setShowModal(true);
                                             }}
                                           >
                                             <Icon name="edit"></Icon>
@@ -448,7 +406,7 @@ const AssetManagement = () => {
                     />
                   ) : (
                     <div className="text-center">
-                      <span className="text-silent">No Assets found</span>
+                      <span className="text-silent">No Alerts found</span>
                     </div>
                   )}
                 </div>
@@ -456,11 +414,7 @@ const AssetManagement = () => {
             </div>
           </Card>
         </Block>
-        <Modal
-          isOpen={showModal.add || showModal.edit}
-          toggle={() => setShowModal({ add: false, edit: false })}
-          size="lg"
-        >
+        <Modal isOpen={showModal} toggle={() => setShowModal(false)} size="lg">
           <ModalBody>
             <a href="#cancel" className="close">
               {" "}
@@ -469,16 +423,16 @@ const AssetManagement = () => {
                 onClick={(ev) => {
                   ev.preventDefault();
                   setShowModal((prev) => {
-                    if (prev.edit) setFormData({ ...INITIAL_ADD_FORM });
-                    return { add: false, edit: false };
+                    resetForm();
+                    return false;
                   });
                 }}
               ></Icon>
             </a>
             <div className="p-2">
-              <h5 className="title">{showModal.add ? "Create Alert" : "Edit Alert"}</h5>
+              <h5 className="title">Edit Alert</h5>
               <div className="mt-4">
-                <form noValidate className={formClass} onSubmit={handleSubmit(onSubmitHandler)}>
+                <form noValidate className={formClass} onSubmit={handleSubmit(onEditAlertHandler)}>
                   <Row className="g-3">
                     {TABLE_HEADING.map((item) => (
                       <Col sm="4">
@@ -498,11 +452,42 @@ const AssetManagement = () => {
                         </div>
                       </Col>
                     ))}
+                    <Col lg="7">
+                      <FormGroup>
+                        <div className="form-control-wrap">
+                          <div className="input-daterange date-picker-range input-group">
+                            <DatePicker
+                              selected={rangeStart}
+                              onChange={setRangeStart}
+                              selectsStart
+                              startDate={rangeStart}
+                              endDate={rangeEnd}
+                              wrapperClassName="start-m"
+                              className="form-control"
+                            />{" "}
+                            <div className="input-group-addon">TO</div>
+                            <DatePicker
+                              selected={rangeEnd}
+                              onChange={setRangeEnd}
+                              startDate={rangeStart}
+                              endDate={rangeEnd}
+                              selectsEnd
+                              minDate={rangeStart}
+                              wrapperClassName="end-m"
+                              className="form-control"
+                            />
+                          </div>
+                        </div>
+                        <div className="form-note">
+                          Date Format <code>mm/dd/yyyy</code>
+                        </div>
+                      </FormGroup>
+                    </Col>
                   </Row>
                   <Row className="g-3">
                     <Col lg="7">
                       <Button color="primary" size="lg" type="submit">
-                        {showModal.add ? "Add Asset" : "Edit Alert"}
+                        Edit Alert
                       </Button>
                     </Col>
                   </Row>
