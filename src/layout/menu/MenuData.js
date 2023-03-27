@@ -15,12 +15,6 @@ const menu = [
     page: 2,
   },
   {
-    icon: "ticket-fill",
-    text: "Add Validator",
-    link: "add-validator",
-    page: 8,
-  },
-  {
     icon: "cc-alt2-fill",
     text: "City Setup",
     link: "/gtfs",
@@ -39,18 +33,6 @@ const menu = [
     page: 5,
   },
   {
-    icon: "contact-fill",
-    text: "Venues",
-    link: "/museum-data",
-    page: 12,
-  },
-  {
-    icon: "coffee",
-    text: "Add Products",
-    link: "/add-beverages",
-    page: 9,
-  },
-  {
     icon: "coffee",
     text: "Beverage",
     link: "/Beverage-c1",
@@ -61,6 +43,19 @@ const menu = [
     text: "Tickets",
     link: "/Tickets",
     page: 7,
+  },
+  {
+    icon: "ticket-fill",
+    text: "Add Validator",
+    link: "add-validator",
+    page: 8,
+  },
+
+  {
+    icon: "coffee",
+    text: "Add Products",
+    link: "/add-beverages",
+    page: 9,
   },
   {
     icon: "map",
@@ -76,6 +71,13 @@ const menu = [
   },
 
   {
+    icon: "contact-fill",
+    text: "Venues",
+    link: "/museum-data",
+    page: 12,
+  },
+
+  {
     icon: "alert-circle-fill",
     text: "Alerts",
     link: "/alerts",
@@ -87,18 +89,14 @@ const menu = [
     link: "/asset-management",
     page: 14,
   },
+
   {
     icon: "map",
     text: "Add Tracker",
     link: "/add-tracker",
     page: 16,
   },
-  {
-    icon: "map",
-    text: "Add Ride",
-    link: "/rideinfotwo",
-    page: 15,
-  },
+
   {
     icon: "coins",
     text: "Payment",
@@ -108,13 +106,13 @@ const menu = [
   {
     icon: "property",
     text: "Beverage History",
-    link: "/Transactions",
-    page: 6,
+    link: "/beverage-history",
+    page: 18,
   },
   {
     icon: "wallet-out",
     text: "Transactions",
-    link: "/Transactions2",
+    link: "/transactions",
     page: 19,
   },
   {
@@ -158,6 +156,12 @@ const menu = [
     text: "Analytics",
     link: "/analytics",
     page: 26,
+  },
+  {
+    icon: "property-alt",
+    text: "Vehicle Setup",
+    link: "/vehicle-setup",
+    page: 27,
   },
 ];
 export default menu;
