@@ -48,7 +48,7 @@ const Pages = ({ currentAccess }) => {
     { page: 10, pathname: "transit-data", component: TransitData },
     { page: 11, pathname: "transit-approval", component: TransitApproval },
     { page: 12, pathname: "museum-data", component: MuseumData },
-    { page: 13, pathname: "alerts", component: Alerts },
+    { page: 13, pathname: "run-cutting", component: Alerts },
     { page: 14, pathname: "asset-management", component: AssetManagement },
     { page: 15, pathname: "documentation", component: Documentation },
     { page: 16, pathname: "add-tracker", component: AddTracker },

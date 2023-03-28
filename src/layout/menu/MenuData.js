@@ -78,9 +78,9 @@ const menu = [
   },
 
   {
-    icon: "alert-circle-fill",
-    text: "Alerts",
-    link: "/alerts",
+    icon: "clipboard",
+    text: "Run Cutting",
+    link: "/run-cutting",
     page: 13,
   },
   {

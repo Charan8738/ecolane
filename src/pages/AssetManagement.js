@@ -289,20 +289,20 @@ const AssetManagement = () => {
                 <DataTableBody>
                   <DataTableHead>
                     <DataTableRow size="sm">
-                      <span>Route ID</span>
+                      <h6>Route ID</h6>
                     </DataTableRow>
                     <DataTableRow>
-                      <span>Description</span>
+                      <h6>Description</h6>
                     </DataTableRow>
                     <DataTableRow>
-                      <span>Start Date</span>
+                      <h6>Start Date</h6>
                     </DataTableRow>
                     <DataTableRow>
-                      <span>End Date</span>
+                      <h6>End Date</h6>
                     </DataTableRow>
 
                     <DataTableRow className="nk-tb-col-tools">
-                      <span>Actions</span>
+                      <h6>Actions</h6>
                     </DataTableRow>
                   </DataTableHead>
 
