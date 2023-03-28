@@ -53,7 +53,7 @@ const Pages = ({ currentAccess }) => {
     { page: 15, pathname: "documentation", component: Documentation },
     { page: 16, pathname: "add-tracker", component: AddTracker },
     { page: 17, pathname: "Payment", component: Payment },
-    { page: 18, pathname: "beverage-history", component: Transactions },
+    // { page: 18, pathname: "beverage-history", component: Transactions },
     { page: 19, pathname: "transactions", component: Transactions2 },
     { page: 20, pathname: "support", component: support },
     { page: 21, pathname: "visitorhistory", component: visitorhistory },

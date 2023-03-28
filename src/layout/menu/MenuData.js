@@ -103,12 +103,12 @@ const menu = [
     link: "/Payment",
     page: 17,
   },
-  {
-    icon: "property",
-    text: "Beverage History",
-    link: "/beverage-history",
-    page: 18,
-  },
+  // {
+  //   icon: "property",
+  //   text: "Beverage History",
+  //   link: "/beverage-history",
+  //   page: 18,
+  // },
   {
     icon: "wallet-out",
     text: "Transactions",
