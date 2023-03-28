@@ -92,7 +92,7 @@ const menu = [
 
   {
     icon: "map",
-    text: "Add Tracker",
+    text: "GPS Trackers",
     link: "/add-tracker",
     page: 16,
   },
