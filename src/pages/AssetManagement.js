@@ -369,7 +369,7 @@ const AssetManagement = () => {
                                             <span>Edit </span>
                                           </DropdownItem>
                                         </li>
-                                        <li>
+                                        {/* <li>
                                           <DropdownItem
                                             tag="a"
                                             href="#edit"
@@ -383,7 +383,7 @@ const AssetManagement = () => {
                                             <Icon name="trash"></Icon>
                                             <span>Delete </span>
                                           </DropdownItem>
-                                        </li>
+                                        </li> */}
                                       </ul>
                                     </DropdownMenu>
                                   </UncontrolledDropdown>

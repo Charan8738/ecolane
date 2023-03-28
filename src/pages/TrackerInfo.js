@@ -53,6 +53,20 @@ const SpeedometerWiddget = ({ value }) => {
     </div>
   );
 };
+const SpeedometerWidget = ({ value }) => {
+  return (
+    <div style={{ height: 130, width: 150 }}>
+      <Speedometer value={value} max={15} angle={180} min={0} height={150} width={150}>
+        <Background opacity={0.8} />
+        <Arc />
+        <Needle />
+        <Progress />
+        <Marks />
+        <Indicator fontSize={35} />
+      </Speedometer>
+    </div>
+  );
+};
 const TrackerInfo = () => {
   const location = useLocation();
   const chartData = [
@@ -228,10 +242,10 @@ const TrackerInfo = () => {
               <Card>
                 <CardBody className="card-inner">
                   <CardTitle className="text-primary centre" tag="h6">
-                    Battery Voltage
+                    Battery Voltage (Volts)
                   </CardTitle>
                   <div className="center">
-                    <SpeedometerWiddget value={gpsData?.Speed} />
+                    <SpeedometerWidget value={gpsData?.Voltage} />
                   </div>
                 </CardBody>
               </Card>
@@ -250,7 +264,7 @@ const TrackerInfo = () => {
                     Tripmeter (miles)
                   </CardTitle>
                   <CardTitle className="center ff-mono" tag="h4">
-                    {odoData?.Odometerfinalvalue.toFixed(2)}
+                    {odoData?.Odometer.toFixed(2)}
                   </CardTitle>
                 </CardBody>
                 {/* <CardBody>

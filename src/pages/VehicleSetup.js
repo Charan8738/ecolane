@@ -22,6 +22,7 @@ import DatePicker from "react-datepicker";
 import { FormGroup, Input, Form, Button, Card, Spinner } from "reactstrap";
 import axios from "axios";
 import { successAlert } from "../utils/Utils";
+import Moment from "react-moment";
 
 const VehicleSetup = () => {
   const formClass = classNames({
@@ -53,7 +54,7 @@ const VehicleSetup = () => {
       ...formData,
       Odometerdatetime: updatedDate.toLocaleString(),
     };
-    axios.post("https://zig-web.com/ZIGSmartWeb/api/Firmware/Buschipodoupdate", updatedVehicle).then((res) => {
+    axios.put("Buschipodoupdate", updatedVehicle).then((res) => {
       if (res.status === 200) {
         successAlert("Updated successfully");
         let currentVehicles = [...QRList];
@@ -285,7 +286,9 @@ const VehicleSetup = () => {
                             </DataTableRow>
 
                             <DataTableRow size="md">
-                              <span className="tb-sub">{item.Odometerdatetime}</span>
+                              <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                                <span className="tb-sub">{item.Odometerdatetime}</span>
+                              </Moment>
                             </DataTableRow>
                             <DataTableRow className="nk-tb-col-tools">
                               <Button color="primary" className="btn-sm" onClick={() => onEditClick(item)}>

@@ -34,13 +34,13 @@ const Header = ({ fixed, theme, className, setVisibility, ...props }) => {
           </div>
           <div className="nk-header-tools">
             <ul className="nk-quick-nav">
-              <li className="chats-dropdown hide-mb-xs"  onClick={() => setVisibility(false)}>
+              {/* <li className="chats-dropdown hide-mb-xs"  onClick={() => setVisibility(false)}>
                 <ChatDropdown />
               </li>
               <li className="notification-dropdown mr-n1"  onClick={() => setVisibility(false)}>
                 <Notification />
-              </li>
-              <li className="user-dropdown"  onClick={() => setVisibility(false)}>
+              </li> */}
+              <li className="user-dropdown" onClick={() => setVisibility(false)}>
                 <User />
               </li>
             </ul>

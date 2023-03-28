@@ -165,14 +165,14 @@ const TripsTable = ({ data, columns, pagination, actions, className, selectableR
       <Row className={`justify-between g-2 ${actions ? "with-export" : ""}`}>
         <Col className="col-7 text-left" sm="4">
           <div id="DataTables_Table_0_filter" className="dataTables_filter">
-            <label>
+            {/* <label>
               <input
                 type="search"
                 className="form-control form-control-sm"
                 placeholder="Search by name"
                 onChange={(ev) => setSearchText(ev.target.value)}
               />
-            </label>
+            </label> */}
           </div>
         </Col>
         <Col className="col-5 text-right" sm="8">
@@ -278,30 +278,38 @@ const columns = [
 const dataTableColumns = [
   {
     name: "Start Address",
-    selector: (row) => row.Latitude + "," + row.Longitude,
+    selector: (row) => (
+      <span>
+        {row.Latitude},<br></br> {row.Longitude}
+      </span>
+    ),
     sortable: true,
   },
   {
     name: "End Address",
-    selector: (row) => row.Latitude + "," + row.Longitude,
+    selector: (row) => (
+      <span>
+        {row.Latitude},<br></br> {row.Longitude}
+      </span>
+    ),
     sortable: true,
     hide: 370,
   },
   {
     name: "Start Time",
-    selector: (row) => row.Createddate,
+    selector: (row) => <Moment format="MMMM Do YYYY, h:mm a">{row.Createddate}</Moment>,
     sortable: true,
     hide: "sm",
   },
   {
     name: "End Time",
-    selector: (row) => row.Createddate,
+    selector: (row) => <Moment format="MMMM Do YYYY, h:mm a">{row.Createddate}</Moment>,
     sortable: true,
     hide: "sm",
   },
   {
     name: "Distance(miles)",
-    selector: (row) => row.Distancetravelled,
+    selector: (row) => row.Distancetravelled.toFixed(2),
     sortable: true,
     hide: "md",
   },
