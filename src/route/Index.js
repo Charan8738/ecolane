@@ -4,7 +4,10 @@ import { RedirectAs404 } from "../utils/Utils";
 import { useSelector } from "react-redux";
 import { selectHomepage } from "../redux/userSlice";
 import AddTracker from "../pages/AddTracker";
+import FleetTracker from "../pages/FleetTracker";
 import TrackerInfo from "../pages/TrackerInfo";
+import VehicleInfo from "../pages/VehicleInfo";
+// const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
 const Homepage = React.lazy(() => import("../pages/Devices"));
 const AddNewDevice = React.lazy(() => import("../pages/AddNewDevice"));
@@ -52,6 +55,7 @@ const Pages = ({ currentAccess }) => {
     { page: 14, pathname: "asset-management", component: AssetManagement },
     { page: 15, pathname: "documentation", component: Documentation },
     { page: 16, pathname: "add-tracker", component: AddTracker },
+    { page: 16, pathname: "fleet-tracker", component: FleetTracker },
     { page: 17, pathname: "Payment", component: Payment },
     // { page: 18, pathname: "beverage-history", component: Transactions },
     { page: 19, pathname: "transactions", component: Transactions2 },
@@ -71,6 +75,7 @@ const Pages = ({ currentAccess }) => {
     <Suspense fallback={<div />}>
       <Switch>
         <Route path={`/tracker-info`} component={TrackerInfo} />
+        <Route path={`/vehicle-info`} component={VehicleInfo} />
         <Route path={`${process.env.PUBLIC_URL}/device/:id`} component={DeviceConfig}></Route>
         {rolesRoutePages.map(
           (route) =>
