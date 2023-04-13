@@ -139,9 +139,9 @@ const Login = () => {
                   <label className="form-label" htmlFor="password">
                     Passcode
                   </label>
-                  <Link className="link link-primary link-sm" to={`${process.env.PUBLIC_URL}/auth-reset`}>
+                  {/* <Link className="link link-primary link-sm" to={`${process.env.PUBLIC_URL}/auth-reset`}>
                     Forgot Code?
-                  </Link>
+                  </Link> */}
                 </div>
                 <div className="form-control-wrap">
                   <a

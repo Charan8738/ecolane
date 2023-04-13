@@ -73,12 +73,16 @@ const VehicleInfo = () => {
   const [gpsData, setGpsData] = useState();
   const [analyticsData, setAnalyticsData] = useState();
   const [tripsData, setTripsData] = useState();
+  const [gsmSignal, setGsmSignal] = useState();
+  const [gpsSignal, setGpsSignal] = useState();
+  const [timeStamp, setTimeStamp] = useState();
   const imei = location.state?.imei;
   const vehicleType = location.state?.vehicleType;
   const vehicleNo = location.state?.vehicleNo;
+
   console.log(vehicleNo);
-  const straightLineChart = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  const gpschart = {
+    labels: timeStamp,
     dataUnit: "BTC",
     datasets: [
       {
@@ -92,10 +96,44 @@ const VehicleInfo = () => {
         borderRadius: 0,
         fill: true,
         bezierCurve: false,
-        data: [110, 80, 125, 300, 95, 75, 90, 110, 80, 125, 55, 95],
+        // data: [110, 80, 125, 300, 95, 75, 90, 110, 80, 125],
+        data: gpsSignal,
       },
     ],
   };
+  const gsmChart = {
+    labels: timeStamp,
+    dataUnit: "numbers",
+    datasets: [
+      {
+        label: "GSM Signal Strength",
+        lineTension: 0,
+        borderColor: "#1270f2",
+        backgroundColor: "rgba(18, 112, 242,0.15)",
+        pointBorderWidth: 2,
+        pointBackgroundColor: "white",
+        pointRadius: 4,
+        borderRadius: 0,
+        fill: true,
+        bezierCurve: false,
+        // data: [110, 80, 125, 300, 95, 75, 90, 110, 80, 125],
+        data: gsmSignal,
+      },
+    ],
+  };
+  useEffect(() => {
+    async function getChartData() {
+      const response = await fetch("https://gps.zig-app.com/api/strength?imei=" + imei);
+      const json = await response.json();
+      const timeArray = json.Time_Stamp.map((dateString) => {
+        return dateString.split(" ")[1];
+      });
+      setGpsSignal(json.GPS);
+      setGsmSignal(json.GSM);
+      setTimeStamp(timeArray);
+    }
+    getChartData();
+  }, []);
   useEffect(() => {
     async function fetchData() {
       const response = await fetch("https://ecolane-api.zig-web.com/api/AllTripdata?WifiMacAddress=100");
@@ -395,10 +433,10 @@ const VehicleInfo = () => {
             <Col md={6}>
               <PreviewCard>
                 <div className="card-head">
-                  <h6 className="title">GSM Signal Strength</h6>
+                  <h6 className="title">GPS Signal Strength</h6>
                 </div>
                 <div className="nk-ck-sm">
-                  <LineChartExample legend={false} data={straightLineChart} />
+                  <LineChartExample legend={false} data={gpschart} />
                 </div>
               </PreviewCard>
             </Col>
@@ -408,7 +446,7 @@ const VehicleInfo = () => {
                   <h6 className="title">GSM Signal Strength</h6>
                 </div>
                 <div className="nk-ck-sm">
-                  <LineChartExample legend={false} data={straightLineChart} />
+                  <LineChartExample legend={false} data={gsmChart} />
                 </div>
               </PreviewCard>
             </Col>

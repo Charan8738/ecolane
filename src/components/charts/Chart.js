@@ -35,10 +35,11 @@ export const LineChartExample = ({ data, legend }) => {
             {
               display: true,
               ticks: {
-                beginAtZero: false,
+                beginAtZero: true,
                 fontSize: 12,
                 fontColor: "#9eaecf",
                 padding: 10,
+                stepSize: 1,
               },
               gridLines: {
                 tickMarkLength: 0,
