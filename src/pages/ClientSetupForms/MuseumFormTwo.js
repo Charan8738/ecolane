@@ -78,7 +78,7 @@ const MuseumFormTwo = ({ onSubmit }) => {
         } else if (res.state === "prompt") {
           navigator.geolocation.getCurrentPosition(success, errors, options);
         } else {
-          window.alert("Access Denied ");
+          window.alert("Access Denied");
         }
       });
     } else {

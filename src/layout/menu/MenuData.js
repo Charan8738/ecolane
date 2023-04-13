@@ -96,6 +96,12 @@ const menu = [
     link: "/add-tracker",
     page: 16,
   },
+  {
+    icon: "map",
+    text: "Fleet Tracking",
+    link: "/fleet-tracker",
+    page: 16,
+  },
 
   {
     icon: "coins",
