@@ -126,7 +126,7 @@ const AddTrackerModal = ({ onSubmitHandler, ...props }) => {
                 <RenderComponent component={FormControlMap[item.type]} {...item.props} />
               </Col>
             ))}
-            {props.isEdit ? (
+            {/* {props.isEdit ? (
               <Col sm="12">
                 <RenderComponent
                   component={FormControlMap["IS"]}
@@ -138,7 +138,7 @@ const AddTrackerModal = ({ onSubmitHandler, ...props }) => {
                   onChangeHandler={onChangeHandler}
                 />
               </Col>
-            ) : null}
+            ) : null} */}
             <Col sm="12">
               <Button color="primary" size="lg" type="submit">
                 {props.isEdit ? "Edit" : "Add"}

@@ -169,5 +169,11 @@ const menu = [
     link: "/vehicle-setup",
     page: 27,
   },
+  {
+    icon: "property-alt",
+    text: "Device Setup",
+    link: "/device-setup",
+    page: 28,
+  },
 ];
 export default menu;

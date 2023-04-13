@@ -309,12 +309,12 @@ const MuseumData = () => {
                                               onEditClick(item.id);
                                             }}
                                           >
-                                            <Icon name="eye"></Icon>
+                                            <Icon name="edit-fill"></Icon>
                                             <span>Edit</span>
                                           </DropdownItem>
                                         </li>
 
-                                        <li>
+                                        {/* <li>
                                           <DropdownItem
                                             tag="a"
                                             href="#remove"
@@ -325,7 +325,7 @@ const MuseumData = () => {
                                             <Icon name="trash"></Icon>
                                             <span>Remove </span>
                                           </DropdownItem>
-                                        </li>
+                                        </li> */}
                                       </ul>
                                     </DropdownMenu>
                                   </UncontrolledDropdown>

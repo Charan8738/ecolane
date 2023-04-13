@@ -25,12 +25,12 @@ import {
   ModalBody,
 } from "reactstrap";
 import DiagnoseTrackerModal from "./components/DiagnoseTrackerModal/DiagnoseTrackerModal";
-// import AddTrackerModal from "../pages/components/AddTrackerModal/AddTrackerModal";
+import AddTrackerModal from "../pages/components/AddTrackerModal/AddTrackerModal";
 import { user_id } from "../redux/userSlice";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-const FleetTracker = () => {
+const DeviceSetup = () => {
   const history = useHistory();
   const VEHICLE_TYPES = { 1: "Truck", 2: "Car", 3: "Maxi Cab", 4: "Bike", 5: "Bus" };
   const DEVICE_MODE_BADGE = { PARKED: "warning", MOVING: "success", OFFLINE: "danger" };
@@ -87,7 +87,7 @@ const FleetTracker = () => {
   };
 
   const onEditClick = (id) => {
-    const selectedTracker = trackers.find((item) => item.id === id);
+    const selectedTracker = trackers.find((item) => item.Id === id);
     setFormData({
       ...selectedTracker,
     });
@@ -95,7 +95,7 @@ const FleetTracker = () => {
   const onEditSubmit = (data) => {
     console.log(data);
     axios
-      .put("api/RegisterDevice", {
+      .put("https://gps.zig-app.com/api/company/RegisterDevice?token=aaca7bec-d73d-11ed-abce-0242ac110002", {
         imei: data.imei,
         client_id: data.client_id,
         vehicleNo: data.vehicleNo,
@@ -127,8 +127,7 @@ const FleetTracker = () => {
   };
   const redirectToWidget = (imei) => {
     const tracker = trackers.find((item) => item.imei === imei);
-    console.log(tracker.vehicleType);
-    history.push("/vehicle-info", { imei: imei, vehicleType: tracker.vehicleType, vehicleNo: tracker.vehicleNo });
+    history.push("/tracker-info", { imei: imei, vehicleType: tracker.vehicleType });
   };
   useEffect(() => {
     if (onSearchText !== "") {
@@ -176,13 +175,10 @@ const FleetTracker = () => {
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                Fleet Tracking
+                GPS Trackers
               </BlockTitle>
             </BlockHeadContent>
             <BlockHeadContent>
-              <div className="total">
-                <h5>Total: {currentItems.length}</h5>
-              </div>
               <div className="toggle-wrap nk-block-tools-toggle">
                 <a
                   href="#more"
@@ -205,7 +201,7 @@ const FleetTracker = () => {
                           type="text"
                           className="form-control"
                           id="default-04"
-                          placeholder="Search by coach no"
+                          placeholder="Search by vehicle no"
                           onChange={(e) => onFilterChange(e)}
                         />
                       </div>
@@ -246,7 +242,7 @@ const FleetTracker = () => {
                 <table style={{ width: "100%", tableLayout: "auto", textAlign: "center" }} className="table">
                   <thead>
                     <tr>
-                      <th>Coach No</th>
+                      <th>Vehicle No</th>
                       <th className="d-none d-md-table-cell">Vehicle Type</th>
                       <th className="d-sm-none">IMEI and Sim No</th>
                       <th className="d-none d-sm-table-cell">IMEI</th>
@@ -302,13 +298,13 @@ const FleetTracker = () => {
                                   </DropdownToggle>
                                   <DropdownMenu right>
                                     <ul className="link-list-opt no-bdr">
-                                      {/* <li>
+                                      <li>
                                         <DropdownItem
                                           tag="a"
                                           href="#edit"
                                           onClick={(ev) => {
                                             ev.preventDefault();
-                                            onEditClick(item.id);
+                                            onEditClick(item.Id);
                                             toggle("edit");
                                           }}
                                         >
@@ -328,19 +324,6 @@ const FleetTracker = () => {
                                         >
                                           <Icon name="activity-round" />
                                           <span>Diagonise</span>
-                                        </DropdownItem>
-                                      </li> */}
-                                      <li>
-                                        <DropdownItem
-                                          tag="a"
-                                          href="#more"
-                                          onClick={(ev) => {
-                                            ev.preventDefault();
-                                            redirectToWidget(item.imei);
-                                          }}
-                                        >
-                                          <Icon name="more-v-alt" />
-                                          <span>View more</span>
                                         </DropdownItem>
                                       </li>
                                     </ul>
@@ -405,9 +388,9 @@ const FleetTracker = () => {
                 }}
               ></Icon>
             </a>
-            {/* <div className="p-2">
+            <div className="p-2">
               <AddTrackerModal onSubmitHandler={onEditSubmit} isEdit={true} formData={formData} clients={clients} />
-            </div> */}
+            </div>
           </ModalBody>
         </Modal>
         {/* Below is the add tracker modal */}
@@ -416,7 +399,7 @@ const FleetTracker = () => {
             view.add ? "content-active" : ""
           }`}
         >
-          {/* <AddTrackerModal onSubmitHandler={onSubmitHandler} /> */}
+          <AddTrackerModal onSubmitHandler={onSubmitHandler} />
         </SimpleBar>
 
         {view.add && <div className="toggle-overlay" onClick={toggle}></div>}
@@ -425,4 +408,4 @@ const FleetTracker = () => {
   );
 };
 
-export default FleetTracker;
+export default DeviceSetup;

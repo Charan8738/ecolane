@@ -3,7 +3,7 @@ import Moment from "react-moment";
 import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
 import Swal from "sweetalert2";
-import './total.css'
+import "./total.css";
 import "moment-timezone";
 
 import DatePicker from "react-datepicker";
@@ -17,7 +17,6 @@ import {
   selectAPICount,
 } from "../redux/ticketsliceforvipvisitors";
 import {
-
   Block,
   BlockHead,
   BlockTitle,
@@ -34,15 +33,11 @@ import {
   PaginationComponent,
 } from "../components/Component";
 import { user_id } from "../redux/userSlice";
-import {
-  Card,
-  Spinner,
-} from "reactstrap";
+import { Card, Spinner } from "reactstrap";
 const Venue = () => {
   const status = useSelector(getTicketsStatus);
   const dispatch = useDispatch(); //dispatch to change values in store
- 
-  
+
   const client_id = useSelector(user_id);
   const date = new Date();
   const daysAgo = new Date(date.getTime());
@@ -90,13 +85,13 @@ const Venue = () => {
   const [isLoading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemPerPage] = useState(7);
-  
+
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const [sm, updateSm] = useState(false); // ----> Responsivenes
-  
+
   const onFilterChange = (e) => {
     setSearchText(e.target.value);
   };
@@ -111,7 +106,8 @@ const Venue = () => {
     }
   }, [onSearchText]);
   useEffect(() => {
-    const url = "https://zig-web.com/ZIGSmartWeb/api/ZIGShuttle/GetVIPUsersMOCA?Startdate=2022-10-10&Enddate=2022-10-12&Clientid=90&_=1665575610921";
+    const url =
+      "https://zig-web.com/ZIGSmartWeb/api/ZIGShuttle/GetVIPUsersMOCA?Startdate=2022-10-10&Enddate=2022-10-12&Clientid=90&_=1665575610921";
     const fetchData = async () => {
       try {
         const response = await fetch(url);
@@ -149,9 +145,6 @@ const Venue = () => {
   //   });
   // };
 
-
-
-
   return (
     <React.Fragment>
       <Head title="Venues"></Head>
@@ -160,15 +153,10 @@ const Venue = () => {
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">
-
-                  Visitors VIP
-                </div>
+                <div className="title">Visitors VIP</div>
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
-                
-                
 
                 <div className="picker">
                   <DatePicker
@@ -180,10 +168,6 @@ const Venue = () => {
                     className="form-control date-picker"
                   />
                 </div>
-                
-
-
-
               </BlockTitle>
             </BlockHeadContent>
 
@@ -191,7 +175,6 @@ const Venue = () => {
               <div className="total">
                 <h5>Total:{data.length}</h5>
               </div>
-             
 
               <div className="toggle-wrap nk-block-tools-toggle">
                 <a
@@ -207,7 +190,6 @@ const Venue = () => {
                 <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
                   <ul className="nk-block-tools g-3">
                     <li>
-
                       <div className="form-control-wrap">
                         <div className="form-icon form-icon-right">
                           <Icon name="search"></Icon>
@@ -221,118 +203,113 @@ const Venue = () => {
                         />
                       </div>
                     </li>
-                    
-
-
                   </ul>
                 </div>
               </div>
             </BlockHeadContent>
-
           </BlockBetween>
         </BlockHead>
-        <Block >
+        <Block>
           <Card>
-          <div className="card-inner-group">
+            <div className="card-inner-group">
               <div className="card-inner p-0">
-            <DataTableBody>
-              <DataTableHead>
-                <DataTableRow size="sm">
-                  <span> Pass</span>
-                </DataTableRow>
-                <DataTableRow>
-                  <span> User Name</span>
-                </DataTableRow>
-                <DataTableRow>
-                  <span># Tickets</span>
-                </DataTableRow>
-                <DataTableRow size="sm">
-                  <span> Email</span>
-                </DataTableRow>
-                <DataTableRow size="sm">
-                  <span> Phone</span>
-                </DataTableRow>
-                <DataTableRow>
-                  <span> IN Time</span>
-                </DataTableRow>
-                <DataTableRow size="md">
-                  <span> OUT Time</span>
-                </DataTableRow>
-                <DataTableRow size="sm">
-                  <span> Admit</span>
-                </DataTableRow>
-              </DataTableHead>
-              {currentItems.length > 0
-                ? currentItems.map((item,id) => {
-                  return (
-                    <DataTableItem key={id}>
+                <DataTableBody>
+                  <DataTableHead>
+                    <DataTableRow size="sm">
+                      <span> Pass</span>
+                    </DataTableRow>
+                    <DataTableRow>
+                      <span> User Name</span>
+                    </DataTableRow>
+                    <DataTableRow>
+                      <span>Tickets</span>
+                    </DataTableRow>
+                    <DataTableRow size="sm">
+                      <span> Email</span>
+                    </DataTableRow>
+                    <DataTableRow size="sm">
+                      <span> Phone</span>
+                    </DataTableRow>
+                    <DataTableRow>
+                      <span> IN Time</span>
+                    </DataTableRow>
+                    <DataTableRow size="md">
+                      <span> OUT Time</span>
+                    </DataTableRow>
+                    <DataTableRow size="sm">
+                      <span> Admit</span>
+                    </DataTableRow>
+                  </DataTableHead>
+                  {currentItems.length > 0
+                    ? currentItems.map((item, id) => {
+                        return (
+                          <DataTableItem key={id}>
+                            <DataTableRow>
+                              <span className="tb-sub"> {item.VIP}</span>
+                            </DataTableRow>
+                            <DataTableRow size="sm">
+                              <span className="tb-product">
+                                <span className="title">{item.UserName}</span>
+                              </span>
+                            </DataTableRow>
+                            <DataTableRow size="md">
+                              <span className="tb-sub">{item.Ticketcount}</span>
+                            </DataTableRow>
 
-                      <DataTableRow>
-                        <span className="tb-sub"> {item.VIP}</span>
-                      </DataTableRow>
-                      <DataTableRow size="sm">
-                        <span className="tb-product">
-                          <span className="title">{item.UserName}</span>
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow size="md">
-                        <span className="tb-sub">{item.Ticketcount}</span>
-                      </DataTableRow>
-
-
-                      <DataTableRow size="md">
-                        <span className="tb-sub">{item.EmailId}</span>
-                      </DataTableRow>
-                      <DataTableRow>
-                        <span className="tb-sub">{item.Phone}</span>
-                      </DataTableRow>
-                      <DataTableRow size="md">
-                        <span className="tb-sub">
-                        <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                            <DataTableRow size="md">
+                              <span className="tb-sub">{item.EmailId}</span>
+                            </DataTableRow>
+                            <DataTableRow>
+                              <span className="tb-sub">{item.Phone}</span>
+                            </DataTableRow>
+                            <DataTableRow size="md">
+                              <span className="tb-sub">
+                                <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
                                   {item.Intime}
                                 </Moment>
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow>
-                        <span className="tb-sub">
-                        <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                              </span>
+                            </DataTableRow>
+                            <DataTableRow>
+                              <span className="tb-sub">
+                                <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
                                   {item.Outtime}
                                 </Moment>
-                        </span>
-                      </DataTableRow>
-                      <DataTableRow>
-                        <span className="tb-sub">
-                          <Button
-                           color="danger"
-                           onClick={() => {
-                            getTickets();
-                            SuccessAlert();
-                           
-                          }}
-                           > Click To Admit
-                           </Button>
-                        </span>
-                      </DataTableRow>
-                    </DataTableItem>
-                  );
-                })
-                : null}
-            </DataTableBody>
-            <div className="card-inner">
-              {data.length > 0 ? (
-                <PaginationComponent
-                  itemPerPage={itemPerPage}
-                  totalItems={data.length}
-                  paginate={paginate}
-                  currentPage={currentPage}
-                />
-              ) : (
-                <div className="text-center">
-                  <span className="text-silent">{isLoading ? <Spinner /> : "No payments found"}</span>
+                              </span>
+                            </DataTableRow>
+                            <DataTableRow>
+                              <span className="tb-sub">
+                                <Button
+                                  color="danger"
+                                  onClick={() => {
+                                    getTickets();
+                                    SuccessAlert();
+                                  }}
+                                >
+                                  {" "}
+                                  Click To Admit
+                                </Button>
+                              </span>
+                            </DataTableRow>
+                          </DataTableItem>
+                        );
+                      })
+                    : null}
+                </DataTableBody>
+                <div className="card-inner">
+                  {data.length > 0 ? (
+                    <PaginationComponent
+                      itemPerPage={itemPerPage}
+                      totalItems={data.length}
+                      paginate={paginate}
+                      currentPage={currentPage}
+                    />
+                  ) : (
+                    <div className="text-center">
+                      <span className="text-silent">{isLoading ? <Spinner /> : "No payments found"}</span>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-            </div>
+              </div>
             </div>
           </Card>
         </Block>
