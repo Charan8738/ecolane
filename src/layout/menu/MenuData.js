@@ -175,5 +175,11 @@ const menu = [
     link: "/device-setup",
     page: 28,
   },
+  {
+    icon: "property-alt",
+    text: "Alerts Management",
+    link: "/alerts-management",
+    page: 28,
+  },
 ];
 export default menu;
