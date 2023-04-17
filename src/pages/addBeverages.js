@@ -160,7 +160,7 @@ const AddBeverages = () => {
       return true;
     return true;
   };
-  const postEditProduct = async (formData,categName) => {
+  const postEditProduct = async (formData, categName) => {
     const res = await axios.post("new/updateFares", formData);
     if (res.status === 200) {
       const index = data.findIndex((item) => item.FareId === editId);
@@ -211,11 +211,11 @@ const AddBeverages = () => {
         BannerImage: newCategoryEdit.BannerImageURL,
       };
       if (isCategoryChanged()) {
-        axios.put("UpdateCateg",editFormData2).then((res) => {
-          postEditProduct(editFormData,newCategoryEdit.CategoryName);
+        axios.put("UpdateCateg", editFormData2).then((res) => {
+          postEditProduct(editFormData, newCategoryEdit.CategoryName);
         });
       } else {
-        postEditProduct(editFormData,newCategoryEdit.CategoryName);
+        postEditProduct(editFormData, newCategoryEdit.CategoryName);
       }
     } catch (err) {
       window.alert("Error in updating");
@@ -308,7 +308,7 @@ const AddBeverages = () => {
     const getBeverages = async () => {
       setLoading(true);
       const catResponse = await axios.get("getCategory?client_id=" + client_id);
-    setCategories([...catResponse.data]);
+      setCategories([...catResponse.data]);
       const response = await axios.get("getFares?client_id=" + client_id);
       setLoading(false);
       if (response.status === 200) {

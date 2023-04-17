@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from "react-leaflet";
 import { icon } from "leaflet";
 import redBus from "../../../../assets/images/redbus.png";
-import redTruck from "../../../../assets/images/redTruck.png";
-import redCar from "../../../../assets/images/redCar.png";
-import redBike from "../../../../assets/images/redBike.jpg";
+import redTruck from "../../../../assets/images/truck.png";
+import redCar from "../../../../assets/images/car.png";
+import redBike from "../../../../assets/images/motor-sports.png";
 import { PreviewCard } from "../../../../components/Component";
 import { Spinner } from "reactstrap";
 const LiveMapTeltonika = ({ vehicleType, imei }) => {

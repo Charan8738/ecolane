@@ -110,7 +110,41 @@ const AssetManagement = () => {
         console.log(err);
       });
   };
-  const onEditAlertHandler = () => {};
+  const onDeleteHandler = (route_id) => {
+    console.log("tets");
+    axios.delete("DeleteVehicleAlerts?route_id=" + route_id).then((res) => {
+      if (res.status == 200) {
+        successAlert("Alert Deleted successfully");
+      } else {
+        // throw new Error(res.data);
+        failureAlert("Unable to delete alert");
+      }
+    });
+  };
+  const onEditAlertHandler = () => {
+    const newAlert = { ...formData, Start_Date: rangeStart.toISOString(), End_Date: rangeEnd.toISOString() };
+    axios
+      .post("UpdateVehicleAlerts", { ...newAlert })
+      .then((res) => {
+        if (res.status === 200) {
+          // setData((prev) => [...prev, res.data]);
+          const index = data.findIndex((item) => item.route_id === newAlert.route_id);
+          let newItems = [...data];
+          newItems[index] = { ...newItems[index], ...newAlert };
+          // console.log(newItems);
+          setData(newItems);
+          resetForm();
+          setShowModal(false);
+          successAlert("Alert Edited successfully");
+        } else {
+          throw new Error(res.data);
+        }
+      })
+      .catch((err) => {
+        window.alert("Error in Editing alerts");
+        console.log(err);
+      });
+  };
 
   const fetchAlerts = async () => {
     const response = await axios.get("GetRealtimeAlertspb");
@@ -369,7 +403,7 @@ const AssetManagement = () => {
                                             <span>Edit </span>
                                           </DropdownItem>
                                         </li>
-                                        {/* <li>
+                                        <li>
                                           <DropdownItem
                                             tag="a"
                                             href="#edit"
@@ -378,12 +412,13 @@ const AssetManagement = () => {
                                               let newArr = [...data];
                                               newArr.splice(idx, 1);
                                               setData([...newArr]);
+                                              onDeleteHandler(item.route_id);
                                             }}
                                           >
                                             <Icon name="trash"></Icon>
                                             <span>Delete </span>
                                           </DropdownItem>
-                                        </li> */}
+                                        </li>
                                       </ul>
                                     </DropdownMenu>
                                   </UncontrolledDropdown>
