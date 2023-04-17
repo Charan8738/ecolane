@@ -7,6 +7,8 @@ import AddTracker from "../pages/AddTracker";
 import FleetTracker from "../pages/FleetTracker";
 import TrackerInfo from "../pages/TrackerInfo";
 import VehicleInfo from "../pages/VehicleInfo";
+import AlertManage from "../pages/AlertManage";
+
 // const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
 const Homepage = React.lazy(() => import("../pages/Devices"));
@@ -69,6 +71,7 @@ const Pages = ({ currentAccess }) => {
     { page: 26, pathname: "analytics", component: Analytics },
     { page: 27, pathname: "vehicle-setup", component: VehicleSetup },
     { page: 28, pathname: "device-setup", component: DeviceSetup },
+    { page: 28, pathname: "alerts-management", component: AlertManage },
   ];
   useLayoutEffect(() => {
     window.scrollTo(0, 0);

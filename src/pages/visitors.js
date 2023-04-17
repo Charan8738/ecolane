@@ -226,16 +226,14 @@ const Venue = () => {
 
                         <DataTableRow size="md">
                           <span className="tb-sub">
-                            <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                              {item.Intime}
-                            </Moment>
+                            {/* <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a"> */}
+                            <Moment format="MMMM Do YYYY, h:mm a">{item.Intime}</Moment>
                           </span>
                         </DataTableRow>
                         <DataTableRow>
                           <span className="tb-sub">
-                            <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                              {item.Outtime}
-                            </Moment>
+                            {/* <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a"> */}
+                            <Moment format="MMMM Do YYYY, h:mm a">{item.Outtime}</Moment>
                           </span>
                         </DataTableRow>
                       </DataTableItem>
