@@ -11,6 +11,7 @@ import {
   Icon,
   BlockBetween,
   PaginationComponent,
+  Col,
 } from "../components/Component";
 import {
   Button,
@@ -23,6 +24,9 @@ import {
   Badge,
   Modal,
   ModalBody,
+  FormGroup,
+  Label,
+  Input,
 } from "reactstrap";
 import DiagnoseTrackerModal from "./components/DiagnoseTrackerModal/DiagnoseTrackerModal";
 // import AddTrackerModal from "../pages/components/AddTrackerModal/AddTrackerModal";
@@ -42,6 +46,7 @@ const FleetTracker = () => {
     add: false,
     diagnose: false,
   });
+  const [viewOption, setViewOption] = useState("");
   const [formData, setFormData] = useState({});
   const [isLoading, setLoading] = useState(false);
   const [onSearchText, setSearchText] = useState("");
@@ -52,7 +57,8 @@ const FleetTracker = () => {
   const [itemPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
-  const currentItems = trackers.slice(indexOfFirstItem, indexOfLastItem);
+  const [filteredTrackers, setFilteredTrackers] = useState([]);
+  const currentItems = filteredTrackers.slice(indexOfFirstItem, indexOfLastItem);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const toggle = (type) => {
     setView({
@@ -130,6 +136,21 @@ const FleetTracker = () => {
     console.log(tracker.vehicleType);
     history.push("/vehicle-info", { imei: imei, vehicleType: tracker.vehicleType, vehicleNo: tracker.vehicleNo });
   };
+
+  useEffect(() => {
+    console.log(viewOption);
+    console.log(filteredTrackers.length);
+    let defaultData = trackers;
+    if (viewOption !== "" && viewOption !== "All") {
+      defaultData = trackers.filter((item) => {
+        return item?.Devicemode.toString().toLowerCase().includes(viewOption.toLowerCase());
+      });
+      setFilteredTrackers(defaultData);
+    } else {
+      setFilteredTrackers(trackers);
+    }
+  }, [viewOption, trackers]);
+
   useEffect(() => {
     if (onSearchText !== "") {
       const filteredObject = trackers.filter((item) => {
@@ -179,9 +200,10 @@ const FleetTracker = () => {
                 Fleet Tracking
               </BlockTitle>
             </BlockHeadContent>
+
             <BlockHeadContent>
               <div className="total">
-                <h5>Total: {currentItems.length}</h5>
+                <h5>Total: {trackers.length}</h5>
               </div>
               <div className="toggle-wrap nk-block-tools-toggle">
                 <a
@@ -238,6 +260,29 @@ const FleetTracker = () => {
             </BlockHeadContent>
           </BlockBetween>
         </BlockHead>
+        <Block>
+          <Col sm="1">
+            <FormGroup>
+              <Label className="form-label">Sort By</Label>
+              <div className="form-control-wrap">
+                <div className="form-control-select">
+                  <Input
+                    type="select"
+                    name="select"
+                    id="view-options"
+                    onChange={(event) => setViewOption(event.target.value)}
+                  >
+                    <option value="All">All</option>
+                    <option value="Moving">Moving</option>
+                    <option value="Parked">Parked</option>
+                    <option value="Idle">Idle</option>
+                    <option value="Offline">Offline</option>
+                  </Input>
+                </div>
+              </div>
+            </FormGroup>
+          </Col>
+        </Block>
         <Block>
           {/* {" "} */}
           <Card className="card-bordered card-preview">
