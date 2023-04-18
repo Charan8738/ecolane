@@ -142,12 +142,12 @@ const AlertManage = () => {
     }
   }, [onSearchText]);
   useEffect(() => {
-    const getTrackers = async () => {
-      const response = await axios.get("https://gps-v2.zig-app.com/api/getdeviceDetails/" + userId);
+    const getAlerts = async () => {
+      const response = await axios.get("https://ecolane-api.zig-web.com/api/GetRealtimeAlertspb");
       return response.data;
     };
     setLoading(true);
-    getTrackers()
+    getAlerts()
       .then((res) => {
         setTrackers([...res]);
         initialTrackers.current = [...res];
@@ -246,12 +246,11 @@ const AlertManage = () => {
                 <table style={{ width: "100%", tableLayout: "auto", textAlign: "center" }} className="table">
                   <thead>
                     <tr>
-                      <th>Coach No</th>
-                      <th className="d-none d-md-table-cell">Vehicle Type</th>
-                      <th className="d-sm-none">IMEI and Sim No</th>
-                      <th className="d-none d-sm-table-cell">IMEI</th>
-                      <th className="d-none d-sm-table-cell">Sim No</th>
-                      <th>Device Mode</th>
+                      <th>Route ID</th>
+                      <th className="d-none d-md-table-cell">Description</th>
+                      <th className="d-sm-none">Start Date</th>
+                      <th className="d-none d-sm-table-cell">Start Date</th>
+                      <th className="d-none d-sm-table-cell">End Date</th>
                       <th className="d-none d-sm-table-cell">Action</th>
                     </tr>
                   </thead>
@@ -259,38 +258,38 @@ const AlertManage = () => {
                     {currentItems.length > 0
                       ? currentItems.map((item) => {
                           return (
-                            <tr key={item.vehicleNo}>
+                            <tr key={item.route_id}>
                               <th style={{ padding: "0.75rem 0.25rem" }}>
-                                <span>{item.vehicleNo}</span>
-                                <span className="d-block d-md-none">{VEHICLE_TYPES[item.vehicleType]}</span>
+                                <span>{item.route_id}</span>
+                                <span className="d-block d-md-none">{VEHICLE_TYPES[item.DescriptionText]}</span>
                               </th>
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
-                                {VEHICLE_TYPES[item.vehicleType]}
+                                {item.DescriptionText}
                               </td>
                               <td className="d-sm-none" style={{ padding: "0.75rem 0.25rem" }}>
-                                <span className="d-block">{item.imei}</span>
-                                <span className="d-block">{item.simno}</span>
+                                <span className="d-block">{item.Start_Date}</span>
+                                <span className="d-block">{item.End_Date}</span>
                               </td>
                               <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
-                                {item.imei}
+                                {item.Start_Date}
                               </td>
                               <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
-                                {item.simno}
+                                {item.End_Date}
                               </td>
-                              <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-sm-table-cell">
+                              {/* <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-sm-table-cell">
                                 {" "}
                                 <span className="tb-sub">
                                   <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
                                     {item?.Devicemode.toString().toUpperCase()}
                                   </Badge>
                                 </span>
-                              </td>
+                              </td> */}
                               <td style={{ padding: "0.75rem 0.25rem" }}>
-                                <span className="tb-sub d-block d-sm-none ">
+                                {/* <span className="tb-sub d-block d-sm-none ">
                                   <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
                                     {item?.Devicemode.toString().toUpperCase()}
                                   </Badge>
-                                </span>
+                                </span> */}
                                 <UncontrolledDropdown>
                                   <DropdownToggle
                                     tag="a"

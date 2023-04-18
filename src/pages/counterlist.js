@@ -32,19 +32,19 @@ import {
   DataTableItem,
   PaginationComponent,
 } from "../components/Component";
-import { user_id } from "../redux/userSlice";
+// import { user_id } from "../redux/userSlice";
 import { Card, Spinner, Badge } from "reactstrap";
 const Venue = () => {
   const status = useSelector(getTicketsStatus);
   const dispatch = useDispatch(); //dispatch to change values in store
 
-  const client_id = useSelector(user_id);
+  // const client_id = useSelector(user_id);
   const date = new Date();
   const daysAgo = new Date(date.getTime());
   daysAgo.setDate(date.getDate() - 2);
   const INITIAL_ADD_FORM = {
     category: null,
-    client_id: client_id,
+    // client_id: client_id,
     itemName: "",
     price: null,
     itemDescription: "",
@@ -61,23 +61,40 @@ const Venue = () => {
   };
 
   useEffect(() => {
+    const url =
+      "https://zig-web.com/Zigsmartv3ios/api/Beverage/GetBeveragePerMacaddress?Status=1&Macaddress=F5:A0:B3:41:84:8B";
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
+        console.log(json);
+        //console.log((json.Id?.reduce((a, v) => a + v, 0)));
+        //data = json.purchasetickets;
+        setData(json);
+        initialData.current = [...json];
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
     let intervalId;
     if (rangeDate.start && rangeDate.end) {
       const startDate =
         rangeDate.start.getFullYear() + "-" + (rangeDate.start.getMonth() + 1) + "-" + rangeDate.start.getDate();
       const endDate =
         rangeDate.end.getFullYear() + "-" + (rangeDate.end.getMonth() + 1) + "-" + rangeDate.end.getDate();
-      dispatch(fetchTickets({ startDate: startDate, endDate: endDate }));
+      // dispatch(fetchTickets({ startDate: startDate, endDate: endDate }));
       intervalId = setInterval(() => {
-        getTickets(startDate, endDate);
+        // getTickets(startDate, endDate);
+        fetchData();
       }, 3000);
     }
 
     return () => clearTimeout(intervalId);
   }, [dispatch, rangeDate]);
-  const getTickets = (start, end) => {
-    if (status !== "loading") dispatch(fetchTickets({ startDate: start, endDate: end }));
-  };
+  // const getTickets = (start, end) => {
+  //   if (status !== "loading") dispatch(fetchTickets({ startDate: start, endDate: end }));
+  // };
   //const data = [];
   const [onSearchText, setSearchText] = useState("");
   const initialData = useRef([]);

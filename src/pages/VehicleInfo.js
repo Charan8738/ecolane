@@ -35,6 +35,7 @@ import axios from "axios";
 import Speedometer, { Arc, Background, Needle, Progress, Marks, Indicator } from "react-speedometer";
 import TripsTable from "../components/table/TripsTable";
 import LiveMapTeltonika from "./components/CustomWidgets/Widgets/LiveMapTeltonika";
+import TimeDifference from "../components/TimeDifference";
 const SpeedometerWiddget = ({ value }) => {
   return (
     <div style={{ height: 130, width: 150 }}>
@@ -152,16 +153,19 @@ const VehicleInfo = () => {
       }
     };
     setLoading(true);
-    getGpsData()
-      .then((res) => {
-        setGpsData({ ...res });
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    const timer = setInterval(() => {
+      getGpsData()
+        .then((res) => {
+          setGpsData({ ...res });
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 10000);
+    return () => clearInterval(timer);
   }, []);
   useEffect(() => {
     const getAnalyticsData = async () => {
@@ -220,7 +224,10 @@ const VehicleInfo = () => {
                       IMEI: <span className="text-base">{gpsData?.imei}</span>
                     </li>
                     <li>
-                      Last updated: <span className="text-base">{gpsData?.last_updated}</span>
+                      Last updated:
+                      <span className="text-base">
+                        <TimeDifference timestamp={gpsData?.timestamp} />
+                      </span>
                     </li>
                   </ul>
                 </BlockDes>
@@ -270,7 +277,7 @@ const VehicleInfo = () => {
                     Battery Voltage (Volts)
                   </CardTitle>
                   <div className="center">
-                    <SpeedometerWidget value={gpsData?.ExternalVoltage} />
+                    <SpeedometerWidget value={gpsData?.external_voltage} />
                   </div>
                 </CardBody>
               </Card>
