@@ -176,9 +176,9 @@ const menu = [
     page: 28,
   },
   {
-    icon: "property-alt",
-    text: "Alerts Management",
-    link: "/alerts-management",
+    icon: "clipboard",
+    text: "Bus schedules",
+    link: "/bus-schedules",
     page: 28,
   },
 ];

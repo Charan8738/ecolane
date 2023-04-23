@@ -7,6 +7,7 @@ import AddTracker from "../pages/AddTracker";
 import FleetTracker from "../pages/FleetTracker";
 import TrackerInfo from "../pages/TrackerInfo";
 import VehicleInfo from "../pages/VehicleInfo";
+import ScheduleInfo from "../pages/ScheduleInfo";
 import AlertManage from "../pages/AlertManage";
 
 // const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
@@ -71,7 +72,7 @@ const Pages = ({ currentAccess }) => {
     { page: 26, pathname: "analytics", component: Analytics },
     { page: 27, pathname: "vehicle-setup", component: VehicleSetup },
     { page: 28, pathname: "device-setup", component: DeviceSetup },
-    { page: 28, pathname: "alerts-management", component: AlertManage },
+    { page: 28, pathname: "bus-schedules", component: AlertManage },
   ];
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -81,6 +82,7 @@ const Pages = ({ currentAccess }) => {
       <Switch>
         <Route path={`/tracker-info`} component={TrackerInfo} />
         <Route path={`/vehicle-info`} component={VehicleInfo} />
+        <Route path={`/schedule-info`} component={ScheduleInfo} />
         <Route path={`${process.env.PUBLIC_URL}/device/:id`} component={DeviceConfig}></Route>
         {rolesRoutePages.map(
           (route) =>
