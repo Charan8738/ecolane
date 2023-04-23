@@ -259,7 +259,7 @@ const AddBeverages = () => {
 
   const deleteProduct = (FareId) => {
     axios
-      .delete("DeleteMenuItem", { data: { FareId: parseInt(FareId) } })
+      .delete("DeleteProduct?fareid=" + FareId)
       .then((res) => {
         console.log(res);
         if (res.status === 200) {

@@ -3,6 +3,7 @@ import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
 import { successAlert, failureAlert } from "../utils/Utils";
 import SimpleBar from "simplebar-react";
+import Moment from "react-moment";
 import {
   Block,
   BlockHead,
@@ -25,7 +26,7 @@ import {
   ModalBody,
 } from "reactstrap";
 import DiagnoseTrackerModal from "./components/DiagnoseTrackerModal/DiagnoseTrackerModal";
-// import AddTrackerModal from "../pages/components/AddTrackerModal/AddTrackerModal";
+import CreateScheduleModal from "../pages/components/CreateScheduleModal/CreateScheduleModal";
 import { user_id } from "../redux/userSlice";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -79,7 +80,7 @@ const AlertManage = () => {
             add: false,
             diagnose: false,
           });
-          successAlert("Tracker added successfully");
+          successAlert("Schedule created successfully");
         } else {
           failureAlert("Error");
         }
@@ -92,21 +93,30 @@ const AlertManage = () => {
       ...selectedTracker,
     });
   };
-  const onEditSubmit = (data) => {
+
+  const onEditSubmit = (data, updatedDate) => {
     console.log(data);
+    let js = { data, scheduled_date: updatedDate, coach_count: data.length };
+    // console.log(updatedDate);
+    // const updatedVehicle = {
+    //   id: data.id,
+    //   coach_no: data.Coachno,
+    //   route_name: data.routeno,
+    //   driver_name: data.Odometer,
+    //   schedule_date: updatedDate,
+    // };
+    console.log(data.length);
+    console.log(js);
     axios
-      .put("api/RegisterDevice", {
-        imei: data.imei,
-        client_id: data.client_id,
-        vehicleNo: data.vehicleNo,
-        OdometerValue: data.OdometerValue,
-        vehicleType: data.vehicleType,
-      })
+      .post("https://gps.zig-app.com/api/AddSchedule", js)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === 201) {
           const newTrackers = [...trackers];
-          const editedIdx = newTrackers.findIndex((item) => item.id === data.id);
-          newTrackers[editedIdx] = { ...data };
+          newTrackers.push(js);
+          // const editedIdx = newTrackers.findIndex((item) => item.id === data.id);
+          // newTrackers[editedIdx] = { ...data };
+          // setTrackers(newTrackers);
+          console.log(newTrackers);
           setTrackers(newTrackers);
           setView({
             edit: false,
@@ -125,10 +135,10 @@ const AlertManage = () => {
   const onFormCancel = () => {
     setView({ edit: false, add: false, diagnose: false });
   };
-  const redirectToWidget = (imei) => {
-    const tracker = trackers.find((item) => item.imei === imei);
-    console.log(tracker.vehicleType);
-    history.push("/vehicle-info", { imei: imei, vehicleType: tracker.vehicleType, vehicleNo: tracker.vehicleNo });
+  const redirectToWidget = (_id) => {
+    const tracker = trackers.find((item) => item._id === _id);
+    // console.log(tracker.vehicleType);
+    history.push("/schedule-info", { _id: _id, trackers: tracker });
   };
   useEffect(() => {
     if (onSearchText !== "") {
@@ -143,7 +153,7 @@ const AlertManage = () => {
   }, [onSearchText]);
   useEffect(() => {
     const getAlerts = async () => {
-      const response = await axios.get("https://ecolane-api.zig-web.com/api/GetRealtimeAlertspb");
+      const response = await axios.get("https://gps.zig-app.com/api/getSchedules");
       return response.data;
     };
     setLoading(true);
@@ -159,15 +169,15 @@ const AlertManage = () => {
         setLoading(false);
       });
   }, []);
-  useEffect(() => {
-    const getClients = async () => {
-      const response = await axios.get("api/getUserDetails");
-      return response.data;
-    };
-    getClients().then((res) => {
-      setClients([...res]);
-    });
-  }, []);
+  // useEffect(() => {
+  //   const getClients = async () => {
+  //     const response = await axios.get("api/getUserDetails");
+  //     return response.data;
+  //   };
+  //   getClients().then((res) => {
+  //     setClients([...res]);
+  //   });
+  // }, []);
   return (
     <React.Fragment>
       <Head title="Add Tracker"></Head>
@@ -211,7 +221,7 @@ const AlertManage = () => {
                       </div>
                     </li>
 
-                    {/* <li className="nk-block-tools-opt">
+                    <li className="nk-block-tools-opt">
                       <Button
                         className="toggle btn-icon d-md-none"
                         color="primary"
@@ -229,9 +239,9 @@ const AlertManage = () => {
                         }}
                       >
                         <Icon name="plus"></Icon>
-                        <span>Add Tracker</span>
+                        <span>Create Schedule</span>
                       </Button>
-                    </li> */}
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -246,11 +256,8 @@ const AlertManage = () => {
                 <table style={{ width: "100%", tableLayout: "auto", textAlign: "center" }} className="table">
                   <thead>
                     <tr>
-                      <th>Route ID</th>
-                      <th className="d-none d-md-table-cell">Description</th>
-                      <th className="d-sm-none">Start Date</th>
-                      <th className="d-none d-sm-table-cell">Start Date</th>
-                      <th className="d-none d-sm-table-cell">End Date</th>
+                      <th>Schedule Date</th>
+                      <th className="d-none d-md-table-cell">No of vehicles</th>
                       <th className="d-none d-sm-table-cell">Action</th>
                     </tr>
                   </thead>
@@ -258,32 +265,15 @@ const AlertManage = () => {
                     {currentItems.length > 0
                       ? currentItems.map((item) => {
                           return (
-                            <tr key={item.route_id}>
+                            <tr key={item.scheduled_date}>
                               <th style={{ padding: "0.75rem 0.25rem" }}>
-                                <span>{item.route_id}</span>
-                                <span className="d-block d-md-none">{VEHICLE_TYPES[item.DescriptionText]}</span>
+                                <Moment format="MMMM Do YYYY">{item.scheduled_date}</Moment>
                               </th>
+
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
-                                {item.DescriptionText}
+                                {item.coach_count}
                               </td>
-                              <td className="d-sm-none" style={{ padding: "0.75rem 0.25rem" }}>
-                                <span className="d-block">{item.Start_Date}</span>
-                                <span className="d-block">{item.End_Date}</span>
-                              </td>
-                              <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
-                                {item.Start_Date}
-                              </td>
-                              <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
-                                {item.End_Date}
-                              </td>
-                              {/* <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-sm-table-cell">
-                                {" "}
-                                <span className="tb-sub">
-                                  <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
-                                    {item?.Devicemode.toString().toUpperCase()}
-                                  </Badge>
-                                </span>
-                              </td> */}
+
                               <td style={{ padding: "0.75rem 0.25rem" }}>
                                 {/* <span className="tb-sub d-block d-sm-none ">
                                   <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
@@ -335,7 +325,7 @@ const AlertManage = () => {
                                           href="#more"
                                           onClick={(ev) => {
                                             ev.preventDefault();
-                                            redirectToWidget(item.imei);
+                                            redirectToWidget(item._id);
                                           }}
                                         >
                                           <Icon name="more-v-alt" />
@@ -391,8 +381,8 @@ const AlertManage = () => {
             </div>
           </ModalBody>
         </Modal>
-        {/* Below is the Edit Modal*/}
-        <Modal isOpen={view.edit} toggle={() => onFormCancel()} className="modal-dialog-centered" size="lg">
+        {/* Below is the Create Modal*/}
+        <Modal isOpen={view.add} toggle={() => onFormCancel()} className="modal-dialog-centered" size="xl">
           <ModalBody>
             <a href="#cancel" className="close">
               {" "}
@@ -404,19 +394,17 @@ const AlertManage = () => {
                 }}
               ></Icon>
             </a>
-            {/* <div className="p-2">
-              <AddTrackerModal onSubmitHandler={onEditSubmit} isEdit={true} formData={formData} clients={clients} />
-            </div> */}
+            <div className="p-2">
+              <CreateScheduleModal
+                onSubmitHandler={onEditSubmit}
+                isEdit={false}
+                // formData={formData}
+                clients={clients}
+              />
+            </div>
           </ModalBody>
         </Modal>
         {/* Below is the add tracker modal */}
-        <SimpleBar
-          className={`nk-add-product toggle-slide toggle-slide-right toggle-screen-any ${
-            view.add ? "content-active" : ""
-          }`}
-        >
-          {/* <AddTrackerModal onSubmitHandler={onSubmitHandler} /> */}
-        </SimpleBar>
 
         {view.add && <div className="toggle-overlay" onClick={toggle}></div>}
       </Content>

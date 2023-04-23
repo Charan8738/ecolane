@@ -400,10 +400,10 @@ const FleetTracker = () => {
                 </table>
 
                 <div className="card-inner">
-                  {trackers.length > 0 ? (
+                  {currentItems.length > 0 ? (
                     <PaginationComponent
                       itemPerPage={itemPerPage}
-                      totalItems={trackers.length}
+                      totalItems={currentItems.length}
                       paginate={paginate}
                       currentPage={currentPage}
                     />

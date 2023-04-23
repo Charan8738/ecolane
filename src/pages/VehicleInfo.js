@@ -34,6 +34,7 @@ import { useState } from "react";
 import axios from "axios";
 import Speedometer, { Arc, Background, Needle, Progress, Marks, Indicator } from "react-speedometer";
 import TripsTable from "../components/table/TripsTable";
+import TeltonikaTripsTable from "../components/table/TeltonikaTripsTable";
 import LiveMapTeltonika from "./components/CustomWidgets/Widgets/LiveMapTeltonika";
 import TimeDifference from "../components/TimeDifference";
 const SpeedometerWiddget = ({ value }) => {
@@ -74,6 +75,7 @@ const VehicleInfo = () => {
   const [gpsData, setGpsData] = useState();
   const [analyticsData, setAnalyticsData] = useState();
   const [tripsData, setTripsData] = useState();
+  const [teltonikaTripsData, setTeltonikaTripsData] = useState();
   const [gsmSignal, setGsmSignal] = useState();
   const [gpsSignal, setGpsSignal] = useState();
   const [timeStamp, setTimeStamp] = useState();
@@ -143,6 +145,7 @@ const VehicleInfo = () => {
     }
     fetchData();
   }, []);
+
   useEffect(() => {
     const getGpsData = async () => {
       try {
@@ -167,6 +170,7 @@ const VehicleInfo = () => {
     }, 10000);
     return () => clearInterval(timer);
   }, []);
+
   useEffect(() => {
     const getAnalyticsData = async () => {
       try {
@@ -188,6 +192,31 @@ const VehicleInfo = () => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    async function fetchTeltonikaTripsData() {
+      const current = new Date();
+      const currentdate = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
+      console.log(currentdate);
+      // const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
+
+      const response = await fetch("https://gps.zig-app.com/api/getTripList/" + imei + "?date=" + currentdate);
+
+      const json = await response.json();
+      const filteredArray = json.filter((obj) => {
+        for (const key in obj) {
+          if (obj[key] === null) {
+            return false;
+          }
+        }
+        return true;
+      });
+      setTeltonikaTripsData(filteredArray);
+    }
+    fetchTeltonikaTripsData();
+    // console.log(fetchTeltonikaTripsData);
+  }, []);
+
   if (!imei) return <Redirect to="/" />;
 
   return (
@@ -459,13 +488,16 @@ const VehicleInfo = () => {
             </Col>
           </Row>
         </Block>
+
         <Block>
           <BlockHead>
             <BlockHeadContent>
               <BlockTitle tag="h4">Trips List</BlockTitle>
             </BlockHeadContent>
           </BlockHead>
-          <PreviewCard>{tripsData && <TripsTable data={tripsData} expandableRows pagination />}</PreviewCard>
+          <PreviewCard>
+            {teltonikaTripsData && <TeltonikaTripsTable data={teltonikaTripsData} expandableRows pagination />}
+          </PreviewCard>
         </Block>
       </Content>
     </React.Fragment>
