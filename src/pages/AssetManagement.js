@@ -147,8 +147,9 @@ const AssetManagement = () => {
   };
 
   const fetchAlerts = async () => {
-    const response = await axios.get("GetRealtimeAlertspb");
-    return [...response.data];
+    const res = await axios.get("GetRealtimeAlertspb");
+    const sortedRouteList = [...res.data].sort((a, b) => b.Alert_id - a.Alert_id);
+    return [...sortedRouteList];
   };
   const fetchRoutes = async () => {
     const response = await axios.get("lima/GetStandardBusLines");

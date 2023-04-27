@@ -42,11 +42,27 @@ const ScheduleInfo = () => {
   const location = useLocation();
   const id = location.state?._id;
   const tracker = location.state?.trackers;
-  var schedulesData = location.state?.trackers.data;
+  const schedulesData = location.state?.trackers.data;
   const scheduleDate = location.state?.trackers.scheduled_date;
   console.log(tracker.data);
 
+  const [scheduleData, setScheduleData] = useState([]);
+  const [updateData, setUpdateData] = useState();
   const [showEditModal, setShowEditModal] = useState(false);
+  setScheduleData([...schedulesData]);
+  useEffect(() => {
+    const getSchedules = async () => {
+      const response = await axios.get("https://gps.zig-app.com/api/getSchedules");
+      let sch = response.data;
+      console.log(tracker._id);
+      const schData = sch.find((item) => item._id === tracker._id);
+      console.log(schData.data);
+      setScheduleData([...schData.data]);
+    };
+    getSchedules();
+  }, []);
+  console.log(scheduleData);
+  console.log(schedulesData);
 
   const onFormCancel = () => {
     setView({ edit: false, add: false, diagnose: false });
@@ -65,14 +81,15 @@ const ScheduleInfo = () => {
       .put("https://gps.zig-app.com/api/updateSchedule", newData)
       .then((res) => {
         if (res.status === 200) {
-          const newTrackers = [...schedulesData];
-          newTrackers.push(data);
+          // const newTrackers = [...scheduleData];
+          // newTrackers.push(data);
           //   const editedIdx = newTrackers.findIndex((item) => item._id === data._id);
           //   newTrackers[editedIdx] = { ...data };
-          schedulesData = newTrackers;
+          // schedulesData = newTrackers;
           // setTrackers(newTrackers);
-          console.log(newTrackers);
+          // console.log(newTrackers);
           //   setTrackers(newTrackers);
+          setUpdateData("test");
           setView({
             edit: false,
             add: false,
@@ -88,7 +105,6 @@ const ScheduleInfo = () => {
       });
   };
 
-  // console.log(tracker.data);
   if (!id) return <Redirect to="/alerts-management" />;
   return (
     <React.Fragment>
@@ -132,7 +148,7 @@ const ScheduleInfo = () => {
           <Card>
             <CardBody className="card-inner">
               <CardTitle className="text-primary centre" tag="h6"></CardTitle>
-              <SchedulesDataTable data={schedulesData} expandableRows pagination actions />
+              <SchedulesDataTable data={scheduleData} expandableRows pagination actions />
             </CardBody>
           </Card>
         </Block>
@@ -154,7 +170,7 @@ const ScheduleInfo = () => {
             <EditScheduleModal
               onSubmitHandler={onEditSubmit}
               isEdit={false}
-              formData={schedulesData}
+              formData={scheduleData}
               //   clients={clients}
             />
           </div>

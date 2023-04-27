@@ -58,7 +58,7 @@ const FleetTracker = () => {
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const [filteredTrackers, setFilteredTrackers] = useState([]);
-  const currentItems = filteredTrackers.slice(indexOfFirstItem, indexOfLastItem);
+  let currentItems = filteredTrackers.slice(indexOfFirstItem, indexOfLastItem);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const toggle = (type) => {
     setView({
@@ -400,10 +400,10 @@ const FleetTracker = () => {
                 </table>
 
                 <div className="card-inner">
-                  {currentItems.length > 0 ? (
+                  {trackers.length > 0 ? (
                     <PaginationComponent
                       itemPerPage={itemPerPage}
-                      totalItems={currentItems.length}
+                      totalItems={trackers.length}
                       paginate={paginate}
                       currentPage={currentPage}
                     />

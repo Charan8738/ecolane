@@ -186,7 +186,7 @@ const AlertManage = () => {
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                Alerts Management
+                Bus Schedules
               </BlockTitle>
             </BlockHeadContent>
             <BlockHeadContent>
