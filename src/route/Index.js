@@ -59,7 +59,7 @@ const Pages = ({ currentAccess }) => {
     { page: 14, pathname: "asset-management", component: AssetManagement },
     { page: 15, pathname: "documentation", component: Documentation },
     { page: 16, pathname: "add-tracker", component: AddTracker },
-    { page: 16, pathname: "fleet-tracker", component: FleetTracker },
+    { page: 29, pathname: "fleet-tracker", component: FleetTracker },
     { page: 17, pathname: "Payment", component: Payment },
     // { page: 18, pathname: "beverage-history", component: Transactions },
     { page: 19, pathname: "transactions", component: Transactions2 },
@@ -72,7 +72,7 @@ const Pages = ({ currentAccess }) => {
     { page: 26, pathname: "analytics", component: Analytics },
     { page: 27, pathname: "vehicle-setup", component: VehicleSetup },
     { page: 28, pathname: "device-setup", component: DeviceSetup },
-    { page: 28, pathname: "bus-schedules", component: AlertManage },
+    { page: 30, pathname: "bus-schedules", component: AlertManage },
   ];
   useLayoutEffect(() => {
     window.scrollTo(0, 0);

@@ -100,7 +100,7 @@ const menu = [
     icon: "map",
     text: "Fleet Tracking",
     link: "/fleet-tracker",
-    page: 16,
+    page: 29,
   },
 
   {
@@ -163,12 +163,12 @@ const menu = [
     link: "/analytics",
     page: 26,
   },
-  {
-    icon: "property-alt",
-    text: "Vehicle Setup",
-    link: "/vehicle-setup",
-    page: 27,
-  },
+  // {
+  //   icon: "property-alt",
+  //   text: "Vehicle Setup",
+  //   link: "/vehicle-setup",
+  //   page: 27,
+  // },
   {
     icon: "property-alt",
     text: "Device Setup",
@@ -177,9 +177,9 @@ const menu = [
   },
   {
     icon: "clipboard",
-    text: "Bus schedules",
+    text: "Bus Schedules",
     link: "/bus-schedules",
-    page: 28,
+    page: 30,
   },
 ];
 export default menu;
