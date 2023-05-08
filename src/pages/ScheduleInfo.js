@@ -46,23 +46,28 @@ const ScheduleInfo = () => {
   const scheduleDate = location.state?.trackers.scheduled_date;
   console.log(tracker.data);
 
-  const [scheduleData, setScheduleData] = useState([]);
+  const [scheduleData, setScheduleData] = useState(schedulesData);
   const [updateData, setUpdateData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+
   const [showEditModal, setShowEditModal] = useState(false);
-  setScheduleData([...schedulesData]);
+  // setScheduleData([...schedulesData]);
   useEffect(() => {
     const getSchedules = async () => {
+      setIsLoading(true);
       const response = await axios.get("https://gps.zig-app.com/api/getSchedules");
       let sch = response.data;
       console.log(tracker._id);
       const schData = sch.find((item) => item._id === tracker._id);
       console.log(schData.data);
-      setScheduleData([...schData.data]);
+      setScheduleData(schData.data);
+      setIsLoading(false);
+      setUpdateData(false);
     };
     getSchedules();
-  }, []);
+  }, [updateData]);
   console.log(scheduleData);
-  console.log(schedulesData);
+  // console.log(schedulesData);
 
   const onFormCancel = () => {
     setView({ edit: false, add: false, diagnose: false });
@@ -89,7 +94,7 @@ const ScheduleInfo = () => {
           // setTrackers(newTrackers);
           // console.log(newTrackers);
           //   setTrackers(newTrackers);
-          setUpdateData("test");
+          setUpdateData(true);
           setView({
             edit: false,
             add: false,
@@ -148,7 +153,13 @@ const ScheduleInfo = () => {
           <Card>
             <CardBody className="card-inner">
               <CardTitle className="text-primary centre" tag="h6"></CardTitle>
-              <SchedulesDataTable data={scheduleData} expandableRows pagination actions />
+              {isLoading ? (
+                <div className="text-center">
+                  <span className="text-silent">{isLoading ? <Spinner color="primary" /> : "No Schedules found"}</span>
+                </div>
+              ) : (
+                <SchedulesDataTable data={scheduleData} expandableRows pagination actions />
+              )}
             </CardBody>
           </Card>
         </Block>

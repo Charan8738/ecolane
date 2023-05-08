@@ -9,6 +9,7 @@ import TrackerInfo from "../pages/TrackerInfo";
 import VehicleInfo from "../pages/VehicleInfo";
 import ScheduleInfo from "../pages/ScheduleInfo";
 import AlertManage from "../pages/AlertManage";
+import home from "../pages/home";
 
 // const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
@@ -73,6 +74,7 @@ const Pages = ({ currentAccess }) => {
     { page: 27, pathname: "vehicle-setup", component: VehicleSetup },
     { page: 28, pathname: "device-setup", component: DeviceSetup },
     { page: 30, pathname: "bus-schedules", component: AlertManage },
+    { page: 30, pathname: "home", component: home },
   ];
   useLayoutEffect(() => {
     window.scrollTo(0, 0);

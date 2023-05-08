@@ -181,5 +181,11 @@ const menu = [
     link: "/bus-schedules",
     page: 30,
   },
+  {
+    icon: "clipboard",
+    text: "Home",
+    link: "/home",
+    page: 30,
+  },
 ];
 export default menu;

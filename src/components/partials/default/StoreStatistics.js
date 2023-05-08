@@ -8,7 +8,7 @@ const StoreStatistics = () => {
       <div className="card-inner">
         <div className="card-title-group mb-2">
           <div className="card-title">
-            <h6 className="title">Store Statistics</h6>
+            <h6 className="title">App Statistics</h6>
           </div>
         </div>
         <ul className="nk-store-statistics">

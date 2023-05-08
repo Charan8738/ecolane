@@ -84,7 +84,7 @@ const SchedulesDataTable = ({ data, columns, pagination, actions, className, sel
   const [searchText, setSearchText] = useState("");
   const [rowsPerPageS, setRowsPerPage] = useState(10);
   const [mobileView, setMobileView] = useState();
-
+  console.log(data);
   useEffect(() => {
     let defaultData = tableData;
     if (searchText !== "") {

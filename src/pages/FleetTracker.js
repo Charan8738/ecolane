@@ -3,6 +3,9 @@ import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
 import { successAlert, failureAlert } from "../utils/Utils";
 import SimpleBar from "simplebar-react";
+import DataCard from "../components/partials/default/DataCard";
+import { DefaultOrderChart, DefaultRevenueChart } from "../components/partials/charts/default/DefaultCharts";
+import TrafficSources from "../components/partials/e-commerce/traffic-sources/FleetTrackingChart";
 import {
   Block,
   BlockHead,
@@ -12,6 +15,7 @@ import {
   BlockBetween,
   PaginationComponent,
   Col,
+  Row,
 } from "../components/Component";
 import {
   Button,
@@ -200,96 +204,97 @@ const FleetTracker = () => {
                 Fleet Tracking
               </BlockTitle>
             </BlockHeadContent>
-
-            <BlockHeadContent>
-              <div className="total">
-                <h5>Total: {trackers.length}</h5>
-              </div>
-              <div className="toggle-wrap nk-block-tools-toggle">
-                <a
-                  href="#more"
-                  className="btn btn-icon btn-trigger toggle-expand mr-n1"
-                  onClick={(ev) => {
-                    ev.preventDefault();
-                    updateSm(!sm);
-                  }}
-                >
-                  <Icon name="more-v"></Icon>
-                </a>
-                <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
-                  <ul className="nk-block-tools g-3">
-                    <li>
-                      <div className="form-control-wrap">
-                        <div className="form-icon form-icon-right">
-                          <Icon name="search"></Icon>
-                        </div>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="default-04"
-                          placeholder="Search by coach no"
-                          onChange={(e) => onFilterChange(e)}
-                        />
-                      </div>
-                    </li>
-
-                    {/* <li className="nk-block-tools-opt">
-                      <Button
-                        className="toggle btn-icon d-md-none"
-                        color="primary"
-                        onClick={() => {
-                          toggle("add");
-                        }}
-                      >
-                        <Icon name="plus"></Icon>
-                      </Button>
-                      <Button
-                        className="toggle d-none d-md-inline-flex"
-                        color="primary"
-                        onClick={() => {
-                          toggle("add");
-                        }}
-                      >
-                        <Icon name="plus"></Icon>
-                        <span>Add Tracker</span>
-                      </Button>
-                    </li> */}
-                  </ul>
-                </div>
-              </div>
-            </BlockHeadContent>
           </BlockBetween>
         </BlockHead>
         <Block>
-          <Col sm="1">
-            <FormGroup>
-              <Label className="form-label">Sort By</Label>
-              <div className="form-control-wrap">
-                <div className="form-control-select">
-                  <Input
-                    type="select"
-                    name="select"
-                    id="view-options"
-                    onChange={(event) => setViewOption(event.target.value)}
-                  >
-                    <option value="All">All</option>
-                    <option value="Moving">Moving</option>
-                    <option value="Parked">Parked</option>
-                    <option value="Idle">Idle</option>
-                    <option value="Offline">Offline</option>
-                  </Input>
-                </div>
-              </div>
-            </FormGroup>
+          <Col sm="4">
+            <TrafficSources device={trackers} />
           </Col>
         </Block>
+        <Block>
+          <Label className="form-label" style={{ display: "flex", alignItems: "center", height: "100%" }}>
+            Sort By
+          </Label>
+          <Row className="gy-4">
+            <Col sm="1">
+              <FormGroup>
+                <div className="form-control-wrap">
+                  <div className="form-control-select">
+                    <Input
+                      type="select"
+                      name="select"
+                      id="view-options"
+                      onChange={(event) => setViewOption(event.target.value)}
+                    >
+                      <option value="All">All</option>
+                      <option value="Moving">Moving</option>
+                      <option value="Parked">Parked</option>
+                      <option value="Idle">Idle</option>
+                      <option value="Offline">Offline</option>
+                    </Input>
+                  </div>
+                </div>
+              </FormGroup>
+            </Col>
+            <Col sm="2" lg="2">
+              <div className="form-control-wrap">
+                <div className="form-icon form-icon-right">
+                  <Icon name="search"></Icon>
+                </div>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="default-04"
+                  placeholder="Search by coach no"
+                  onChange={(e) => onFilterChange(e)}
+                />
+              </div>
+            </Col>
+
+            {/* <div
+              className="total"
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                marginLeft: "auto",
+                marginRight: "15px",
+              }}
+            >
+              <h5>Total: {trackers.length}</h5>
+            </div> */}
+          </Row>
+        </Block>
+        {/* <Block>
+          <Row className="g-gs">
+            <Col xxl="3" sm="4">
+              <DataCard
+                title="Total Vehicles"
+                percentChange={"2.5"}
+                up={true}
+                chart={<DefaultOrderChart />}
+                amount="22"
+                // amount={devices ? `${devices.length}` : "NA"}
+              />
+            </Col>
+            <Col xxl="3" sm="4">
+              <DataCard
+                title="Vehicles Running"
+                percentChange={"2.5"}
+                up={false}
+                chart={<DefaultRevenueChart />}
+                amount="100"
+                // amount={devices ? `${devices.filter((i) => i.DeviceStatus === "Online").length}` : "NA"}
+              />
+            </Col>
+          </Row>
+        </Block> */}
         <Block>
           {/* {" "} */}
           <Card className="card-bordered card-preview">
             <div className="card-inner-group">
               <div className="card-inner p-0">
                 <table style={{ width: "100%", tableLayout: "auto", textAlign: "center" }} className="table">
-                  <thead>
+                  <thead className="table-light">
                     <tr>
                       <th>Coach No</th>
                       <th className="d-none d-md-table-cell">Vehicle Type</th>
@@ -304,18 +309,17 @@ const FleetTracker = () => {
                     {currentItems.length > 0
                       ? currentItems.map((item) => {
                           return (
-                            <tr key={item.vehicleNo}>
-                              <th style={{ padding: "0.75rem 0.25rem" }}>
-                                <span>{item.vehicleNo}</span>
-                                <span className="d-block d-md-none">{VEHICLE_TYPES[item.vehicleType]}</span>
-                              </th>
+                            <tr key={item.vehicleNo} className="tb-tnx-item">
+                              <td style={{ padding: "0.75rem 0.25rem" }}>
+                                <span style={{ fontWeight: "bold" }}>{item.vehicleNo}</span>
+                                {/* <span className="d-block d-md-none">{VEHICLE_TYPES[item.vehicleType]}</span> */}
+                              </td>
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
                                 {VEHICLE_TYPES[item.vehicleType]}
                               </td>
-                              <td className="d-sm-none" style={{ padding: "0.75rem 0.25rem" }}>
+                              {/* <td className="d-sm-none" style={{ padding: "0.75rem 0.25rem" }}>
                                 <span className="d-block">{item.imei}</span>
-                                <span className="d-block">{item.simno}</span>
-                              </td>
+                              </td> */}
                               <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
                                 {item.imei}
                               </td>
@@ -323,7 +327,6 @@ const FleetTracker = () => {
                                 {item.simno}
                               </td>
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-sm-table-cell">
-                                {" "}
                                 <span className="tb-sub">
                                   <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
                                     {item?.Devicemode.toString().toUpperCase()}

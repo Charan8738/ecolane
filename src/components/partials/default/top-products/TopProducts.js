@@ -28,7 +28,7 @@ const TopProducts = () => {
       <div className="card-inner">
         <div className="card-title-group mb-2">
           <div className="card-title">
-            <h6 className="title">Top products</h6>
+            <h6 className="title">Crowded Routes</h6>
           </div>
           <div className="card-tools">
             <UncontrolledDropdown>

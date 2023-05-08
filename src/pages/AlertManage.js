@@ -4,14 +4,18 @@ import Head from "../layout/head/Head";
 import { successAlert, failureAlert } from "../utils/Utils";
 import SimpleBar from "simplebar-react";
 import Moment from "react-moment";
+
 import {
   Block,
   BlockHead,
   BlockHeadContent,
   BlockTitle,
   Icon,
+  Row,
+  Col,
   BlockBetween,
   PaginationComponent,
+  SpecialTable,
 } from "../components/Component";
 import {
   Button,
@@ -24,12 +28,18 @@ import {
   Badge,
   Modal,
   ModalBody,
+  Label,
+  FormGroup,
+  Input,
 } from "reactstrap";
 import DiagnoseTrackerModal from "./components/DiagnoseTrackerModal/DiagnoseTrackerModal";
 import CreateScheduleModal from "../pages/components/CreateScheduleModal/CreateScheduleModal";
 import { user_id } from "../redux/userSlice";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+import backgroundImage from "../assets/images/schedules.png";
+
 import axios from "axios";
 const AlertManage = () => {
   const history = useHistory();
@@ -181,6 +191,7 @@ const AlertManage = () => {
   return (
     <React.Fragment>
       <Head title="Add Tracker"></Head>
+
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
@@ -189,72 +200,54 @@ const AlertManage = () => {
                 Bus Schedules
               </BlockTitle>
             </BlockHeadContent>
-            <BlockHeadContent>
-              <div className="total">
-                <h5>Total: {currentItems.length}</h5>
-              </div>
-              <div className="toggle-wrap nk-block-tools-toggle">
-                <a
-                  href="#more"
-                  className="btn btn-icon btn-trigger toggle-expand mr-n1"
-                  onClick={(ev) => {
-                    ev.preventDefault();
-                    updateSm(!sm);
-                  }}
-                >
-                  <Icon name="more-v"></Icon>
-                </a>
-                <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
-                  <ul className="nk-block-tools g-3">
-                    <li>
-                      <div className="form-control-wrap">
-                        <div className="form-icon form-icon-right">
-                          <Icon name="search"></Icon>
-                        </div>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="default-04"
-                          placeholder="Search by coach no"
-                          onChange={(e) => onFilterChange(e)}
-                        />
-                      </div>
-                    </li>
-
-                    <li className="nk-block-tools-opt">
-                      <Button
-                        className="toggle btn-icon d-md-none"
-                        color="primary"
-                        onClick={() => {
-                          toggle("add");
-                        }}
-                      >
-                        <Icon name="plus"></Icon>
-                      </Button>
-                      <Button
-                        className="toggle d-none d-md-inline-flex"
-                        color="primary"
-                        onClick={() => {
-                          toggle("add");
-                        }}
-                      >
-                        <Icon name="plus"></Icon>
-                        <span>Create Schedule</span>
-                      </Button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </BlockHeadContent>
           </BlockBetween>
         </BlockHead>
+        <Block>
+          <Row className="gy-4">
+            <Col sm="2" lg="2">
+              <Button
+                className="toggle btn-icon d-md-none"
+                color="primary"
+                onClick={() => {
+                  toggle("add");
+                }}
+              >
+                <Icon name="plus"></Icon>
+              </Button>
+              <Button
+                className="toggle d-none d-md-inline-flex"
+                color="primary"
+                onClick={() => {
+                  toggle("add");
+                }}
+              >
+                <Icon name="plus"></Icon>
+                <span>Create Schedule</span>
+              </Button>
+            </Col>
+            <Col lg="10">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-evenly",
+                  textAlign: "right",
+                  paddingRight: "10px",
+                }}
+              >
+                <h5>Total: {currentItems.length}</h5>
+              </div>
+            </Col>
+          </Row>
+        </Block>
         <Block>
           {/* {" "} */}
           <Card className="card-bordered card-preview">
             <div className="card-inner-group">
               <div className="card-inner p-0">
+                {/* Table */}
                 <table style={{ width: "100%", tableLayout: "auto", textAlign: "center" }} className="table">
-                  <thead>
+                  <thead className="table-light">
                     <tr>
                       <th>Schedule Date</th>
                       <th className="d-none d-md-table-cell">No of vehicles</th>
@@ -265,21 +258,18 @@ const AlertManage = () => {
                     {currentItems.length > 0
                       ? currentItems.map((item) => {
                           return (
-                            <tr key={item.scheduled_date}>
-                              <th style={{ padding: "0.75rem 0.25rem" }}>
-                                <Moment format="MMMM Do YYYY">{item.scheduled_date}</Moment>
-                              </th>
+                            <tr key={item.scheduled_date} className="tb-tnx-item">
+                              <td style={{ padding: "0.75rem 0.25rem" }}>
+                                <strong>
+                                  <Moment format="MMMM Do YYYY">{item.scheduled_date}</Moment>
+                                </strong>
+                              </td>
 
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
                                 {item.coach_count}
                               </td>
 
                               <td style={{ padding: "0.75rem 0.25rem" }}>
-                                {/* <span className="tb-sub d-block d-sm-none ">
-                                  <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
-                                    {item?.Devicemode.toString().toUpperCase()}
-                                  </Badge>
-                                </span> */}
                                 <UncontrolledDropdown>
                                   <DropdownToggle
                                     tag="a"
@@ -291,34 +281,6 @@ const AlertManage = () => {
                                   </DropdownToggle>
                                   <DropdownMenu right>
                                     <ul className="link-list-opt no-bdr">
-                                      {/* <li>
-                                        <DropdownItem
-                                          tag="a"
-                                          href="#edit"
-                                          onClick={(ev) => {
-                                            ev.preventDefault();
-                                            onEditClick(item.id);
-                                            toggle("edit");
-                                          }}
-                                        >
-                                          <Icon name="edit"></Icon>
-                                          <span>Edit Tracker</span>
-                                        </DropdownItem>
-                                      </li>
-                                      <li>
-                                        <DropdownItem
-                                          tag="a"
-                                          href="#diagnose"
-                                          onClick={(ev) => {
-                                            ev.preventDefault();
-                                            setDiagnoseImei(item.imei);
-                                            toggle("diagnose");
-                                          }}
-                                        >
-                                          <Icon name="activity-round" />
-                                          <span>Diagonise</span>
-                                        </DropdownItem>
-                                      </li> */}
                                       <li>
                                         <DropdownItem
                                           tag="a"
@@ -342,7 +304,6 @@ const AlertManage = () => {
                       : null}
                   </tbody>
                 </table>
-
                 <div className="card-inner">
                   {trackers.length > 0 ? (
                     <PaginationComponent

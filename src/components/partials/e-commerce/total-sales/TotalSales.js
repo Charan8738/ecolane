@@ -10,7 +10,7 @@ const TotalSales = () => {
         <div className="card-inner">
           <div className="card-title-group">
             <div className="card-title">
-              <h6 className="title">Total Sales</h6>
+              <h6 className="title">Total users</h6>
             </div>
             <div className="card-tools">
               <a href="#report" onClick={(ev) => ev.preventDefault()} className="link">
@@ -19,15 +19,15 @@ const TotalSales = () => {
             </div>
           </div>
           <div className="data">
-            <div className="amount">$74,958.49</div>
+            <div className="amount">74958</div>
             <div className="info">
-              <strong>$7,395.37</strong> in last month
+              <strong>1050</strong> users this month
             </div>
           </div>
           <div className="data">
             <h6 className="sub-title">This week so far</h6>
             <div className="data-group">
-              <div className="amount">$1,338.72</div>
+              <div className="amount">150</div>
               <div className="info text-right">
                 <span className="change up text-danger">
                   <Icon name="arrow-long-up"></Icon>4.63%

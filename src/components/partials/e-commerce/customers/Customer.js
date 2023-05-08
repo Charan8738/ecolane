@@ -10,7 +10,7 @@ const Customer = () => {
         <div className="card-inner pb-0">
           <div className="card-title-group">
             <div className="card-title">
-              <h6 className="title">Customers</h6>
+              <h6 className="title">Vehicles Running</h6>
             </div>
           </div>
           <div className="data">

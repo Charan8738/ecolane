@@ -9,7 +9,7 @@ const RecentOrders = () => {
       <div className="card-inner">
         <div className="card-title-group">
           <div className="card-title">
-            <h6 className="title">Recent Orders</h6>
+            <h6 className="title">Recent Transactions</h6>
           </div>
         </div>
       </div>
