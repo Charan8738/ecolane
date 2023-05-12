@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import SimpleBar from "simplebar-react";
 import Logo from "../logo/Logo";
+import brand from "../../images/Ecolane-Logo.png";
 import Menu from "../menu/Menu";
 import Toggle from "./Toggle";
 import EcommerceMenu from "../menu/EcommerceMenu";
@@ -29,10 +30,17 @@ const Sidebar = ({ fixed, theme, className, sidebarToggle, mobileView, ...props 
 
   return (
     <div className={classes}>
-      <div className="nk-sidebar-element nk-sidebar-head">
-        <div className="nk-sidebar-brand">
-          <Logo />
-        </div>
+      <div
+        style={{
+          backgroundImage: `url(${brand})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "150px",
+        }}
+        className="nk-sidebar-element nk-sidebar-head"
+      >
+        <div className="nk-sidebar-brand">{/* <Logo /> */}</div>
         <div className="nk-menu-trigger mr-n2">
           <Toggle className="nk-nav-toggle nk-quick-nav-icon d-xl-none mr-n2" icon="arrow-left" click={sidebarToggle} />
           <Toggle
@@ -44,7 +52,12 @@ const Sidebar = ({ fixed, theme, className, sidebarToggle, mobileView, ...props 
           />
         </div>
       </div>
-      <div className="nk-sidebar-content" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <div
+        style={{ paddingBottom: "50px" }}
+        className="nk-sidebar-content"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
         <SimpleBar className="nk-sidebar-menu">
           {window.location.pathname.split("/")[2] === "ecommerce" ? (
             <EcommerceMenu sidebarToggle={sidebarToggle} mobileView={mobileView} />

@@ -9,7 +9,7 @@ import redBike from "../../../../assets/images/motor-sports.png";
 import { PreviewCard } from "../../../../components/Component";
 import { Spinner } from "reactstrap";
 const LiveMapTeltonika = ({ vehicleType, imei }) => {
-  const VEHICLE_TYPES = { 1: redTruck, 2: redCar, 3: redCar, 4: redBike, 5: redBus };
+  const VEHICLE_TYPES = { 1: redTruck, 2: redCar, 3: redCar, 4: redBike, 5: redBus, 10: redTruck };
   const [gpsData, setGpsData] = useState();
   const [loading, setLoading] = useState(false);
   const busIcon = icon({

@@ -17,6 +17,8 @@ import {
   Col,
   Row,
 } from "../components/Component";
+import styled from "styled-components";
+
 import {
   Button,
   Card,
@@ -37,10 +39,12 @@ import DiagnoseTrackerModal from "./components/DiagnoseTrackerModal/DiagnoseTrac
 import { user_id } from "../redux/userSlice";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import backgroundImage from "../assets/images/fleet_tracking.png";
+
 import axios from "axios";
 const FleetTracker = () => {
   const history = useHistory();
-  const VEHICLE_TYPES = { 1: "Truck", 2: "Car", 3: "Maxi Cab", 4: "Bike", 5: "Bus" };
+  const VEHICLE_TYPES = { 1: "Truck", 2: "Car", 3: "Maxi Cab", 4: "Bike", 5: "Bus", 10: "Tanker" };
   const DEVICE_MODE_BADGE = { PARKED: "warning", MOVING: "success", OFFLINE: "danger" };
   const userId = useSelector(user_id);
   const [clients, setClients] = useState([]);
@@ -196,14 +200,25 @@ const FleetTracker = () => {
   return (
     <React.Fragment>
       <Head title="Add Tracker"></Head>
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "300px",
+          paddingTop: "125px",
+        }}
+      >
+        <BlockTitle page tag="h3">
+          <Title>Fleet Tracking</Title>
+        </BlockTitle>
+      </div>
+
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
-            <BlockHeadContent>
-              <BlockTitle page tag="h3">
-                Fleet Tracking
-              </BlockTitle>
-            </BlockHeadContent>
+            <BlockHeadContent></BlockHeadContent>
           </BlockBetween>
         </BlockHead>
         <Block>
@@ -472,5 +487,10 @@ const FleetTracker = () => {
     </React.Fragment>
   );
 };
+const Title = styled.h3`
+  font-size: 112px;
+  font-weight: 900;
+  padding-left: 32px;
+`;
 
 export default FleetTracker;

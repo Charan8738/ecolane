@@ -15,6 +15,7 @@ import {
   selectAllTickets,
   selectAPICount,
 } from "../redux/ticketsSlice";
+import backgroundImage from "../assets/images/visitors_background.png";
 
 import {
   Block,
@@ -34,6 +35,7 @@ import {
 } from "../components/Component";
 import { user_id } from "../redux/userSlice";
 import { Card, Spinner } from "reactstrap";
+import styled from "styled-components";
 const Venue = () => {
   const status = useSelector(getTicketsStatus);
   const dispatch = useDispatch(); //dispatch to change values in store
@@ -128,12 +130,26 @@ const Venue = () => {
   return (
     <React.Fragment>
       <Head title="Venues"></Head>
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "300px",
+          paddingTop: "125px",
+        }}
+      >
+        <BlockTitle page tag="h3">
+          <Title>Visitors</Title>
+        </BlockTitle>
+      </div>
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">Visitors</div>
+                {/* <div className="title">Visitors</div> */}
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
@@ -261,5 +277,10 @@ const Venue = () => {
     </React.Fragment>
   );
 };
+const Title = styled.h3`
+  font-size: 112px;
+  font-weight: 900;
+  padding-left: 32px;
+`;
 
 export default Venue;

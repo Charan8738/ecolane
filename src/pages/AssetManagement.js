@@ -16,6 +16,9 @@ import {
   PaginationComponent,
   PreviewCard,
 } from "../components/Component";
+import styled from "styled-components";
+import backgroundImage from "../assets/images/alerts_manage.png";
+
 import "moment-timezone";
 import Moment from "react-moment";
 import Content from "../layout/content/Content";
@@ -173,14 +176,35 @@ const AssetManagement = () => {
   return (
     <React.Fragment>
       <Head title="Alerts"></Head>
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "306px",
+          paddingTop: "125px",
+        }}
+      >
+        <BlockTitle page tag="h3">
+          <Title>Alerts Management</Title>
+        </BlockTitle>
+      </div>
+      <Container>
+        <AlertTitle>Alerts</AlertTitle>
+
+        <List>
+          {currentItems.length > 0
+            ? currentItems.map((item, idx) => {
+                return <li>{item.DescriptionText}</li>;
+              })
+            : null}
+        </List>
+      </Container>
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
-            <BlockHeadContent>
-              <BlockTitle page tag="h3">
-                Alerts Management
-              </BlockTitle>
-            </BlockHeadContent>
+            <BlockHeadContent></BlockHeadContent>
           </BlockBetween>
         </BlockHead>
         <Block>
@@ -322,7 +346,7 @@ const AssetManagement = () => {
             <div className="card-inner-group">
               <div className="card-inner p-0">
                 <DataTableBody>
-                  <DataTableHead>
+                  <DataTableHead className="table-dark">
                     <DataTableRow size="sm">
                       <h6>Route ID</h6>
                     </DataTableRow>
@@ -536,4 +560,62 @@ const AssetManagement = () => {
     </React.Fragment>
   );
 };
+const Title = styled.h3`
+  font-size: 100px;
+  font-weight: 900;
+  padding-left: 32px;
+`;
+
+const Container = styled.div`
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 4px 8px -4px rgba(0, 0, 0, 0.3);
+  height: 100%;
+`;
+const AlertTitle = styled.div`
+  position: absolute;
+  background: #df2020;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  color: white;
+  font-weight: bold;
+  z-index: 200;
+`;
+const List = styled.ul`
+  display: flex;
+  list-style: none;
+  margin: 0;
+  animation: scroll 20s infinite linear;
+  li {
+    white-space: nowrap;
+    padding: 10px 24px;
+    color: #494949;
+    position: relative;
+  }
+  li::after {
+    content: " ";
+    width: 1px;
+    height: 100%;
+    background: #b8b8b8;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  li:last-child::after {
+    display: none;
+  }
+  @keyframes scroll {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(-1466px);
+    }
+  }
+`;
+
 export default AssetManagement;

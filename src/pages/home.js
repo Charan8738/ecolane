@@ -10,6 +10,8 @@ import TrafficSources from "../components/partials/e-commerce/traffic-sources/Tr
 import StoreVisitors from "../components/partials/e-commerce/store-visitors/StoreVisitors";
 import RecentOrders from "../components/partials/default/recent-orders/RecentOrders";
 import TopProducts from "../components/partials/default/top-products/TopProducts";
+import { user_id } from "../redux/userSlice";
+import { useSelector } from "react-redux";
 
 import {
   Block,
@@ -23,6 +25,8 @@ import {
   BlockBetween,
 } from "../components/Component";
 const home = () => {
+  const userId = useSelector(user_id);
+  console.log(userId);
   return (
     <React.Fragment>
       <Head title="Homepage"></Head>

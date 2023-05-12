@@ -3,6 +3,12 @@ const menu = [
     heading: "Dashboards",
   },
   {
+    icon: "clipboard",
+    text: "Home",
+    link: "/home",
+    page: 30,
+  },
+  {
     icon: "cpu",
     text: "Devices",
     link: "/devices",
@@ -179,12 +185,6 @@ const menu = [
     icon: "clipboard",
     text: "Bus Schedules",
     link: "/bus-schedules",
-    page: 30,
-  },
-  {
-    icon: "clipboard",
-    text: "Home",
-    link: "/home",
     page: 30,
   },
 ];
