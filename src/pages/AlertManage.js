@@ -204,180 +204,180 @@ const AlertManage = () => {
         <BlockTitle page tag="h3">
           <Title>Bus Schedules</Title>
         </BlockTitle>
-        <Content>
-          <BlockHead size="sm">
-            <BlockBetween>
-              <BlockHeadContent></BlockHeadContent>
-            </BlockBetween>
-          </BlockHead>
-          <Block>
-            <Row className="gy-4">
-              <Col sm="2" lg="2">
-                <Button
-                  className="toggle btn-icon d-md-none"
-                  color="primary"
-                  onClick={() => {
-                    toggle("add");
-                  }}
-                >
-                  <Icon name="plus"></Icon>
-                </Button>
-                <Button
-                  className="toggle d-none d-md-inline-flex"
-                  color="primary"
-                  onClick={() => {
-                    toggle("add");
-                  }}
-                >
-                  <Icon name="plus"></Icon>
-                  <span>Create Schedule</span>
-                </Button>
-              </Col>
-              <Col lg="10">
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-evenly",
-                    textAlign: "right",
-                    paddingRight: "10px",
-                  }}
-                >
-                  <h5>Total: {currentItems.length}</h5>
-                </div>
-              </Col>
-            </Row>
-          </Block>
-          <Block>
-            {/* {" "} */}
-            <Card className="card-bordered card-preview">
-              <div className="card-inner-group">
-                <div className="card-inner p-0">
-                  {/* Table */}
-                  <table style={{ width: "100%", tableLayout: "auto", textAlign: "center" }} className="table">
-                    <thead className="table-light">
-                      <tr>
-                        <th>Schedule Date</th>
-                        <th className="d-none d-md-table-cell">No of vehicles</th>
-                        <th className="d-none d-sm-table-cell">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {currentItems.length > 0
-                        ? currentItems.map((item) => {
-                            return (
-                              <tr key={item.scheduled_date} className="tb-tnx-item">
-                                <td style={{ padding: "0.75rem 0.25rem" }}>
-                                  <strong>
-                                    <Moment format="MMMM Do YYYY">{item.scheduled_date}</Moment>
-                                  </strong>
-                                </td>
-
-                                <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
-                                  {item.coach_count}
-                                </td>
-
-                                <td style={{ padding: "0.75rem 0.25rem" }}>
-                                  <UncontrolledDropdown>
-                                    <DropdownToggle
-                                      tag="a"
-                                      href="#more"
-                                      onClick={(ev) => ev.preventDefault()}
-                                      className="dropdown-toggle btn btn-icon btn-trigger"
-                                    >
-                                      <Icon name="more-h"></Icon>
-                                    </DropdownToggle>
-                                    <DropdownMenu right>
-                                      <ul className="link-list-opt no-bdr">
-                                        <li>
-                                          <DropdownItem
-                                            tag="a"
-                                            href="#more"
-                                            onClick={(ev) => {
-                                              ev.preventDefault();
-                                              redirectToWidget(item._id);
-                                            }}
-                                          >
-                                            <Icon name="more-v-alt" />
-                                            <span>View more</span>
-                                          </DropdownItem>
-                                        </li>
-                                      </ul>
-                                    </DropdownMenu>
-                                  </UncontrolledDropdown>
-                                </td>
-                              </tr>
-                            );
-                          })
-                        : null}
-                    </tbody>
-                  </table>
-                  <div className="card-inner">
-                    {trackers.length > 0 ? (
-                      <PaginationComponent
-                        itemPerPage={itemPerPage}
-                        totalItems={trackers.length}
-                        paginate={paginate}
-                        currentPage={currentPage}
-                      />
-                    ) : (
-                      <div className="text-center">
-                        <span className="text-silent">
-                          {isLoading ? <Spinner color="primary" /> : "No trackers found"}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </Block>
-          {/* Below is the Diagnose Modal */}
-          <Modal isOpen={view.diagnose} toggle={() => onFormCancel()} className="modal-dialog-centered" size="lg">
-            <ModalBody>
-              <a href="#cancel" className="close">
-                {" "}
-                <Icon
-                  name="cross-sm"
-                  onClick={(ev) => {
-                    ev.preventDefault();
-                    onFormCancel();
-                  }}
-                ></Icon>
-              </a>
-              <div className="p-2">
-                <DiagnoseTrackerModal imei={diagnoseImei} />
-              </div>
-            </ModalBody>
-          </Modal>
-          {/* Below is the Create Modal*/}
-          <Modal isOpen={view.add} toggle={() => onFormCancel()} className="modal-dialog-centered" size="xl">
-            <ModalBody>
-              <a href="#cancel" className="close">
-                {" "}
-                <Icon
-                  name="cross-sm"
-                  onClick={(ev) => {
-                    ev.preventDefault();
-                    onFormCancel();
-                  }}
-                ></Icon>
-              </a>
-              <div className="p-2">
-                <CreateScheduleModal
-                  onSubmitHandler={onEditSubmit}
-                  isEdit={false}
-                  // formData={formData}
-                  clients={clients}
-                />
-              </div>
-            </ModalBody>
-          </Modal>
-          {/* Below is the add tracker modal */}
-
-          {view.add && <div className="toggle-overlay" onClick={toggle}></div>}
-        </Content>
       </div>
+      <Content>
+        <BlockHead size="sm">
+          <BlockBetween>
+            <BlockHeadContent></BlockHeadContent>
+          </BlockBetween>
+        </BlockHead>
+        <Block>
+          <Row className="gy-4">
+            <Col sm="2" lg="2">
+              <Button
+                className="toggle btn-icon d-md-none"
+                color="primary"
+                onClick={() => {
+                  toggle("add");
+                }}
+              >
+                <Icon name="plus"></Icon>
+              </Button>
+              <Button
+                className="toggle d-none d-md-inline-flex"
+                color="primary"
+                onClick={() => {
+                  toggle("add");
+                }}
+              >
+                <Icon name="plus"></Icon>
+                <span>Create Schedule</span>
+              </Button>
+            </Col>
+            <Col lg="10">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-evenly",
+                  textAlign: "right",
+                  paddingRight: "10px",
+                }}
+              >
+                <h5>Total: {currentItems.length}</h5>
+              </div>
+            </Col>
+          </Row>
+        </Block>
+        <Block>
+          {/* {" "} */}
+          <Card className="card-bordered card-preview">
+            <div className="card-inner-group">
+              <div className="card-inner p-0">
+                {/* Table */}
+                <table style={{ width: "100%", tableLayout: "auto", textAlign: "center" }} className="table">
+                  <thead className="table-light">
+                    <tr>
+                      <th>Schedule Date</th>
+                      <th className="d-none d-md-table-cell">No of vehicles</th>
+                      <th className="d-none d-sm-table-cell">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentItems.length > 0
+                      ? currentItems.map((item) => {
+                          return (
+                            <tr key={item.scheduled_date} className="tb-tnx-item">
+                              <td style={{ padding: "0.75rem 0.25rem" }}>
+                                <strong>
+                                  <Moment format="MMMM Do YYYY">{item.scheduled_date}</Moment>
+                                </strong>
+                              </td>
+
+                              <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
+                                {item.coach_count}
+                              </td>
+
+                              <td style={{ padding: "0.75rem 0.25rem" }}>
+                                <UncontrolledDropdown>
+                                  <DropdownToggle
+                                    tag="a"
+                                    href="#more"
+                                    onClick={(ev) => ev.preventDefault()}
+                                    className="dropdown-toggle btn btn-icon btn-trigger"
+                                  >
+                                    <Icon name="more-h"></Icon>
+                                  </DropdownToggle>
+                                  <DropdownMenu right>
+                                    <ul className="link-list-opt no-bdr">
+                                      <li>
+                                        <DropdownItem
+                                          tag="a"
+                                          href="#more"
+                                          onClick={(ev) => {
+                                            ev.preventDefault();
+                                            redirectToWidget(item._id);
+                                          }}
+                                        >
+                                          <Icon name="more-v-alt" />
+                                          <span>View more</span>
+                                        </DropdownItem>
+                                      </li>
+                                    </ul>
+                                  </DropdownMenu>
+                                </UncontrolledDropdown>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : null}
+                  </tbody>
+                </table>
+                <div className="card-inner">
+                  {trackers.length > 0 ? (
+                    <PaginationComponent
+                      itemPerPage={itemPerPage}
+                      totalItems={trackers.length}
+                      paginate={paginate}
+                      currentPage={currentPage}
+                    />
+                  ) : (
+                    <div className="text-center">
+                      <span className="text-silent">
+                        {isLoading ? <Spinner color="primary" /> : "No trackers found"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Card>
+        </Block>
+        {/* Below is the Diagnose Modal */}
+        <Modal isOpen={view.diagnose} toggle={() => onFormCancel()} className="modal-dialog-centered" size="lg">
+          <ModalBody>
+            <a href="#cancel" className="close">
+              {" "}
+              <Icon
+                name="cross-sm"
+                onClick={(ev) => {
+                  ev.preventDefault();
+                  onFormCancel();
+                }}
+              ></Icon>
+            </a>
+            <div className="p-2">
+              <DiagnoseTrackerModal imei={diagnoseImei} />
+            </div>
+          </ModalBody>
+        </Modal>
+        {/* Below is the Create Modal*/}
+        <Modal isOpen={view.add} toggle={() => onFormCancel()} className="modal-dialog-centered" size="xl">
+          <ModalBody>
+            <a href="#cancel" className="close">
+              {" "}
+              <Icon
+                name="cross-sm"
+                onClick={(ev) => {
+                  ev.preventDefault();
+                  onFormCancel();
+                }}
+              ></Icon>
+            </a>
+            <div className="p-2">
+              <CreateScheduleModal
+                onSubmitHandler={onEditSubmit}
+                isEdit={false}
+                // formData={formData}
+                clients={clients}
+              />
+            </div>
+          </ModalBody>
+        </Modal>
+        {/* Below is the add tracker modal */}
+
+        {view.add && <div className="toggle-overlay" onClick={toggle}></div>}
+      </Content>
     </React.Fragment>
   );
 };

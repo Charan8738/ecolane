@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Card, DropdownMenu, DropdownToggle, DropdownItem, UncontrolledDropdown } from "reactstrap";
 import { productData, productDataSet2, productDataSet3, productDataSet4 } from "./ProductData";
 
-const TopProducts = () => {
-  const [data, setData] = useState("Weekly");
-  const [dataSet, setDataSet] = useState(productData);
+const TopProducts = ({ monthlycrowd, weeklycrowd, dailycrowd }) => {
+  const [data, setData] = useState("Daily");
+  const [dataSet, setDataSet] = useState([]);
+  // console.log(monthlycrowd);
 
   useEffect(() => {
     let object;
     if (data === "Daily") {
-      object = productDataSet2;
+      object = dailycrowd;
     } else if (data === "Monthly") {
-      object = productDataSet3;
+      object = monthlycrowd;
     } else {
-      object = productDataSet4;
+      object = weeklycrowd;
     }
     setDataSet(object);
   }, [data]);
@@ -86,16 +87,16 @@ const TopProducts = () => {
         <ul className="nk-top-products">
           {dataSet.map((item, idx) => (
             <li className="item" key={idx}>
-              <div className="thumb">
+              {/* <div className="thumb">
                 <img src={item.img} alt="" />
-              </div>
+              </div> */}
               <div className="info">
-                <div className="title">{item.name}</div>
-                <div className="price">${item.price}</div>
+                <div className="title">{item.RouteName}</div>
+                {/* <div className="price">{item.Crowd}</div> */}
               </div>
               <div className="total">
-                <div className="amount">$ {returnTotal(item.price, item.sold)}</div>
-                <div className="count">{item.sold} Sold</div>
+                <div className="amount">{item.Crowd}</div>
+                {/* <div className="count">{item.Crowd}</div> */}
               </div>
             </li>
           ))}

@@ -194,231 +194,231 @@ const DeviceSetup = () => {
         <BlockTitle page tag="h3">
           <Title> Device Setup</Title>
         </BlockTitle>
-        <Content>
-          <BlockHead size="sm">
-            <BlockBetween>
-              <BlockHeadContent></BlockHeadContent>
-              <BlockHeadContent>
-                <br />
-                <div className="toggle-wrap nk-block-tools-toggle">
-                  <a
-                    href="#more"
-                    className="btn btn-icon btn-trigger toggle-expand mr-n1"
-                    onClick={(ev) => {
-                      ev.preventDefault();
-                      updateSm(!sm);
-                    }}
-                  >
-                    <Icon name="more-v"></Icon>
-                  </a>
-                  <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
-                    <ul className="nk-block-tools g-3">
-                      <li>
-                        <div className="form-control-wrap">
-                          <div className="form-icon form-icon-right">
-                            <Icon name="search"></Icon>
-                          </div>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="default-04"
-                            placeholder="Search by vehicle no"
-                            onChange={(e) => onFilterChange(e)}
-                          />
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </BlockHeadContent>
-            </BlockBetween>
-          </BlockHead>
-          <Block>
-            <Row className="g-gs">
-              <Col sm="5">
-                <TrafficSources device={trackers} />
-              </Col>
-              <Col xxl="3" sm="4">
-                <DataCard title="Total Devices" percentChange={"2.5"} up={true} amount={trackers.length} />
-                <DataCard title="Assigned Devices" percentChange={"2.5"} up={true} amount={assigned} />
-              </Col>
-              <Col xxl="3" sm="4">
-                <DataCard title="Unassigned Devices" amount={unassigned} />
-              </Col>
-            </Row>
-          </Block>
-
-          <Block>
-            {/* {" "} */}
-            <Card className="card-bordered card-preview">
-              <div className="card-inner-group">
-                <div className="card-inner p-0">
-                  <table style={{ width: "100%", tableLayout: "auto", textAlign: "center" }} className="table">
-                    <thead className="table-light">
-                      <tr>
-                        <th>Vehicle No</th>
-                        <th className="d-none d-md-table-cell">Vehicle Type</th>
-                        <th className="d-sm-none">IMEI and Sim No</th>
-                        <th className="d-none d-sm-table-cell">IMEI</th>
-                        <th className="d-none d-sm-table-cell">Sim No</th>
-                        <th>Device Mode</th>
-                        <th className="d-none d-sm-table-cell">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {currentItems.length > 0
-                        ? currentItems.map((item) => {
-                            return (
-                              <tr key={item.vehicleNo} className="tb-tnx-item">
-                                <th style={{ padding: "0.75rem 0.25rem" }}>
-                                  <span>{item.vehicleNo}</span>
-                                  <span className="d-block d-md-none">{VEHICLE_TYPES[item.vehicleType]}</span>
-                                </th>
-                                <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
-                                  {VEHICLE_TYPES[item.vehicleType]}
-                                </td>
-                                <td className="d-sm-none" style={{ padding: "0.75rem 0.25rem" }}>
-                                  <span className="d-block">{item.imei}</span>
-                                  {/* <span className="d-block">{item.simno}</span> */}
-                                </td>
-                                <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
-                                  {item.imei}
-                                </td>
-                                <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
-                                  {item.simno}
-                                </td>
-                                <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-sm-table-cell">
-                                  {" "}
-                                  <span className="tb-sub">
-                                    <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
-                                      {item?.Devicemode.toString().toUpperCase()}
-                                    </Badge>
-                                  </span>
-                                </td>
-                                <td style={{ padding: "0.75rem 0.25rem" }}>
-                                  <span className="tb-sub d-block d-sm-none ">
-                                    <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
-                                      {item?.Devicemode.toString().toUpperCase()}
-                                    </Badge>
-                                  </span>
-                                  <UncontrolledDropdown>
-                                    <DropdownToggle
-                                      tag="a"
-                                      href="#more"
-                                      onClick={(ev) => ev.preventDefault()}
-                                      className="dropdown-toggle btn btn-icon btn-trigger"
-                                    >
-                                      <Icon name="more-h"></Icon>
-                                    </DropdownToggle>
-                                    <DropdownMenu right>
-                                      <ul className="link-list-opt no-bdr">
-                                        <li>
-                                          <DropdownItem
-                                            tag="a"
-                                            href="#edit"
-                                            onClick={(ev) => {
-                                              ev.preventDefault();
-                                              onEditClick(item.Id);
-                                              toggle("edit");
-                                            }}
-                                          >
-                                            <Icon name="edit"></Icon>
-                                            <span>Edit Tracker</span>
-                                          </DropdownItem>
-                                        </li>
-                                        <li>
-                                          <DropdownItem
-                                            tag="a"
-                                            href="#diagnose"
-                                            onClick={(ev) => {
-                                              ev.preventDefault();
-                                              setDiagnoseImei(item.imei);
-                                              toggle("diagnose");
-                                            }}
-                                          >
-                                            <Icon name="activity-round" />
-                                            <span>Diagonise</span>
-                                          </DropdownItem>
-                                        </li>
-                                      </ul>
-                                    </DropdownMenu>
-                                  </UncontrolledDropdown>
-                                </td>
-                              </tr>
-                            );
-                          })
-                        : null}
-                    </tbody>
-                  </table>
-
-                  <div className="card-inner">
-                    {trackers.length > 0 ? (
-                      <PaginationComponent
-                        itemPerPage={itemPerPage}
-                        totalItems={trackers.length}
-                        paginate={paginate}
-                        currentPage={currentPage}
-                      />
-                    ) : (
-                      <div className="text-center">
-                        <span className="text-silent">
-                          {isLoading ? <Spinner color="primary" /> : "No trackers found"}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </Block>
-          {/* Below is the Diagnose Modal */}
-          <Modal isOpen={view.diagnose} toggle={() => onFormCancel()} className="modal-dialog-centered" size="lg">
-            <ModalBody>
-              <a href="#cancel" className="close">
-                {" "}
-                <Icon
-                  name="cross-sm"
-                  onClick={(ev) => {
-                    ev.preventDefault();
-                    onFormCancel();
-                  }}
-                ></Icon>
-              </a>
-              <div className="p-2">
-                <DiagnoseTrackerModal imei={diagnoseImei} />
-              </div>
-            </ModalBody>
-          </Modal>
-          {/* Below is the Edit Modal*/}
-          <Modal isOpen={view.edit} toggle={() => onFormCancel()} className="modal-dialog-centered" size="lg">
-            <ModalBody>
-              <a href="#cancel" className="close">
-                {" "}
-                <Icon
-                  name="cross-sm"
-                  onClick={(ev) => {
-                    ev.preventDefault();
-                    onFormCancel();
-                  }}
-                ></Icon>
-              </a>
-              <div className="p-2">
-                <AddTrackerModal onSubmitHandler={onEditSubmit} isEdit={true} formData={formData} clients={clients} />
-              </div>
-            </ModalBody>
-          </Modal>
-          {/* Below is the add tracker modal */}
-          <SimpleBar
-            className={`nk-add-product toggle-slide toggle-slide-right toggle-screen-any ${
-              view.add ? "content-active" : ""
-            }`}
-          >
-            <AddTrackerModal onSubmitHandler={onSubmitHandler} />
-          </SimpleBar>
-
-          {view.add && <div className="toggle-overlay" onClick={toggle}></div>}
-        </Content>
       </div>
+      <Content>
+        <BlockHead size="sm">
+          <BlockBetween>
+            <BlockHeadContent></BlockHeadContent>
+            <BlockHeadContent>
+              <br />
+              <div className="toggle-wrap nk-block-tools-toggle">
+                <a
+                  href="#more"
+                  className="btn btn-icon btn-trigger toggle-expand mr-n1"
+                  onClick={(ev) => {
+                    ev.preventDefault();
+                    updateSm(!sm);
+                  }}
+                >
+                  <Icon name="more-v"></Icon>
+                </a>
+                <div className="toggle-expand-content" style={{ display: sm ? "block" : "none" }}>
+                  <ul className="nk-block-tools g-3">
+                    <li>
+                      <div className="form-control-wrap">
+                        <div className="form-icon form-icon-right">
+                          <Icon name="search"></Icon>
+                        </div>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="default-04"
+                          placeholder="Search by vehicle no"
+                          onChange={(e) => onFilterChange(e)}
+                        />
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </BlockHeadContent>
+          </BlockBetween>
+        </BlockHead>
+        <Block>
+          <Row className="g-gs">
+            <Col sm="5">
+              <TrafficSources device={trackers} />
+            </Col>
+            <Col xxl="3" sm="4">
+              <DataCard title="Total Devices" percentChange={"2.5"} up={true} amount={trackers.length} />
+              <DataCard title="Assigned Devices" percentChange={"2.5"} up={true} amount={assigned} />
+            </Col>
+            <Col xxl="3" sm="4">
+              <DataCard title="Unassigned Devices" amount={unassigned} />
+            </Col>
+          </Row>
+        </Block>
+
+        <Block>
+          {/* {" "} */}
+          <Card className="card-bordered card-preview">
+            <div className="card-inner-group">
+              <div className="card-inner p-0">
+                <table style={{ width: "100%", tableLayout: "auto", textAlign: "center" }} className="table">
+                  <thead className="table-light">
+                    <tr>
+                      <th>Vehicle No</th>
+                      <th className="d-none d-md-table-cell">Vehicle Type</th>
+                      <th className="d-sm-none">IMEI and Sim No</th>
+                      <th className="d-none d-sm-table-cell">IMEI</th>
+                      <th className="d-none d-sm-table-cell">Sim No</th>
+                      <th>Device Mode</th>
+                      <th className="d-none d-sm-table-cell">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentItems.length > 0
+                      ? currentItems.map((item) => {
+                          return (
+                            <tr key={item.vehicleNo} className="tb-tnx-item">
+                              <th style={{ padding: "0.75rem 0.25rem" }}>
+                                <span>{item.vehicleNo}</span>
+                                <span className="d-block d-md-none">{VEHICLE_TYPES[item.vehicleType]}</span>
+                              </th>
+                              <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
+                                {VEHICLE_TYPES[item.vehicleType]}
+                              </td>
+                              <td className="d-sm-none" style={{ padding: "0.75rem 0.25rem" }}>
+                                <span className="d-block">{item.imei}</span>
+                                {/* <span className="d-block">{item.simno}</span> */}
+                              </td>
+                              <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
+                                {item.imei}
+                              </td>
+                              <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
+                                {item.simno}
+                              </td>
+                              <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-sm-table-cell">
+                                {" "}
+                                <span className="tb-sub">
+                                  <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
+                                    {item?.Devicemode.toString().toUpperCase()}
+                                  </Badge>
+                                </span>
+                              </td>
+                              <td style={{ padding: "0.75rem 0.25rem" }}>
+                                <span className="tb-sub d-block d-sm-none ">
+                                  <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
+                                    {item?.Devicemode.toString().toUpperCase()}
+                                  </Badge>
+                                </span>
+                                <UncontrolledDropdown>
+                                  <DropdownToggle
+                                    tag="a"
+                                    href="#more"
+                                    onClick={(ev) => ev.preventDefault()}
+                                    className="dropdown-toggle btn btn-icon btn-trigger"
+                                  >
+                                    <Icon name="more-h"></Icon>
+                                  </DropdownToggle>
+                                  <DropdownMenu right>
+                                    <ul className="link-list-opt no-bdr">
+                                      <li>
+                                        <DropdownItem
+                                          tag="a"
+                                          href="#edit"
+                                          onClick={(ev) => {
+                                            ev.preventDefault();
+                                            onEditClick(item.Id);
+                                            toggle("edit");
+                                          }}
+                                        >
+                                          <Icon name="edit"></Icon>
+                                          <span>Edit Tracker</span>
+                                        </DropdownItem>
+                                      </li>
+                                      <li>
+                                        <DropdownItem
+                                          tag="a"
+                                          href="#diagnose"
+                                          onClick={(ev) => {
+                                            ev.preventDefault();
+                                            setDiagnoseImei(item.imei);
+                                            toggle("diagnose");
+                                          }}
+                                        >
+                                          <Icon name="activity-round" />
+                                          <span>Diagonise</span>
+                                        </DropdownItem>
+                                      </li>
+                                    </ul>
+                                  </DropdownMenu>
+                                </UncontrolledDropdown>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : null}
+                  </tbody>
+                </table>
+
+                <div className="card-inner">
+                  {trackers.length > 0 ? (
+                    <PaginationComponent
+                      itemPerPage={itemPerPage}
+                      totalItems={trackers.length}
+                      paginate={paginate}
+                      currentPage={currentPage}
+                    />
+                  ) : (
+                    <div className="text-center">
+                      <span className="text-silent">
+                        {isLoading ? <Spinner color="primary" /> : "No trackers found"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Card>
+        </Block>
+        {/* Below is the Diagnose Modal */}
+        <Modal isOpen={view.diagnose} toggle={() => onFormCancel()} className="modal-dialog-centered" size="lg">
+          <ModalBody>
+            <a href="#cancel" className="close">
+              {" "}
+              <Icon
+                name="cross-sm"
+                onClick={(ev) => {
+                  ev.preventDefault();
+                  onFormCancel();
+                }}
+              ></Icon>
+            </a>
+            <div className="p-2">
+              <DiagnoseTrackerModal imei={diagnoseImei} />
+            </div>
+          </ModalBody>
+        </Modal>
+        {/* Below is the Edit Modal*/}
+        <Modal isOpen={view.edit} toggle={() => onFormCancel()} className="modal-dialog-centered" size="lg">
+          <ModalBody>
+            <a href="#cancel" className="close">
+              {" "}
+              <Icon
+                name="cross-sm"
+                onClick={(ev) => {
+                  ev.preventDefault();
+                  onFormCancel();
+                }}
+              ></Icon>
+            </a>
+            <div className="p-2">
+              <AddTrackerModal onSubmitHandler={onEditSubmit} isEdit={true} formData={formData} clients={clients} />
+            </div>
+          </ModalBody>
+        </Modal>
+        {/* Below is the add tracker modal */}
+        <SimpleBar
+          className={`nk-add-product toggle-slide toggle-slide-right toggle-screen-any ${
+            view.add ? "content-active" : ""
+          }`}
+        >
+          <AddTrackerModal onSubmitHandler={onSubmitHandler} />
+        </SimpleBar>
+
+        {view.add && <div className="toggle-overlay" onClick={toggle}></div>}
+      </Content>
     </React.Fragment>
   );
 };

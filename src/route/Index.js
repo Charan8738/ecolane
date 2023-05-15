@@ -74,7 +74,7 @@ const Pages = ({ currentAccess }) => {
     { page: 27, pathname: "vehicle-setup", component: VehicleSetup },
     { page: 28, pathname: "device-setup", component: DeviceSetup },
     { page: 30, pathname: "bus-schedules", component: AlertManage },
-    { page: 30, pathname: "home", component: home },
+    { page: 31, pathname: "home", component: home },
   ];
   useLayoutEffect(() => {
     window.scrollTo(0, 0);

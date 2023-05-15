@@ -3,7 +3,7 @@ import { Card } from "reactstrap";
 import { Icon } from "../../../Component";
 import { TotalOrderChart } from "../../charts/e-commerce/EcomCharts";
 
-const Orders = () => {
+const Orders = ({ noOfTickets }) => {
   return (
     <Card>
       <div className="nk-ecwg nk-ecwg3">
@@ -15,7 +15,7 @@ const Orders = () => {
           </div>
           <div className="data">
             <div className="data-group">
-              <div className="amount">329</div>
+              <div className="amount">{noOfTickets}</div>
               <div className="info text-right">
                 <span className="change up text-danger">
                   <Icon name="arrow-long-up"></Icon>4.63%

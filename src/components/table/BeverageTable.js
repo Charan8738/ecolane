@@ -30,7 +30,7 @@ const successToast = () => {
     closeButton: <CloseButton />,
   });
 };
-const BeverageTable = ({ isCompact }) => {
+const BeverageTable = ({ isCompact, beverages }) => {
   const client_id = useSelector(user_id);
 
   const dispatch = useDispatch(); //dispatch to change values in store
@@ -49,15 +49,15 @@ const BeverageTable = ({ isCompact }) => {
     successToast();
   };
 
-  console.log(clients);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      // if (status === "idle") {
-      dispatch(fetchClients(client_id));
-      //   }
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [status, dispatch]);
+  // console.log(clients);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     // if (status === "idle") {
+  //     dispatch(fetchClients(client_id));
+  //     //   }
+  //   }, 3000);
+  //   return () => clearTimeout(timer);
+  // }, [status, dispatch]);
   // if (status === "loading" || status === "failed") {
   //   return (
   //     <Card>
@@ -75,7 +75,7 @@ const BeverageTable = ({ isCompact }) => {
   //     </Card>
   //   );
   // }
-  const beverages = clients.filter((item) => item.Status === 1);
+  // const beverages = clients.filter((item) => item.Status === 0);
 
   if (beverages && beverages.length > 0) {
     return (

@@ -3,7 +3,7 @@ import { Icon } from "../../../Component";
 import { Card, UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
 import { AverageOrderChart } from "../../charts/e-commerce/EcomCharts";
 
-const AverageOrder = ({ totalSales }) => {
+const TransactionsOrder = ({ totalSales }) => {
   const [data, setData] = useState("7");
   return (
     <Card className="h-100">
@@ -78,7 +78,7 @@ const AverageOrder = ({ totalSales }) => {
               </div>
             </div>
           </div>
-          <h6 className="sub-title">Orders over time</h6>
+          <h6 className="sub-title">Transactions over time</h6>
         </div>
         <div className="nk-ecwg2-ck">
           <AverageOrderChart state={data} />
@@ -87,4 +87,4 @@ const AverageOrder = ({ totalSales }) => {
     </Card>
   );
 };
-export default AverageOrder;
+export default TransactionsOrder;

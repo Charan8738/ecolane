@@ -11,6 +11,10 @@ import { ToastContainer } from "react-toastify";
 import DatePicker from "react-datepicker";
 import { FormGroup, Label } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
+import styled from "styled-components";
+import backgroundImage from "../assets/images/transaction_background.png";
+import TransactionsOrder from "../components/partials/e-commerce/average-order/TransactionsOrder";
+
 import {
   fetchTickets,
   getTicketsError,
@@ -230,12 +234,33 @@ const Venue = () => {
   return (
     <React.Fragment>
       <Head title="Venues"></Head>
+
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "280px",
+          paddingTop: "105px",
+        }}
+      >
+        <BlockTitle page tag="h3">
+          <Title>Transactions</Title>
+        </BlockTitle>
+      </div>
+
       <Content>
+        <Block>
+          <Col xxl="6" md="6">
+            <TransactionsOrder totalSales={sum_value} />
+          </Col>
+        </Block>
         <BlockHead size="sm">
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">Transactions</div>
+                {/* <div className="title">Transactions</div> */}
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
@@ -313,7 +338,7 @@ const Venue = () => {
         <Block>
           <Card>
             <DataTableBody>
-              <DataTableHead>
+              <DataTableHead className="table-dark">
                 <DataTableRow size="sm">
                   <span>Email</span>
                 </DataTableRow>
@@ -412,5 +437,9 @@ const Venue = () => {
     </React.Fragment>
   );
 };
-
+const Title = styled.h3`
+  font-size: 112px;
+  font-weight: 900;
+  padding-left: 32px;
+`;
 export default Venue;

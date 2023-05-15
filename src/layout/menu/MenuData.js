@@ -6,7 +6,7 @@ const menu = [
     icon: "clipboard",
     text: "Home",
     link: "/home",
-    page: 30,
+    page: 31,
   },
   {
     icon: "cpu",
