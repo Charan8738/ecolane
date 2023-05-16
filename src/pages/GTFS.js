@@ -14,7 +14,8 @@ import {
   Icon,
   Button,
 } from "../components/Component";
-
+import styled from "styled-components";
+import backgroundImage from "../assets/images/city_background.png";
 const GTFS = () => {
   const [file, setFile] = useState("");
   const handleAdvanced3 = () => {
@@ -33,6 +34,20 @@ const GTFS = () => {
   return (
     <React.Fragment>
       <Head title="Homepage"></Head>
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "280px",
+          paddingTop: "105px",
+        }}
+      >
+        <BlockTitle page tag="h3">
+          <Title>Client Setup</Title>
+        </BlockTitle>
+      </div>
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
@@ -193,4 +208,9 @@ const GTFS = () => {
   );
 };
 const OPTIONS = ["Bike Share", "Ride Share", "Micro Transit", "Para Transit", "Custom"];
+const Title = styled.h3`
+  font-size: 112px;
+  font-weight: 900;
+  padding-left: 32px;
+`;
 export default GTFS;

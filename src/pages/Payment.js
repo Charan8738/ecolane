@@ -185,7 +185,7 @@ const Venue = () => {
       </div>
       <Content>
         <Block>
-          <Col xxl="12" md="6">
+          <Col xxl="12" md="12">
             <PreviewCard>
               <div className="nk-ck">
                 <BarChartExample ticketsData={ticketsData} ticketsDate={ticketsDate} />
@@ -418,61 +418,5 @@ const BarChartExample = ({ stacked, ticketsDate, ticketsData }) => {
     />
   );
 };
-// export const barChartData = {
-//   labels: [
-//     "01",
-//     "02",
-//     "03",
-//     "04",
-//     "05",
-//     "06",
-//     "07",
-//     "08",
-//     "09",
-//     "10",
-//     "11",
-//     "12",
-//     "13",
-//     "14",
-//     "15",
-//     "16",
-//     "17",
-//     "18",
-//     "19",
-//     "20",
-//     "21",
-//     "22",
-//     "23",
-//     "24",
-//     "25",
-//     "26",
-//     "27",
-//     "28",
-//     "29",
-//     "30",
-//   ],
-//   dataUnit: "People",
-//   datasets: [
-//     {
-//       label: "join",
-//       backgroundColor: "rgba(157, 114, 255, 0.8)",
-//       barPercentage: 0.7,
-//       categoryPercentage: 0.7,
-//       data: [
-//         110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95,
-//         75, 90, 75, 90,
-//       ],
-//     },
-//     {
-//       label: "join",
-//       backgroundColor: "rgba(157, 114, 255, 0.8)",
-//       barPercentage: 0.7,
-//       categoryPercentage: 0.7,
-//       data: [
-//         110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95,
-//         75, 90, 75, 90,
-//       ],
-//     },
-//   ],
-// };
+
 export default Venue;

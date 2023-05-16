@@ -20,6 +20,8 @@ import Nouislider from "nouislider-react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Redirect } from "react-router-dom";
+import backgroundImage from "../assets/images/client_background.png";
+import styled from "styled-components";
 
 const ClientSetup = () => {
   const clientId = useSelector(user_id);
@@ -129,14 +131,24 @@ const ClientSetup = () => {
   return (
     <React.Fragment>
       <Head title="Profile"></Head>
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "280px",
+          paddingTop: "105px",
+        }}
+      >
+        <BlockTitle page tag="h3">
+          <Title>Client Setup</Title>
+        </BlockTitle>
+      </div>
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
-            <BlockHeadContent>
-              <BlockTitle page tag="h3">
-                Profile
-              </BlockTitle>
-            </BlockHeadContent>
+            <BlockHeadContent></BlockHeadContent>
           </BlockBetween>
         </BlockHead>
         <Block>
@@ -1389,5 +1401,9 @@ const ClientSetup = () => {
     </React.Fragment>
   );
 };
-
+const Title = styled.h3`
+  font-size: 112px;
+  font-weight: 900;
+  padding-left: 32px;
+`;
 export default ClientSetup;
