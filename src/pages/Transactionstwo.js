@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import backgroundImage from "../assets/images/transaction_background.png";
 import TransactionsOrder from "../components/partials/e-commerce/average-order/TransactionsOrder";
+import axios from "axios";
 
 import {
   fetchTickets,
@@ -55,6 +56,7 @@ const Venue = () => {
   };
   const status = useSelector(getTicketsStatus);
   const dispatch = useDispatch(); //dispatch to change values in store
+  const userId = useSelector(user_id);
 
   const [approval, setApproval] = useState("");
   const [approvaltwo, setApprovaltwo] = useState("");
@@ -90,7 +92,27 @@ const Venue = () => {
     const [start, end] = dates;
     setRangeDate({ start: start, end: end });
   };
+  useEffect(() => {
+    const getData = async () => {
+      const response = await axios.get(
+        "https://ecolane-api.zig-web.com/api/User/GetAnalyticsV3?client_id=" + client_id
+      );
+      return response.data;
+    };
+    setLoading(true);
+    getData()
+      .then((res) => {
+        console.log(res.monthlyTicketsAmountData);
 
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
   // useEffect(() => {
   //   let intervalId;
   //   if (rangeDate.start && rangeDate.end) {

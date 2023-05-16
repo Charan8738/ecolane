@@ -43,6 +43,19 @@ const home = () => {
   const [totalSales, setTotalSales] = useState(0);
   const [transactionsData, setTransactionsData] = useState([]);
   const [noOfTickets, setNoOfTickets] = useState(0);
+
+  const [dailyUserDetails, setDailyUserDetails] = useState([]);
+  const [UserData, setUserData] = useState([]);
+  const [UserDataDate, setUserDataDate] = useState([]);
+
+  const [monthlySalesData, setmonthlySalesData] = useState([]);
+  const [salesData, setSalesData] = useState([]);
+  const [salesDate, setSalesDate] = useState([]);
+
+  const [monthlyTicketsData, setMonthlyTicketsData] = useState([]);
+  const [ticketsCountData, setTicketsCountData] = useState([]);
+  const [ticketsCountDate, setTicketsCountDate] = useState([]);
+
   const [isLoading, setLoading] = useState(false);
 
   console.log(userId);
@@ -52,7 +65,7 @@ const home = () => {
       const response = await axios.get("https://ecolane-api.zig-web.com/api/User/GetAnalyticsV3?client_id=" + userId);
       return response.data;
     };
-    setLoading(true);
+    setLoading(false);
     getData()
       .then((res) => {
         setData(res);
@@ -65,8 +78,11 @@ const home = () => {
         setCategories(res.AppStatistics[0].Categories);
         setMonthlyCowd(res.MonthlyCrowd);
         setWeeklyCrowd(res.Weeklycrowd);
+        setDailyUserDetails(res.dailUserDetails);
         setDailyCrowd(res.DailyCrowd);
-        setLoading(false);
+        setmonthlySalesData(res.monthlyTicketsAmountData);
+        setMonthlyTicketsData(res.MonthlyTicketsDatas);
+        setLoading(true);
       })
       .catch((err) => {
         console.log(err);
@@ -81,7 +97,7 @@ const home = () => {
       const response = await axios.get("https://gps-v2.zig-app.com/api/getdeviceDetails/" + userId);
       return response.data;
     };
-    setLoading(true);
+    setLoading(false);
     getTrackers()
       .then((res) => {
         // setTrackers([...res]);
@@ -93,7 +109,7 @@ const home = () => {
         console.log(err);
       })
       .finally(() => {
-        setLoading(false);
+        setLoading(true);
       });
   }, []);
   useEffect(() => {
@@ -124,6 +140,35 @@ const home = () => {
         setLoading(false);
       });
   }, []);
+
+  // Splits and converts the data into array
+  useEffect(() => {
+    const dailyUserData = dailyUserDetails.map((data) => data.Data);
+    const dailyUserDataDate = dailyUserDetails.map((data) => data.Date);
+
+    setUserData(dailyUserData);
+    setUserDataDate(dailyUserDataDate);
+    console.log(dailyUserData);
+  }, [dailyUserDetails]);
+
+  // Splits and converts the data into array
+
+  useEffect(() => {
+    const datas = monthlySalesData.map((data) => data.TotalAmount);
+    const date = monthlySalesData.map((data) => data.Date);
+    setSalesData(datas);
+    setSalesDate(date);
+  }, [monthlySalesData]);
+
+  // Splits and converts the data into array
+
+  useEffect(() => {
+    const datas = monthlyTicketsData.map((data) => data.TicketsCountData);
+    const date = monthlyTicketsData.map((data) => data.Date);
+    setTicketsCountData(datas);
+    setTicketsCountDate(date);
+  }, [monthlyTicketsData]);
+
   console.log(transactionsData);
   console.log(noOfTickets);
 
@@ -149,15 +194,25 @@ const home = () => {
           <Block>
             <Row className="g-gs">
               <Col xxl="4" md="6">
-                <TotalSales totalusers={totalUsers} monthlyUsers={usersMonthly} weeklyUsers={usersWeekly} />
+                <TotalSales
+                  totalusers={totalUsers}
+                  monthlyUsers={usersMonthly}
+                  weeklyUsers={usersWeekly}
+                  UserData={UserData}
+                  UserDataDate={UserDataDate}
+                />
               </Col>
               <Col xxl="4" md="6">
-                <AverageOrder totalSales={totalSales} />
+                <AverageOrder totalSales={totalSales} salesData={salesData} salesDate={salesDate} />
               </Col>
               <Col xxl="4">
                 <Row className="g-gs">
                   <Col xxl="12" md="6">
-                    <Orders noOfTickets={noOfTickets} />
+                    <Orders
+                      noOfTickets={noOfTickets}
+                      ticketsCountData={ticketsCountData}
+                      ticketsCountDate={ticketsCountDate}
+                    />
                   </Col>
                   <Col xxl="12" md="6">
                     <Customer movingVehicles={movingVehicles} />
