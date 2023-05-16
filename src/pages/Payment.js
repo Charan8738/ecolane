@@ -16,6 +16,7 @@ import {
   selectAPICount,
 } from "../redux/ticketsSlice";
 import styled from "styled-components";
+import { Bar } from "react-chartjs-2";
 
 import {
   Block,
@@ -32,13 +33,12 @@ import {
   DataTableRow,
   DataTableItem,
   PaginationComponent,
-  BarChartExample,
   PreviewCard,
 } from "../components/Component";
 import { user_id } from "../redux/userSlice";
 import { Card, Spinner } from "reactstrap";
 import axios from "axios";
-import { barChartData } from "../pages/components/charts/ChartData";
+// import { barChartData } from "../pages/components/charts/ChartData";
 import backgroundImage from "../assets/images/payment_background.png";
 
 const Venue = () => {
@@ -110,30 +110,44 @@ const Venue = () => {
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  const [MonthlyTicketsDatas, setMonthlyTicketsDatas] = useState([]);
+  const [ticketsData, setTicketsData] = useState([]);
+  const [ticketsDate, setTicketsDate] = useState([]);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const [sm, updateSm] = useState(false); // ----> Responsivenes
   const onFilterChange = (e) => {
     setSearchText(e.target.value);
   };
-  // useEffect(() => {
-  //   const startDate =
-  //     rangeDate.start.getFullYear() + "-" + (rangeDate.start.getMonth() + 1) + "-" + rangeDate.start.getDate();
-  //   const endDate = rangeDate.end.getFullYear() + "-" + (rangeDate.end.getMonth() + 1) + "-" + rangeDate.end.getDate();
-  //   const url = `https://zig-app.com/ZIGSmartWeb/api/Zigshuttle/GetPurchaseticket?startDate=${startDate}&endDate=${endDate}&Clientid=${client_id}`;
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(url);
-  //       const json = await response.json();
-  //       console.log(json.purchasetickets);
-  //       //data = json.purchasetickets;
-  //       setData(json.purchasetickets);
-  //       initialData.current = [...json.purchasetickets];
-  //     } catch (error) {
-  //       console.log("error", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const getData = async () => {
+      const response = await axios.get(
+        "https://ecolane-api.zig-web.com/api/User/GetAnalyticsV3?client_id=" + client_id
+      );
+      return response.data;
+    };
+    setLoading(false);
+    getData()
+      .then((res) => {
+        // console.log(res.MonthlyTicketsDatas);
+        setMonthlyTicketsDatas(res.MonthlyTicketsDatas);
+        setLoading(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  // Splits and converts the data into array
+  useEffect(() => {
+    const ticketsData = MonthlyTicketsDatas.map((data) => data.TicketsCountData);
+    const ticketsDate = MonthlyTicketsDatas.map((data) => data.Date);
+
+    setTicketsData(ticketsData);
+    setTicketsDate(ticketsDate);
+  }, [MonthlyTicketsDatas]);
   useEffect(() => {
     if (onSearchText !== "") {
       const filteredObject = data.filter((items) => {
@@ -174,7 +188,7 @@ const Venue = () => {
           <Col xxl="12" md="6">
             <PreviewCard>
               <div className="nk-ck">
-                <BarChartExample data={barChartData} />
+                <BarChartExample ticketsData={ticketsData} ticketsDate={ticketsDate} />
               </div>
             </PreviewCard>
           </Col>
@@ -323,4 +337,142 @@ const Title = styled.h3`
   font-weight: 900;
   padding-left: 32px;
 `;
+
+const BarChartExample = ({ stacked, ticketsDate, ticketsData }) => {
+  console.log(ticketsData);
+  const barChartData = {
+    labels: ticketsDate,
+    dataUnit: "People",
+    datasets: [
+      {
+        label: "Ticket Sold",
+        backgroundColor: "rgba(157, 114, 255, 0.8)",
+        barPercentage: 0.7,
+        categoryPercentage: 0.7,
+        data: ticketsData,
+      },
+    ],
+  };
+  return (
+    <Bar
+      data={barChartData}
+      options={{
+        legend: {
+          display: false,
+          labels: {
+            boxWidth: 30,
+            padding: 20,
+            fontColor: "#6783b8",
+          },
+        },
+        maintainAspectRatio: false,
+        tooltips: {
+          enabled: true,
+          backgroundColor: "#eff6ff",
+          titleFontSize: 13,
+          titleFontColor: "#6783b8",
+          titleMarginBottom: 6,
+          bodyFontColor: "#9eaecf",
+          bodyFontSize: 12,
+          bodySpacing: 4,
+          yPadding: 10,
+          xPadding: 10,
+          footerMarginTop: 0,
+          displayColors: false,
+        },
+        scales: {
+          yAxes: [
+            {
+              display: true,
+              stacked: stacked ? true : false,
+              ticks: {
+                beginAtZero: true,
+                fontSize: 12,
+                fontColor: "#9eaecf",
+                padding: 5,
+              },
+              gridLines: {
+                tickMarkLength: 0,
+              },
+            },
+          ],
+          xAxes: [
+            {
+              display: true,
+              stacked: stacked ? true : false,
+              ticks: {
+                fontSize: 12,
+                fontColor: "#9eaecf",
+                source: "auto",
+                padding: 5,
+              },
+              gridLines: {
+                color: "transparent",
+                tickMarkLength: 10,
+                zeroLineColor: "transparent",
+              },
+            },
+          ],
+        },
+      }}
+    />
+  );
+};
+// export const barChartData = {
+//   labels: [
+//     "01",
+//     "02",
+//     "03",
+//     "04",
+//     "05",
+//     "06",
+//     "07",
+//     "08",
+//     "09",
+//     "10",
+//     "11",
+//     "12",
+//     "13",
+//     "14",
+//     "15",
+//     "16",
+//     "17",
+//     "18",
+//     "19",
+//     "20",
+//     "21",
+//     "22",
+//     "23",
+//     "24",
+//     "25",
+//     "26",
+//     "27",
+//     "28",
+//     "29",
+//     "30",
+//   ],
+//   dataUnit: "People",
+//   datasets: [
+//     {
+//       label: "join",
+//       backgroundColor: "rgba(157, 114, 255, 0.8)",
+//       barPercentage: 0.7,
+//       categoryPercentage: 0.7,
+//       data: [
+//         110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95,
+//         75, 90, 75, 90,
+//       ],
+//     },
+//     {
+//       label: "join",
+//       backgroundColor: "rgba(157, 114, 255, 0.8)",
+//       barPercentage: 0.7,
+//       categoryPercentage: 0.7,
+//       data: [
+//         110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95, 75, 90, 110, 80, 125, 55, 95,
+//         75, 90, 75, 90,
+//       ],
+//     },
+//   ],
+// };
 export default Venue;

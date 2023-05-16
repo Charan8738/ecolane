@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { Icon } from "../../../Component";
 import { Card, UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
 // import { AverageOrderChart } from "../../charts/e-commerce/EcomCharts";
-import { averargeOrder, averargeOrderSet2, averargeOrderSet3, averargeOrderSet4 } from "../../charts/e-commerce/Data";
+// import { averargeOrder, averargeOrderSet2, averargeOrderSet3, averargeOrderSet4 } from "../../charts/e-commerce/Data";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 
-const TransactionsOrder = ({ totalSales }) => {
+const TransactionsOrder = ({ totalSales, monthlyChartData, monthlyChartDate }) => {
   const [data, setData] = useState("7");
   return (
     <Card className="h-100">
@@ -13,7 +13,7 @@ const TransactionsOrder = ({ totalSales }) => {
         <div className="card-inner">
           <div className="card-title-group mt-n1">
             <div className="card-title">
-              <h6 className="title">Last 30 days sales</h6>
+              <h6 className="title">Transactions</h6>
             </div>
           </div>
           <div className="data">
@@ -31,18 +31,34 @@ const TransactionsOrder = ({ totalSales }) => {
           <h6 className="sub-title">Transactions over time</h6>
         </div>
         <div className="nk-ecwg2-ck">
-          <AverageOrderChart state={data} />
+          <AverageOrderChart monthlyChartData={monthlyChartData} monthlyChartDate={monthlyChartDate} state={data} />
         </div>
       </div>
     </Card>
   );
 };
 
-const AverageOrderChart = ({ state }) => {
+const AverageOrderChart = ({ state, monthlyChartData, monthlyChartDate }) => {
+  var averargeOrder = {
+    labels: monthlyChartDate,
+    dataUnit: "People",
+    lineTension: 0.1,
+    datasets: [
+      {
+        label: "Active Users",
+        borderColor: "#b695ff",
+        backgroundColor: "#b695ff",
+        barPercentage: 0.7,
+        categoryPercentage: 0.7,
+        borderWidth: 2,
+        data: monthlyChartData,
+      },
+    ],
+  };
   const [data, setData] = useState(averargeOrder);
   useEffect(() => {
     if (state === "7") {
-      setData(averargeOrderSet2);
+      setData(averargeOrder);
     }
   }, [state]);
   return (
@@ -86,7 +102,7 @@ const AverageOrderChart = ({ state }) => {
                 fontColor: "#9eaecf",
                 padding: 0,
                 display: false,
-                stepSize: 100,
+                stepSize: 100000,
               },
               gridLines: {
                 color: "rgba(82, 100, 132, 0.2)",

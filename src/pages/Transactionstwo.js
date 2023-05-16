@@ -57,6 +57,9 @@ const Venue = () => {
   const status = useSelector(getTicketsStatus);
   const dispatch = useDispatch(); //dispatch to change values in store
   const userId = useSelector(user_id);
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [monthlyChartData, setMonthlyChartData] = useState([]);
+  const [monthlyChartDate, setMonthlyChartDate] = useState([]);
 
   const [approval, setApproval] = useState("");
   const [approvaltwo, setApprovaltwo] = useState("");
@@ -99,12 +102,13 @@ const Venue = () => {
       );
       return response.data;
     };
-    setLoading(true);
+    setLoadChart(false);
     getData()
       .then((res) => {
-        console.log(res.monthlyTicketsAmountData);
-
+        // console.log(res.monthlyTicketsAmountData);
         setLoading(false);
+        setMonthlyData(res.monthlyTicketsAmountData);
+        setLoadChart(true);
       })
       .catch((err) => {
         console.log(err);
@@ -113,6 +117,13 @@ const Venue = () => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    const datas = monthlyData.map((data) => data.TotalAmount);
+    const date = monthlyData.map((data) => data.Date);
+    setMonthlyChartData(datas);
+    setMonthlyChartDate(date);
+  }, [monthlyData]);
   // useEffect(() => {
   //   let intervalId;
   //   if (rangeDate.start && rangeDate.end) {
@@ -140,6 +151,7 @@ const Venue = () => {
   const [isLoading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemPerPage] = useState(10);
+  const [loadChart, setLoadChart] = useState(false);
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
@@ -274,9 +286,17 @@ const Venue = () => {
 
       <Content>
         <Block>
-          <Col xxl="6" md="6">
-            <TransactionsOrder totalSales={sum_value} />
-          </Col>
+          {loadChart ? (
+            <Col xxl="6" md="6">
+              <TransactionsOrder
+                monthlyChartData={monthlyChartData}
+                monthlyChartDate={monthlyChartDate}
+                totalSales={sum_value}
+              />
+            </Col>
+          ) : (
+            <Spinner />
+          )}
         </Block>
         <BlockHead size="sm">
           <BlockBetween>
