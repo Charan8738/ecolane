@@ -83,12 +83,12 @@ const menu = [
     page: 12,
   },
 
-  {
-    icon: "clipboard",
-    text: "Run Cutting",
-    link: "/run-cutting",
-    page: 13,
-  },
+  // {
+  //   icon: "clipboard",
+  //   text: "Run Cutting",
+  //   link: "/run-cutting",
+  //   page: 13,
+  // },
   {
     icon: "map",
     text: "Alerts Management",
@@ -96,12 +96,12 @@ const menu = [
     page: 14,
   },
 
-  {
-    icon: "map",
-    text: "GPS Trackers",
-    link: "/add-tracker",
-    page: 16,
-  },
+  // {
+  //   icon: "map",
+  //   text: "GPS Trackers",
+  //   link: "/add-tracker",
+  //   page: 16,
+  // },
   {
     icon: "map",
     text: "Fleet Tracking",

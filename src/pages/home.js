@@ -57,7 +57,7 @@ const home = () => {
   const [ticketsCountDate, setTicketsCountDate] = useState([]);
 
   const [isLoading, setLoading] = useState(false);
-
+  const [finalLoading, setFinalLoading] = useState(false);
   console.log(userId);
 
   useEffect(() => {
@@ -83,6 +83,7 @@ const home = () => {
         setmonthlySalesData(res.monthlyTicketsAmountData);
         setMonthlyTicketsData(res.MonthlyTicketsDatas);
         setLoading(true);
+        setFinalLoading(true);
       })
       .catch((err) => {
         console.log(err);
@@ -115,7 +116,7 @@ const home = () => {
   useEffect(() => {
     const getTransactions = async () => {
       const response = await axios.get(
-        "https://ecolane-api.zig-web.com/api/Payment/GetTranscationreference?startDate=2023-5-12&endDate=2023-5-14&token=3Y1QwEDfikGni1PPouV7aw==&client_id=" +
+        "https://ecolane-api.zig-web.com/api/Payment/GetTranscationreference?startDate=2023-5-12&endDate=2023-5-18&token=3Y1QwEDfikGni1PPouV7aw==&client_id=" +
           userId
       );
       return response.data;
@@ -178,66 +179,79 @@ const home = () => {
   return (
     <React.Fragment>
       <Head title="Homepage"></Head>
-      <Content>
-        <BlockHead size="sm">
-          <BlockBetween>
-            <BlockHeadContent>
-              <BlockTitle page tag="h3">
-                Dashboard
-              </BlockTitle>
-            </BlockHeadContent>
-          </BlockBetween>
-        </BlockHead>
-        {isLoading && totalUsers ? (
-          <Spinner color="primary" />
-        ) : (
-          <Block>
-            <Row className="g-gs">
-              <Col xxl="4" md="6">
-                <TotalSales
-                  totalusers={totalUsers}
-                  monthlyUsers={usersMonthly}
-                  weeklyUsers={usersWeekly}
-                  UserData={UserData}
-                  UserDataDate={UserDataDate}
-                />
-              </Col>
-              <Col xxl="4" md="6">
-                <AverageOrder totalSales={totalSales} salesData={salesData} salesDate={salesDate} />
-              </Col>
-              <Col xxl="4">
-                <Row className="g-gs">
-                  <Col xxl="12" md="6">
-                    <Orders
-                      noOfTickets={noOfTickets}
-                      ticketsCountData={ticketsCountData}
-                      ticketsCountDate={ticketsCountDate}
-                    />
-                  </Col>
-                  <Col xxl="12" md="6">
-                    <Customer movingVehicles={movingVehicles} />
-                  </Col>
-                </Row>
-              </Col>
-              <Col xxl="8">
-                <RecentOrders transactionsData={transactionsData} />
-              </Col>
-              <Col xxl="4" md="6">
-                <TopProducts monthlycrowd={monthlyCrowd} weeklycrowd={weeklyCrowd} dailycrowd={dailyCrowd} />
-              </Col>
-              <Col xxl="3" md="6">
-                <StoreStatistics order={appOrders} customers={Customers} products={Products} categories={Categories} />
-              </Col>
-              <Col xxl="5" lg="6">
-                <TrafficSources />
-              </Col>
-              <Col xxl="4" lg="6">
-                <StoreVisitors />
-              </Col>
-            </Row>
-          </Block>
-        )}
-      </Content>
+      {finalLoading ? (
+        <Content>
+          <BlockHead size="sm">
+            <BlockBetween>
+              <BlockHeadContent>
+                <BlockTitle page tag="h3">
+                  Dashboard
+                </BlockTitle>
+              </BlockHeadContent>
+            </BlockBetween>
+          </BlockHead>
+          {isLoading && totalUsers ? (
+            <Spinner color="primary" />
+          ) : (
+            <Block>
+              <Row className="g-gs">
+                <Col xxl="4" md="6">
+                  <TotalSales
+                    totalusers={totalUsers}
+                    monthlyUsers={usersMonthly}
+                    weeklyUsers={usersWeekly}
+                    UserData={UserData}
+                    UserDataDate={UserDataDate}
+                  />
+                </Col>
+                <Col xxl="4" md="6">
+                  <AverageOrder totalSales={totalSales} salesData={salesData} salesDate={salesDate} />
+                </Col>
+                <Col xxl="4">
+                  <Row className="g-gs">
+                    <Col xxl="12" md="6">
+                      <Orders
+                        noOfTickets={noOfTickets}
+                        ticketsCountData={ticketsCountData}
+                        ticketsCountDate={ticketsCountDate}
+                      />
+                    </Col>
+                    <Col xxl="12" md="6">
+                      <Customer movingVehicles={movingVehicles} />
+                    </Col>
+                  </Row>
+                </Col>
+                <Col xxl="8">
+                  <RecentOrders transactionsData={transactionsData} />
+                </Col>
+                <Col xxl="4" md="6">
+                  <TopProducts monthlycrowd={monthlyCrowd} weeklycrowd={weeklyCrowd} dailycrowd={dailyCrowd} />
+                </Col>
+                <Col xxl="3" md="6">
+                  <StoreStatistics
+                    order={appOrders}
+                    customers={Customers}
+                    products={Products}
+                    categories={Categories}
+                  />
+                </Col>
+                <Col xxl="5" lg="6">
+                  <TrafficSources />
+                </Col>
+                <Col xxl="4" lg="6">
+                  <StoreVisitors />
+                </Col>
+              </Row>
+            </Block>
+          )}
+        </Content>
+      ) : (
+        <Content>
+          <center>
+            <Spinner color="primary" />
+          </center>
+        </Content>
+      )}
     </React.Fragment>
   );
 };

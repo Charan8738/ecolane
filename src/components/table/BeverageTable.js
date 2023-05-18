@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchClients, getClientsError, getClientsStatus, selectAllClients } from "../../redux/beverageSlice";
 import Moment from "react-moment";
+import "moment-timezone";
+
 import { toast } from "react-toastify";
 import { Card, Button } from "reactstrap";
 import { Icon } from "../Component";
-import "moment-timezone";
 import { user_id } from "../../redux/userSlice";
 import axios from "axios";
 

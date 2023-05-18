@@ -7,6 +7,20 @@ import { Line } from "react-chartjs-2";
 const Orders = ({ noOfTickets, ticketsCountData, ticketsCountDate }) => {
   console.log(ticketsCountData);
   console.log(ticketsCountDate);
+
+  const midIndex = Math.floor(ticketsCountData.length / 2);
+  const firstHalf = ticketsCountData.slice(0, midIndex);
+  const secondHalf = ticketsCountData.slice(midIndex);
+  const sum = ticketsCountData.reduce((acc, curr) => acc + curr, 0);
+  const firstHalfPercentage = ((firstHalf.reduce((acc, curr) => acc + curr, 0) / sum) * 100).toFixed(2);
+  const secondHalfPercentage = ((secondHalf.reduce((acc, curr) => acc + curr, 0) / sum) * 100).toFixed(2);
+  const total_tickets = secondHalf.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+  }, 0);
+  console.log(firstHalfPercentage);
+  console.log(secondHalfPercentage);
+  console.log(secondHalf);
+
   return (
     <Card>
       <div className="nk-ecwg nk-ecwg3">
@@ -18,11 +32,19 @@ const Orders = ({ noOfTickets, ticketsCountData, ticketsCountDate }) => {
           </div>
           <div className="data">
             <div className="data-group">
-              <div className="amount">{noOfTickets}</div>
+              <div className="amount">{total_tickets}</div>
               <div className="info text-right">
-                <span className="change up text-danger">
-                  <Icon name="arrow-long-up"></Icon>4.63%
-                </span>
+                {secondHalfPercentage > firstHalfPercentage ? (
+                  <span className="change up text-danger">
+                    <Icon name="arrow-long-up"></Icon>
+                    {secondHalfPercentage}%
+                  </span>
+                ) : (
+                  <span className="change down text-danger">
+                    <Icon name="arrow-long-down"></Icon>
+                    {firstHalfPercentage}%
+                  </span>
+                )}
                 <br />
                 <span>vs. last week</span>
               </div>

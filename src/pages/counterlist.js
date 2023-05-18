@@ -32,8 +32,11 @@ import {
   DataTableItem,
   PaginationComponent,
 } from "../components/Component";
+import backgroundImage from "../assets/images/beverage_background.png";
+import styled from "styled-components";
+
 // import { user_id } from "../redux/userSlice";
-import { Card, Spinner, Badge } from "reactstrap";
+import { Card, Spinner, Badge, Input } from "reactstrap";
 const Venue = () => {
   const status = useSelector(getTicketsStatus);
   const dispatch = useDispatch(); //dispatch to change values in store
@@ -174,12 +177,26 @@ const Venue = () => {
   return (
     <React.Fragment>
       <Head title="Venues"></Head>
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "300px",
+          paddingTop: "105px",
+        }}
+      >
+        <BlockTitle page tag="h3">
+          <Title>Beverages List</Title>
+        </BlockTitle>
+      </div>
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">Beverages</div>
+                {/* <div className="title">Beverages</div> */}
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
@@ -192,6 +209,24 @@ const Venue = () => {
                     selectsRange
                     className="form-control date-picker"
                   />
+                </div>
+                <br></br>
+                <Label className="form-label" style={{ display: "flex", alignItems: "center", height: "100%" }}>
+                  Sort By
+                </Label>
+                <div className="form-control-wrap">
+                  <div className="form-control-select">
+                    <Input
+                      type="select"
+                      name="select"
+                      id="view-options"
+                      // onChange={(event) => setViewOption(event.target.value)}
+                    >
+                      <option value="All">Counter 1</option>
+                      <option value="All">Counter 2</option>
+                      <option value="All">Counter 3</option>
+                    </Input>
+                  </div>
                 </div>
               </BlockTitle>
             </BlockHeadContent>
@@ -346,5 +381,9 @@ const Venue = () => {
     </React.Fragment>
   );
 };
-
+const Title = styled.h3`
+  font-size: 112px;
+  font-weight: 900;
+  padding-left: 32px;
+`;
 export default Venue;

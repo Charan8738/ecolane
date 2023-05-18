@@ -2,7 +2,8 @@ import React from "react";
 import { Card } from "reactstrap";
 import { DataTableHead, DataTableRow, DataTableItem, UserAvatar } from "../../../Component";
 import { recentOrderData } from "./OrderData";
-
+import Moment from "react-moment";
+import "moment-timezone";
 const RecentOrders = ({ transactionsData }) => {
   return (
     <Card className="card-full">
@@ -49,7 +50,9 @@ const RecentOrders = ({ transactionsData }) => {
               </div>
             </DataTableRow>
             <DataTableRow size="md">
-              <span className="tb-sub">{item.Createddate}</span>
+              <span className="tb-sub">
+                <Moment format="MMMM Do YYYY, h:mm a">{item.Createddate}</Moment>
+              </span>
             </DataTableRow>
             <DataTableRow>
               <span className="tb-sub tb-amount">
