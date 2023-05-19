@@ -11,20 +11,67 @@ const menu = [
   {
     icon: "cpu",
     text: "Devices",
-    link: "/devices",
     page: 1,
-  },
-  {
-    icon: "plus-round-fill",
-    text: "Add New Device",
-    link: "/add-device",
-    page: 2,
+    subMenu: [
+      {
+        icon: "cpu",
+        text: "Payment Devices",
+        link: "/devices",
+      },
+      {
+        icon: "plus-round-fill",
+        text: "Add New Device",
+        link: "/add-device",
+      },
+      {
+        icon: "ticket-fill",
+        text: "Add Validator",
+        link: "add-validator",
+      },
+      {
+        icon: "property-alt",
+        text: "Device Setup",
+        link: "/device-setup",
+        page: 28,
+      },
+    ],
   },
   {
     icon: "cc-alt2-fill",
-    text: "City Setup",
-    link: "/gtfs",
+    text: "Business Setup",
     page: 3,
+    subMenu: [
+      {
+        icon: "cc-alt2-fill",
+        text: "City Setup",
+        link: "/gtfs",
+        page: 3,
+      },
+      {
+        icon: "user-list-fill",
+        text: "Client Setup",
+        link: "/client-setup",
+        page: 5,
+      },
+      {
+        icon: "contact-fill",
+        text: "Venues",
+        link: "/museum-data",
+        page: 12,
+      },
+      {
+        icon: "clipboard",
+        text: "Bus Schedules",
+        link: "/bus-schedules",
+        page: 30,
+      },
+      {
+        icon: "user-alt",
+        text: "Visitors",
+        link: "/visitors",
+        page: 23,
+      },
+    ],
   },
   {
     icon: "user-list-fill",
@@ -32,12 +79,7 @@ const menu = [
     link: "/clients",
     page: 4,
   },
-  {
-    icon: "user-list-fill",
-    text: "Client Setup",
-    link: "/client-setup",
-    page: 5,
-  },
+
   {
     icon: "coffee",
     text: "Beverage",
@@ -49,12 +91,6 @@ const menu = [
     text: "Tickets",
     link: "/Tickets",
     page: 7,
-  },
-  {
-    icon: "ticket-fill",
-    text: "Add Validator",
-    link: "add-validator",
-    page: 8,
   },
 
   {
@@ -76,13 +112,7 @@ const menu = [
     page: 11,
   },
 
-  {
-    icon: "contact-fill",
-    text: "Venues",
-    link: "/museum-data",
-    page: 12,
-  },
-
+  ,
   // {
   //   icon: "clipboard",
   //   text: "Run Cutting",
@@ -111,9 +141,22 @@ const menu = [
 
   {
     icon: "coins",
-    text: "Payment",
-    link: "/Payment",
+    text: "Payments",
     page: 17,
+    subMenu: [
+      {
+        icon: "coins",
+        text: "Payment",
+        link: "/Payment",
+        page: 17,
+      },
+      {
+        icon: "wallet-out",
+        text: "Transactions",
+        link: "/transactions",
+        page: 19,
+      },
+    ],
   },
   // {
   //   icon: "property",
@@ -121,12 +164,7 @@ const menu = [
   //   link: "/beverage-history",
   //   page: 18,
   // },
-  {
-    icon: "wallet-out",
-    text: "Transactions",
-    link: "/transactions",
-    page: 19,
-  },
+
   {
     icon: "help-fill",
     text: "Support",
@@ -145,12 +183,7 @@ const menu = [
     link: "/counterlist",
     page: 22,
   },
-  {
-    icon: "user-alt",
-    text: "Visitors",
-    link: "/visitors",
-    page: 23,
-  },
+
   {
     icon: "user-alt-fill",
     text: "Visitors VIP",
@@ -175,17 +208,5 @@ const menu = [
   //   link: "/vehicle-setup",
   //   page: 27,
   // },
-  {
-    icon: "property-alt",
-    text: "Device Setup",
-    link: "/device-setup",
-    page: 28,
-  },
-  {
-    icon: "clipboard",
-    text: "Bus Schedules",
-    link: "/bus-schedules",
-    page: 30,
-  },
 ];
 export default menu;

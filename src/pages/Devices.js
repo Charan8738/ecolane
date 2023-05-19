@@ -3,7 +3,8 @@ import Head from "../layout/head/Head";
 import Content from "../layout/content/Content";
 import { Card } from "reactstrap";
 import { user_id } from "../redux/userSlice";
-import DataCard from "../components/partials/default/DataCard";
+import styled from "styled-components";
+import DataCardCustom from "../components/partials/default/DataCardCustom";
 import {
   Block,
   BlockHead,
@@ -19,6 +20,11 @@ import { DefaultOrderChart, DefaultRevenueChart } from "../components/partials/c
 import DeviceTable from "../components/table/DeviceTable";
 import DeviceTableTwo from "../components/table/DeviceTableTwo";
 import { useSelector, useDispatch } from "react-redux";
+import beacon from "../assets/images/all_beacon.png";
+import online_beacon from "../assets/images/online_beacon.png";
+import offline_beacon from "../assets/images/offline_beacon.png";
+import backgroundImage from "../assets/images/device_background.png";
+
 import {
   fetchDevices,
   selectAllDevices,
@@ -49,34 +55,60 @@ const Homepage = () => {
   return (
     <React.Fragment>
       <Head title="Homepage"></Head>
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "280px",
+          paddingTop: "105px",
+        }}
+      >
+        <BlockTitle page tag="h3">
+          <Title>Devices</Title>
+        </BlockTitle>
+      </div>
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
             <BlockHeadContent>
-              <BlockTitle page tag="h3">
+              {/* <BlockTitle page tag="h3">
                 Devices
-              </BlockTitle>
+              </BlockTitle> */}
             </BlockHeadContent>
           </BlockBetween>
         </BlockHead>
         <Block>
           <Row className="g-gs">
             <Col xxl="3" sm="4">
-              <DataCard
+              <DataCardCustom
                 title="Total Devices"
                 percentChange={"2.5"}
                 up={true}
                 chart={<DefaultOrderChart />}
+                image={beacon}
                 amount={devices ? `${devices.length}` : "NA"}
               />
             </Col>
             <Col xxl="3" sm="4">
-              <DataCard
+              <DataCardCustom
                 title="Devices Online"
                 percentChange={"2.5"}
                 up={false}
                 chart={<DefaultRevenueChart />}
+                image={online_beacon}
                 amount={devices ? `${devices.filter((i) => i.DeviceStatus === "Online").length}` : "NA"}
+              />
+            </Col>
+            <Col xxl="3" sm="4">
+              <DataCardCustom
+                title="Devices Offline"
+                percentChange={"2.5"}
+                up={false}
+                chart={<DefaultRevenueChart />}
+                amount={devices ? `${devices.filter((i) => i.DeviceStatus === "Online").length}` : "NA"}
+                image={offline_beacon}
               />
             </Col>
           </Row>
@@ -114,4 +146,9 @@ const Homepage = () => {
     </React.Fragment>
   );
 };
+const Title = styled.h3`
+  font-size: 112px;
+  font-weight: 900;
+  padding-left: 32px;
+`;
 export default Homepage;
