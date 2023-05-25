@@ -7,70 +7,93 @@ import Simplebar from "simplebar-react";
 import { findUpper } from "../utils/Utils";
 import MessageItem from "../pages/app/messages/MessageItem";
 import axios from "axios";
+import Moment from "react-moment";
+
 const support = () => {
   const [data, setData] = useState(messageData);
   const [filteredTabData, setFilteredTabData] = useState(messageData);
   const [filterTab, setFilterTab] = useState("1");
   const [search, setOnSearch] = useState(false);
   const [filterText, setFilterText] = useState("");
-  const [selectedId, setSelectedIt] = useState();
   const [mobileView, setMobileView] = useState(false);
   const [testData, setTestData] = useState(msgData);
+  let select = 0;
+  select = msgData[0]?.Getreportissuelist[0].IssueId;
+  const [selectedId, setSelectedIt] = useState(select);
+
   const onInputChange = (e) => {
     setFilterText(e.target.value);
   };
   const theme = "primary";
   useEffect(() => {
     if (filterText !== "") {
-      const filteredData = messageData.filter((item) => {
-        return (
-          item.name.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.messageTitle.toLowerCase().includes(filterText.toLowerCase())
-        );
-      });
-      setData([...filteredData]);
+      const filteredData = msgData.map((item) => ({
+        Userid: item.Userid,
+        Getreportissuelist: item.Getreportissuelist.filter(
+          (rep) => rep.IssueId && String(rep.IssueId).toLowerCase().includes(filterText.toLowerCase())
+        ),
+      }));
+      setTestData(filteredData);
+      console.log(filteredData);
     } else {
-      setData(filteredTabData);
+      setTestData(msgData);
     }
   }, [filterText, filterTab, filteredTabData]);
 
+  // useEffect(() => {
+  //   let filteredData;
+  //   if (filterTab === "1") {
+  // filteredData = messageData.filter((item) => {
+  //   return item.closed === false;
+  // });
+  //     setData(filteredData);
+  //     setFilteredTabData(filteredData);
+  //   } else if (filterTab === "2") {
+  //     filteredData = messageData.filter((item) => {
+  //       return item.closed === true;
+  //     });
+  //     setData(filteredData);
+  //     setFilteredTabData(filteredData);
+  //   } else if (filterTab === "3") {
+  //     filteredData = messageData.filter((item) => {
+  //       return item.marked === true;
+  //     });
+  //     setData(filteredData);
+  //     setFilteredTabData(filteredData);
+  //   } else {
+  //     filteredData = messageData;
+  //     setData(filteredData);
+  //     setFilteredTabData(filteredData);
+  //   }
+  // }, [filterTab]);
+
   useEffect(() => {
     let filteredData;
+    console.log("filterTab");
+    console.log(filterTab);
     if (filterTab === "1") {
-      filteredData = messageData.filter((item) => {
-        return item.closed === false;
-      });
-      setData(filteredData);
-      setFilteredTabData(filteredData);
+      console.log("Active data");
+      filteredData = msgData.map((item) => ({
+        Userid: item.Userid,
+        Getreportissuelist: item.Getreportissuelist.filter((rep) => rep.isActive),
+      }));
+      setTestData([...filteredData]);
     } else if (filterTab === "2") {
-      filteredData = messageData.filter((item) => {
-        return item.closed === true;
-      });
-      setData(filteredData);
-      setFilteredTabData(filteredData);
-    } else if (filterTab === "3") {
-      filteredData = messageData.filter((item) => {
-        return item.marked === true;
-      });
-      setData(filteredData);
-      setFilteredTabData(filteredData);
-    } else {
-      filteredData = messageData;
-      setData(filteredData);
-      setFilteredTabData(filteredData);
+      console.log("Closed data");
+      filteredData = msgData.map((item) => ({
+        Userid: item.Userid,
+        Getreportissuelist: item.Getreportissuelist.filter((rep) => !rep.isActive),
+      }));
+      setTestData([...filteredData]);
+    } else if (filterTab === "4") {
+      console.log("All data");
+      setTestData([...msgData]);
     }
   }, [filterTab]);
 
   const onSearchBack = () => {
     setOnSearch(false);
     setFilterText("");
-  };
-
-  const onClosed = (id) => {
-    let newData = data;
-    const index = newData.findIndex((item) => item.id === id);
-    newData[index].closed = true;
-    setData([...newData]);
   };
 
   const onMessageClick = (id) => {
@@ -83,7 +106,6 @@ const support = () => {
   useEffect(() => {
     console.log(selectedId);
   }, [selectedId]);
-
   return (
     <React.Fragment>
       <Head title="Support"></Head>
@@ -113,16 +135,7 @@ const support = () => {
                     Closed
                   </a>
                 </li>
-                <li className={`nk-msg-menu-item ${filterTab === "3" && " active"}`} onClick={() => setFilterTab("3")}>
-                  <a
-                    href="#stared"
-                    onClick={(ev) => {
-                      ev.preventDefault();
-                    }}
-                  >
-                    Stared
-                  </a>
-                </li>
+
                 <li className={`nk-msg-menu-item ${filterTab === "4" && " active"}`} onClick={() => setFilterTab("4")}>
                   <a
                     href="#all"
@@ -160,7 +173,7 @@ const support = () => {
                   <input
                     type="text"
                     className="border-transparent form-focus-none form-control"
-                    placeholder="Search by user or message"
+                    placeholder="Search by Ticket ID"
                     onChange={(e) => onInputChange(e)}
                   />
                   <Button className="search-submit btn-icon">
@@ -247,7 +260,9 @@ const support = () => {
                           <div className="attchment">
                             {rep.Link !== "" && rep.Link !== null && <Icon name="clip-h" />}
                           </div>
-                          <div className="date">{rep.CreatedDate}</div>
+                          <div className="date">
+                            <Moment format="MMMM Do YYYY">{rep.CreatedDate}</Moment>
+                          </div>
                         </div>
                       </div>
                       <div className="nk-msg-context">
@@ -279,13 +294,7 @@ const support = () => {
             </Simplebar>
           </div>
           {/*nk-aside*/}
-          <MessageItem
-            id={selectedId}
-            setMobileView={setMobileView}
-            mobileView={mobileView}
-            onClosed={onClosed}
-            data={data}
-          />
+          <MessageItem id={selectedId} setMobileView={setMobileView} mobileView={mobileView} data={data} />
         </div>
       </ContentAlt>
     </React.Fragment>
