@@ -166,7 +166,7 @@ const menu = [
   // },
 
   {
-    icon: "help-fill",
+    icon: "chat-fill",
     text: "Support",
     link: "/support",
     page: 20,
@@ -202,11 +202,11 @@ const menu = [
     link: "/analytics",
     page: 26,
   },
-  // {
-  //   icon: "property-alt",
-  //   text: "Vehicle Setup",
-  //   link: "/vehicle-setup",
-  //   page: 27,
-  // },
+  {
+    icon: "cc-alt2-fill",
+    text: "Evolution Configuration",
+    link: "/evo-config",
+    page: 26,
+  },
 ];
 export default menu;

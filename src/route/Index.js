@@ -10,6 +10,7 @@ import VehicleInfo from "../pages/VehicleInfo";
 import ScheduleInfo from "../pages/ScheduleInfo";
 import AlertManage from "../pages/AlertManage";
 import home from "../pages/home";
+import EvolutionConfig from "../pages/EvolutionConfig";
 
 // const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
@@ -41,6 +42,7 @@ const users = React.lazy(() => import("../pages/users"));
 const Analytics = React.lazy(() => import("../pages/Analytics"));
 const VehicleSetup = React.lazy(() => import("../pages/VehicleSetup"));
 const DeviceSetup = React.lazy(() => import("../pages/DeviceSetup"));
+// const EvolutionConfig = React.lazy(() => import("../pages/EvolutionConfig"));
 const Pages = ({ currentAccess }) => {
   const homepage = useSelector(selectHomepage) || currentAccess[0];
   const rolesRoutePages = [
@@ -75,6 +77,7 @@ const Pages = ({ currentAccess }) => {
     { page: 28, pathname: "device-setup", component: DeviceSetup },
     { page: 30, pathname: "bus-schedules", component: AlertManage },
     { page: 31, pathname: "home", component: home },
+    { page: 32, pathname: "evo-config", component: EvolutionConfig },
   ];
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -89,7 +92,7 @@ const Pages = ({ currentAccess }) => {
         {rolesRoutePages.map(
           (route) =>
             /* Page 27 made static below and at Menu.js line 282. Make sure to remove at both places*/
-            [...currentAccess].includes(route.page) && (
+            [...currentAccess, 32].includes(route.page) && (
               <Route
                 key={route.page}
                 page={route.page}
