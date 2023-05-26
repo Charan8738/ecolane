@@ -21,11 +21,10 @@ const MessageItem = ({ id, mobileView, setMobileView, data }) => {
   const [chatData, setChatData] = useState([]);
   const messagesEndRef = useRef(null);
   const [replyData, setReplyData] = useState(false);
-
   const onClosed = (id) => {
     console.log("close trigger" + id);
     const closeTicket = async () => {
-      const res = await axios.post("Statusupdate=" + id);
+      const res = await axios.post("https://ecolane-api.zig-web.com/api/Statusupdate?Supportid=" + id);
       return res;
     };
     closeTicket().then((res) => {
@@ -65,23 +64,24 @@ const MessageItem = ({ id, mobileView, setMobileView, data }) => {
   }, []);
 
   useEffect(() => {
-    const getSupportData = async () => {
-      const response = await axios.get("Supportchat/Get?Supportid=" + id);
-      return response.data;
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("Supportchat/Get?Supportid=" + id);
+        setItemData(response.data);
+        setReportIssue([...response.data.ReportIssue]);
+        setChatData(response.data.Supportchat);
+      } catch (error) {
+        console.log(error);
+      }
     };
-    getSupportData()
-      .then((res) => {
-        console.log(res);
-        setItemData(res);
-        setReportIssue([...res.ReportIssue]);
-        setChatData(res.Supportchat);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        console.log("over");
-      });
+
+    fetchData();
+
+    const intervalId = setInterval(fetchData, 3000); // Fetch data every 3 seconds
+
+    return () => {
+      clearInterval(intervalId); // Cleanup the interval on component unmount
+    };
   }, [id]);
 
   // useEffect(() => {
@@ -198,7 +198,18 @@ const MessageItem = ({ id, mobileView, setMobileView, data }) => {
                   <ul className="nk-msg-tags">
                     <li>
                       <span className="label-tag">
-                        <Icon name="flag-fill"></Icon> <span>{reportItem.IssueType}</span>
+                        <Icon name="flag-fill"></Icon>{" "}
+                        <span>
+                          {reportItem.IssueType === "OI"
+                            ? "Other Issue"
+                            : reportItem.IssueType === "BR"
+                            ? "Bug Report"
+                            : reportItem.IssueType === "TOI"
+                            ? "Problem with Tickets"
+                            : reportItem.IssueType === "AS"
+                            ? "App Suggestion"
+                            : reportItem.IssueType}
+                        </span>
                       </span>
                     </li>
                   </ul>
@@ -475,7 +486,7 @@ const MessageItem = ({ id, mobileView, setMobileView, data }) => {
       ) : (
         <Parent>
           <Child>
-            <h4>Please select ticket to view</h4>
+            <h4>No Active Tickets</h4>
           </Child>
         </Parent>
       )}
