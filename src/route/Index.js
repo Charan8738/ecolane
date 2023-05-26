@@ -11,7 +11,8 @@ import ScheduleInfo from "../pages/ScheduleInfo";
 import AlertManage from "../pages/AlertManage";
 import home from "../pages/home";
 import EvolutionConfig from "../pages/EvolutionConfig";
-
+import AllVenues from "../pages/AllVenues";
+import Attendance from "../pages/Attendance";
 // const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
 const Homepage = React.lazy(() => import("../pages/Devices"));
@@ -78,6 +79,8 @@ const Pages = ({ currentAccess }) => {
     { page: 30, pathname: "bus-schedules", component: AlertManage },
     { page: 31, pathname: "home", component: home },
     { page: 32, pathname: "evo-config", component: EvolutionConfig },
+    { page: 33, pathname: "all-venues", component: AllVenues },
+    { page: 34, pathname: "attendance", component: Attendance },
   ];
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -92,7 +95,7 @@ const Pages = ({ currentAccess }) => {
         {rolesRoutePages.map(
           (route) =>
             /* Page 27 made static below and at Menu.js line 282. Make sure to remove at both places*/
-            [...currentAccess, 32].includes(route.page) && (
+            [...currentAccess].includes(route.page) && (
               <Route
                 key={route.page}
                 page={route.page}

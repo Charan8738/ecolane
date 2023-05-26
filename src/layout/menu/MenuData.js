@@ -38,6 +38,12 @@ const menu = [
   },
   {
     icon: "cc-alt2-fill",
+    text: "Evolution Configuration",
+    link: "/evo-config",
+    page: 32,
+  },
+  {
+    icon: "cc-alt2-fill",
     text: "Business Setup",
     page: 3,
     subMenu: [
@@ -202,11 +208,18 @@ const menu = [
     link: "/analytics",
     page: 26,
   },
+
   {
     icon: "cc-alt2-fill",
-    text: "Evolution Configuration",
-    link: "/evo-config",
-    page: 26,
+    text: "All Venues",
+    link: "/all-venues",
+    page: 33,
+  },
+  {
+    icon: "cc-alt2-fill",
+    text: "Attendance",
+    link: "/attendance",
+    page: 33,
   },
 ];
 export default menu;
