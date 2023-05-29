@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
+import styled from "styled-components";
+import backgroundImage from "../assets/images/add_products.png";
 import {
   Block,
   BlockHead,
@@ -341,14 +343,25 @@ const AddBeverages = () => {
   return (
     <React.Fragment>
       <Head title="Beverages"></Head>
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "300px",
+          paddingTop: "140px",
+        }}
+      >
+        <BlockTitle page tag="h3">
+          <Title>Add Products</Title>
+        </BlockTitle>
+      </div>
+
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
-            <BlockHeadContent>
-              <BlockTitle page tag="h3">
-                Add Product
-              </BlockTitle>
-            </BlockHeadContent>
+            <BlockHeadContent></BlockHeadContent>
             <BlockHeadContent>
               <div className="toggle-wrap nk-block-tools-toggle">
                 <a
@@ -854,5 +867,9 @@ const AddBeverages = () => {
     </React.Fragment>
   );
 };
-
+const Title = styled.h3`
+  font-size: 112px;
+  font-weight: 900;
+  padding-left: 32px;
+`;
 export default AddBeverages;
