@@ -35,6 +35,8 @@ import {
 import { user_id } from "../redux/userSlice";
 import { Card, Spinner } from "reactstrap";
 import PaginationComponenttwo from "../components/pagination/paginationtwo";
+import styled from "styled-components";
+import backgroundImage from "../assets/images/users_background.png";
 const Venue = () => {
   const status = useSelector(getTicketsStatus);
 
@@ -67,20 +69,20 @@ const Venue = () => {
     const [start, end] = dates;
     setRangeDate({ start: start, end: end });
   };
-  useEffect(() => {
-    let intervalId;
-    if (rangeDate.start && rangeDate.end) {
-      const startDate =
-        rangeDate.start.getFullYear() + "-" + (rangeDate.start.getMonth() + 1) + "-" + rangeDate.start.getDate();
-      const endDate =
-        rangeDate.end.getFullYear() + "-" + (rangeDate.end.getMonth() + 1) + "-" + rangeDate.end.getDate();
-      dispatch(fetchTickets({ startDate: startDate, endDate: endDate }));
-      intervalId = setInterval(() => {
-        getTickets(startDate, endDate);
-      }, 300);
-    }
-    return () => clearTimeout(intervalId);
-  }, [dispatch, rangeDate]);
+  // useEffect(() => {
+  //   let intervalId;
+  //   if (rangeDate.start && rangeDate.end) {
+  //     const startDate =
+  //       rangeDate.start.getFullYear() + "-" + (rangeDate.start.getMonth() + 1) + "-" + rangeDate.start.getDate();
+  //     const endDate =
+  //       rangeDate.end.getFullYear() + "-" + (rangeDate.end.getMonth() + 1) + "-" + rangeDate.end.getDate();
+  //     dispatch(fetchTickets({ startDate: startDate, endDate: endDate }));
+  //     intervalId = setInterval(() => {
+  //       getTickets(startDate, endDate);
+  //     }, 300);
+  //   }
+  //   return () => clearTimeout(intervalId);
+  // }, [dispatch, rangeDate]);
   const getTickets = (start, end) => {
     if (status !== "loading") dispatch(fetchTickets({ startDate: start, endDate: end }));
   };
@@ -133,12 +135,25 @@ const Venue = () => {
   return (
     <React.Fragment>
       <Head title="Venues"></Head>
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "305px",
+          paddingTop: "140px",
+        }}
+      >
+        <BlockTitle page tag="h3">
+          <Title>Users</Title>
+        </BlockTitle>
+      </div>
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">Users</div>
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
@@ -206,8 +221,8 @@ const Venue = () => {
                   <span>Registered Date</span>
                 </DataTableRow>
               </DataTableHead>
-              {currentItems.length > 0
-                ? currentItems.map((item) => {
+              {data.length > 0
+                ? data.map((item) => {
                     return (
                       <DataTableItem key={item}>
                         <DataTableRow>
@@ -235,7 +250,7 @@ const Venue = () => {
                 />
               ) : (
                 <div className="text-center">
-                  <span className="text-silent">{isLoading ? <Spinner /> : "No payments found"}</span>
+                  <span className="text-silent">{isLoading ? <Spinner /> : "No users found"}</span>
                 </div>
               )}
             </div>
@@ -245,5 +260,9 @@ const Venue = () => {
     </React.Fragment>
   );
 };
-
+const Title = styled.h3`
+  font-size: 112px;
+  font-weight: 900;
+  padding-left: 32px;
+`;
 export default Venue;
