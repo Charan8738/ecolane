@@ -16,6 +16,9 @@ import {
   selectAllTickets,
   selectAPICount,
 } from "../redux/ticketsliceforvipvisitors";
+import styled from "styled-components";
+import backgroundImage from "../assets/images/visitor_vip.png";
+
 import {
   Block,
   BlockHead,
@@ -59,7 +62,7 @@ const Venue = () => {
     const [start, end] = dates;
     setRangeDate({ start: start, end: end });
   };
-
+  const [sDate, setSDate] = useState();
   useEffect(() => {
     let intervalId;
     if (rangeDate.start && rangeDate.end) {
@@ -71,6 +74,8 @@ const Venue = () => {
       // intervalId = setInterval(() => {
       //   getTickets(startDate, endDate);
       // }, 5000);
+      console.log(startDate);
+      setSDate(startDate);
     }
 
     return () => clearTimeout(intervalId);
@@ -91,7 +96,6 @@ const Venue = () => {
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const [sm, updateSm] = useState(false); // ----> Responsivenes
-
   const onFilterChange = (e) => {
     setSearchText(e.target.value);
   };
@@ -148,12 +152,27 @@ const Venue = () => {
   return (
     <React.Fragment>
       <Head title="Venues"></Head>
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          height: "300px",
+          paddingTop: "140px",
+        }}
+      >
+        <BlockTitle page tag="h3">
+          <Title>VIP Visitors</Title>
+        </BlockTitle>
+      </div>
+
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle page tag="h3">
-                <div className="title">Visitors VIP</div>
+                {/* <div className="title">Visitors VIP</div> */}
                 <div className="select  ">
                   <h6>Date :</h6>
                 </div>
@@ -317,5 +336,9 @@ const Venue = () => {
     </React.Fragment>
   );
 };
-
+const Title = styled.h3`
+  font-size: 112px;
+  font-weight: 900;
+  padding-left: 32px;
+`;
 export default Venue;

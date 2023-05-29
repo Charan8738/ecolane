@@ -38,7 +38,7 @@ const support = React.lazy(() => import("../pages/support"));
 const visitorhistory = React.lazy(() => import("../pages/visitorhistory"));
 const counterlist = React.lazy(() => import("../pages/counterlist"));
 const visitors = React.lazy(() => import("../pages/visitors"));
-const visitorsvip = React.lazy(() => import("../pages/visitorsvip"));
+const visitorsvip = React.lazy(() => import("../pages/Visitors_Vip"));
 const users = React.lazy(() => import("../pages/users"));
 const Analytics = React.lazy(() => import("../pages/Analytics"));
 const VehicleSetup = React.lazy(() => import("../pages/VehicleSetup"));

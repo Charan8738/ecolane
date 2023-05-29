@@ -26,7 +26,7 @@ import {
   PaginationComponent,
 } from "../components/Component";
 import axios from "axios";
-import backgroundImage from "../assets/images/visitor_history.png";
+import backgroundImage from "../assets/images/visitor_vip.png";
 
 const Visitors_Vip = () => {
   const client_id = useSelector(user_id);
@@ -125,7 +125,7 @@ const Visitors_Vip = () => {
   };
   return (
     <React.Fragment>
-      <Head title="Visitor History"></Head>
+      <Head title="Vip Visitors"></Head>
       <div
         style={{
           backgroundImage: `url(${backgroundImage})`,
@@ -137,7 +137,7 @@ const Visitors_Vip = () => {
         }}
       >
         <BlockTitle page tag="h3">
-          <Title>Visitor History</Title>
+          <Title>VIP Visitors</Title>
         </BlockTitle>
       </div>
       <Content>
