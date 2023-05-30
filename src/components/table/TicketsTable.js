@@ -160,7 +160,7 @@ const TicketsTable = ({ pagination, expandableRows, actions, className, selectab
       dispatch(fetchTickets({ startDate: startDate, endDate: endDate, client_id: client_id }));
       intervalId = setInterval(() => {
         getTickets(startDate, endDate);
-      }, 10000);
+      }, 25000);
     }
 
     return () => clearTimeout(intervalId);
