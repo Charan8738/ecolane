@@ -171,13 +171,16 @@ const Venue = () => {
         try {
           const response = await fetch(url);
           setLoading(false);
-          const json = await response.json();
-          console.log(json);
-          //data = json.purchasetickets;
-          setData(json);
-          initialData.current = [...json];
-          initialApproval.current = [...json];
-          initialApprovaltwo.current = [...json];
+          console.log(response.status);
+          if (response.status === 200) {
+            const json = await response.json();
+            console.log(json);
+            //data = json.purchasetickets;
+            setData(json);
+            initialData.current = [...json];
+            initialApproval.current = [...json];
+            initialApprovaltwo.current = [...json];
+          }
         } catch (err) {
           setError(true);
         }

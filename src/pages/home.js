@@ -235,12 +235,12 @@ const home = () => {
                     categories={Categories}
                   />
                 </Col>
-                <Col xxl="5" lg="6">
+                {/* <Col xxl="5" lg="6">
                   <TrafficSources />
                 </Col>
                 <Col xxl="4" lg="6">
                   <StoreVisitors />
-                </Col>
+                </Col> */}
               </Row>
             </Block>
           )}
