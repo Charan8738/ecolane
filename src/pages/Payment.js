@@ -120,9 +120,7 @@ const Venue = () => {
   };
   useEffect(() => {
     const getData = async () => {
-      const response = await axios.get(
-        "https://ecolane-api.zig-web.com/api/User/GetAnalyticsV3?client_id=" + client_id
-      );
+      const response = await axios.get("https://ecolane-api.zig-web.com/api/User/GetAnalyticsV3?client_id=1");
       return response.data;
     };
     setLoading(false);
@@ -142,11 +140,14 @@ const Venue = () => {
 
   // Splits and converts the data into array
   useEffect(() => {
-    const ticketsData = MonthlyTicketsDatas.map((data) => data.TicketsCountData);
-    const ticketsDate = MonthlyTicketsDatas.map((data) => data.Date);
+    console.log(MonthlyTicketsDatas.length);
+    if (MonthlyTicketsDatas.length > 0) {
+      const ticketsData = MonthlyTicketsDatas.map((data) => data.TicketsCountData);
+      const ticketsDate = MonthlyTicketsDatas.map((data) => data.Date);
 
-    setTicketsData(ticketsData);
-    setTicketsDate(ticketsDate);
+      setTicketsData(ticketsData);
+      setTicketsDate(ticketsDate);
+    }
   }, [MonthlyTicketsDatas]);
   useEffect(() => {
     if (onSearchText !== "") {

@@ -62,7 +62,7 @@ const home = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await axios.get("https://ecolane-api.zig-web.com/api/User/GetAnalyticsV3?client_id=" + userId);
+      const response = await axios.get("https://ecolane-api.zig-web.com/api/User/GetAnalyticsV3?client_id=1");
       return response.data;
     };
     setLoading(false);

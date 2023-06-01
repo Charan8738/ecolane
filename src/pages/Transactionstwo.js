@@ -97,9 +97,7 @@ const Venue = () => {
   };
   useEffect(() => {
     const getData = async () => {
-      const response = await axios.get(
-        "https://ecolane-api.zig-web.com/api/User/GetAnalyticsV3?client_id=" + client_id
-      );
+      const response = await axios.get("https://ecolane-api.zig-web.com/api/User/GetAnalyticsV3?client_id=1");
       return response.data;
     };
     setLoadChart(false);
