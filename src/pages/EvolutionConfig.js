@@ -131,7 +131,7 @@ const EvolutionConfig = () => {
         if (res.status === 200) {
           // setData((prev) => [...prev, res.data]);
           resetForm();
-          successAlert("Alert created successfully");
+          successAlert("New App Request Created successfully");
           setAddedData(true);
         } else {
           throw new Error(res.data);
