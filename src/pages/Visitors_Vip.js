@@ -82,7 +82,7 @@ const Visitors_Vip = () => {
           rangeDate.end.getFullYear() + "-" + (rangeDate.end.getMonth() + 1) + "-" + rangeDate.end.getDate();
         try {
           const response = await fetch(
-            "https://zig-web.com/ZIGSmartWeb/api/ZIGShuttle/GetVIPUsersMOCA?Startdate=" +
+            "https://zig-web.com/ZIGSmartWebLima/api/ZIGShuttle/GetVIPUsersMOCA?Startdate=" +
               startDate +
               "&Enddate=" +
               endDate +
