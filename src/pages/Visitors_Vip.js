@@ -33,7 +33,7 @@ const Visitors_Vip = () => {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemPerPage] = useState(7);
+  const [itemPerPage] = useState(25);
   const date = new Date();
   const daysAgo = new Date(date.getTime());
   const [searchText, setSearchText] = useState("");
