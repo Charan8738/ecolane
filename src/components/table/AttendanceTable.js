@@ -14,7 +14,7 @@ import "moment-timezone";
 import { user_id } from "../../redux/userSlice";
 
 import DatePicker from "react-datepicker";
-import { Card, Row, Col, Modal, ModalBody, Button, Spinner, FormGroup, Label } from "reactstrap";
+import { Card, Row, Col, Modal, ModalBody, Button, Spinner, FormGroup, Label, Badge } from "reactstrap";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { DataTablePagination } from "../Component";
 
@@ -153,6 +153,14 @@ const AttendanceTable = ({ data, columns, pagination, actions, className, select
     "swathianandkumar.06@gmail.com",
     "hariharan@zed.digital",
     "deepthi@zed.digital",
+    "dharanisundar15@gmail.com",
+    "priyadharshini@zed.digital",
+    "gunadharshini.c@gmail.com",
+    "manisha@zed.digital",
+    "sritharani.cs20@bitsathy.ac.in",
+    "shamsharma249@gmail.com",
+    "tamilkannan@zed.digital",
+    "bharathikannan@zed.digital",
   ];
   useEffect(() => {
     const filteredData = tableData.filter((item) => emailIdsToFilter.includes(item.EmailId));
@@ -301,10 +309,20 @@ const dataTableColumns = [
     hide: 370,
   },
   {
+    name: "Entry",
+    selector: (row) => (
+      <Badge color={row.Validated === "No" ? "danger" : "success"}>
+        {row.Validated === "No" ? "Absent" : "Present"}
+      </Badge>
+    ),
+    sortable: true,
+    hide: 370,
+  },
+  {
     name: "In Time",
     selector: (row) => (
       <Moment tz="Asia/Kolkata" format="MMMM Do YYYY, h:mm a">
-        {row.PurchasedDate}
+        {row.ValidatedDate}
       </Moment>
     ),
     sortable: true,
