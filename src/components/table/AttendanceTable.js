@@ -312,7 +312,7 @@ const dataTableColumns = [
     name: "Entry",
     selector: (row) => (
       <Badge color={row.Validated === "No" ? "danger" : "success"}>
-        {row.Validated === "No" ? "Absent" : "Present"}
+        {row.Validated === "No" ? "Entry Not Registered" : "Entry Registered"}
       </Badge>
     ),
     sortable: true,
