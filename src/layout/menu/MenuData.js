@@ -219,7 +219,7 @@ const menu = [
     icon: "cc-alt2-fill",
     text: "Attendance",
     link: "/attendance",
-    page: 33,
+    page: 34,
   },
 ];
 export default menu;
