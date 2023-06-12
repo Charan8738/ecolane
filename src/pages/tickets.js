@@ -1,13 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Block, BlockHead, PreviewCard, BlockHeadContent, BlockTitle, BlockBetween } from "../components/Component";
 import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
+import { user_id } from "../redux/userSlice";
 import styled from "styled-components";
 import backgroundImage from "../assets/images/Tickets.png";
 import NewTicketsTable from "../components/table/NewTicketsTable";
+import { useSelector, useDispatch } from "react-redux";
 import { Card, Row, Col, Modal, ModalBody, Button, Spinner, FormGroup, Label } from "reactstrap";
-
+import {
+  fetchDevices,
+  selectAllDevices,
+  getDevicesError,
+  getDevicesStatus,
+  setStatusToIdle,
+} from "../redux/deviceSlice";
 const tickets = () => {
+  const dispatch = useDispatch();
+  const devices = useSelector(selectAllDevices);
+  const status = useSelector(getDevicesStatus);
+  const error = useSelector(getDevicesError);
+  const userId = useSelector(user_id);
+
+  useEffect(() => {
+    dispatch(fetchDevices(84));
+
+    console.log(devices);
+  }, []);
   return (
     <React.Fragment>
       <Head title="Tickets"></Head>
@@ -38,7 +57,7 @@ const tickets = () => {
             <BlockHeadContent>
               <BlockTitle tag="h4">Payment Device</BlockTitle>
               <Row>
-                {" "}
+                {/* {devices && devices.length > 0 ?  } */}{" "}
                 <Col className="col-5 text-left" sm="8">
                   <div className="dataTables_length" id="DataTables_Table_0_length">
                     <label>

@@ -102,7 +102,7 @@ const menu = [
     icon: "ticket-fill",
     text: "Tickets Booth",
     link: "/tickets-booth",
-    page: 7,
+    page: 35,
   },
 
   {
