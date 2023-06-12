@@ -21,6 +21,12 @@ const tickets = () => {
   const status = useSelector(getDevicesStatus);
   const error = useSelector(getDevicesError);
   const userId = useSelector(user_id);
+  const [deviceMac, setDeviceMac] = useState("All");
+
+  const onDeviceSelected = (e) => {
+    console.log(e.target.value);
+    setDeviceMac(e.target.value);
+  };
 
   useEffect(() => {
     dispatch(fetchDevices(84));
@@ -67,13 +73,18 @@ const tickets = () => {
                         <select
                           name="DataTables_Table_0_length"
                           className="custom-select custom-select-sm form-control form-control-sm"
-                          // onChange={(e) => setRowsPerPage(e.target.value)}
-                          // value={rowsPerPageS}
+                          onChange={onDeviceSelected}
+                          value={deviceMac}
                         >
-                          <option value="10">tset</option>
+                          <option value="All">All</option>
+                          {devices &&
+                            devices.map((device) => (
+                              <option value={device.IBeaconAMACAddress}>{device.DeviceName}</option>
+                            ))}
+                          {/* <option value="10">All</option>
                           <option value="25">25</option>
                           <option value="40">40</option>
-                          <option value="50">50</option>
+                          <option value="50">50</option> */}
                         </select>{" "}
                       </div>
                     </label>
@@ -83,7 +94,7 @@ const tickets = () => {
             </BlockHeadContent>
           </BlockHead>
           <PreviewCard>
-            <NewTicketsTable expandableRows pagination actions />
+            <NewTicketsTable expandableRows pagination actions deviceMac={deviceMac} />
           </PreviewCard>
         </Block>
       </Content>

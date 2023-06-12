@@ -119,11 +119,11 @@ const CustomCheckbox = React.forwardRef(({ onClick, ...rest }, ref) => (
   </div>
 ));
 
-const NewTicketsTable = ({ pagination, expandableRows, actions, className, selectableRows }) => {
+const NewTicketsTable = ({ pagination, expandableRows, actions, className, selectableRows, deviceMac }) => {
   // selector is used to access the value from the store
+  console.log(deviceMac);
   const client_id = useSelector(user_id);
   const error = useState(false);
-
   const status = useState("loading");
   const [ticketData, setTicketData] = useState([]);
   const [defaultTicket, setDefaultTicket] = useState([]);
@@ -131,6 +131,7 @@ const NewTicketsTable = ({ pagination, expandableRows, actions, className, selec
   const [rowsPerPageS, setRowsPerPage] = useState(10);
   const date = new Date();
   const daysAgo = new Date(date.getTime());
+
   daysAgo.setDate(date.getDate() - 2);
 
   const [rangeDate, setRangeDate] = useState({
@@ -142,6 +143,18 @@ const NewTicketsTable = ({ pagination, expandableRows, actions, className, selec
     setRangeDate({ start: start, end: end });
   };
 
+  // useEffect(() => {
+  //   var defaultData = ticketData;
+
+  //   if (deviceMac === "All") {
+  //     setTicketData(defaultData);
+  //   } else {
+  //     defaultData = defaultTicket.filter((item) => {
+  //       return item?.IBeaconAMACAddress.toString().toLowerCase().includes(deviceMac.toLowerCase());
+  //     });
+  //     setTicketData(defaultData);
+  //   }
+  // }, []);
   useEffect(() => {
     const getTickets = async (start, end) => {
       console.log("inside Fetch Tickets");
