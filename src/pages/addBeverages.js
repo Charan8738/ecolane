@@ -293,8 +293,10 @@ const AddBeverages = () => {
   const { errors, register, handleSubmit } = useForm();
   const fetchCategories = async () => {
     const response = await axios.get("getCategory?client_id=" + client_id);
-    setCategories([...response.data]);
-    return [...response.data];
+    if (response.status == 200) {
+      setCategories([...response.data]);
+      return [...response.data];
+    }
   };
   useEffect(() => {
     if (onSearchText !== "") {
@@ -310,7 +312,10 @@ const AddBeverages = () => {
     const getBeverages = async () => {
       setLoading(true);
       const catResponse = await axios.get("getCategory?client_id=" + client_id);
-      setCategories([...catResponse.data]);
+      if (catResponse.status == 200) {
+        setCategories([...catResponse.data]);
+      }
+
       const response = await axios.get("getFares?client_id=" + client_id);
       setLoading(false);
       if (response.status === 200) {

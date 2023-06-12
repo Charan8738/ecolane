@@ -98,6 +98,12 @@ const menu = [
     link: "/Tickets",
     page: 7,
   },
+  {
+    icon: "ticket-fill",
+    text: "Tickets Booth",
+    link: "/tickets-booth",
+    page: 7,
+  },
 
   {
     icon: "coffee",
@@ -208,7 +214,6 @@ const menu = [
     link: "/analytics",
     page: 26,
   },
-
   {
     icon: "cc-alt2-fill",
     text: "All Venues",

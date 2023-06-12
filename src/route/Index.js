@@ -13,6 +13,7 @@ import home from "../pages/home";
 import EvolutionConfig from "../pages/EvolutionConfig";
 import AllVenues from "../pages/AllVenues";
 import Attendance from "../pages/Attendance";
+import tickets from "../pages/tickets";
 // const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
 const Homepage = React.lazy(() => import("../pages/Devices"));
@@ -81,6 +82,7 @@ const Pages = ({ currentAccess }) => {
     { page: 32, pathname: "evo-config", component: EvolutionConfig },
     { page: 33, pathname: "all-venues", component: AllVenues },
     { page: 34, pathname: "attendance", component: Attendance },
+    { page: 34, pathname: "tickets-booth", component: tickets },
   ];
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
