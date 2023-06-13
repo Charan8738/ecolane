@@ -143,18 +143,31 @@ const NewTicketsTable = ({ pagination, expandableRows, actions, className, selec
     setRangeDate({ start: start, end: end });
   };
 
-  // useEffect(() => {
-  //   var defaultData = ticketData;
+  useEffect(() => {
+    var defaultData = ticketData;
 
-  //   if (deviceMac === "All") {
-  //     setTicketData(defaultData);
-  //   } else {
-  //     defaultData = defaultTicket.filter((item) => {
-  //       return item?.IBeaconAMACAddress.toString().toLowerCase().includes(deviceMac.toLowerCase());
-  //     });
-  //     setTicketData(defaultData);
-  //   }
-  // }, []);
+    if (deviceMac === "All") {
+      setTicketData(defaultData);
+    } else {
+      defaultData = defaultTicket.filter((item) => {
+        return item?.BeaconId && item.BeaconId.toString().toLowerCase().includes(deviceMac.toLowerCase());
+      });
+      setTicketData(defaultData);
+    }
+  }, []);
+  useEffect(() => {
+    var defaultData = ticketData;
+
+    if (deviceMac === "All") {
+      setTicketData(defaultData);
+    } else {
+      defaultData = defaultTicket.filter((item) => {
+        return item?.BeaconId && item.BeaconId.toString().toLowerCase().includes(deviceMac.toLowerCase());
+      });
+      console.log(defaultData.length);
+      setTicketData(defaultData);
+    }
+  }, [deviceMac]);
   useEffect(() => {
     const getTickets = async (start, end) => {
       console.log("inside Fetch Tickets");
