@@ -77,6 +77,8 @@ const tickets = () => {
                           value={deviceMac}
                         >
                           <option value="All">All</option>
+                          <option value="F0:CF:9F:AF:74:C1">Booth 2</option>
+                          <option value="DB:BB:0D:CB:E2:4B">Booth 3</option>
                           {devices &&
                             devices.map((device) => (
                               <option value={device.IBeaconAMACAddress}>{device.DeviceName}</option>

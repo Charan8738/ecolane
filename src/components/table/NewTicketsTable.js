@@ -143,18 +143,6 @@ const NewTicketsTable = ({ pagination, expandableRows, actions, className, selec
     setRangeDate({ start: start, end: end });
   };
 
-  // useEffect(() => {
-  //   var defaultData = ticketData;
-
-  //   if (deviceMac === "All") {
-  //     setTicketData(defaultData);
-  //   } else {
-  //     defaultData = defaultTicket.filter((item) => {
-  //       return item?.IBeaconAMACAddress.toString().toLowerCase().includes(deviceMac.toLowerCase());
-  //     });
-  //     setTicketData(defaultData);
-  //   }
-  // }, []);
   useEffect(() => {
     const getTickets = async (start, end) => {
       console.log("inside Fetch Tickets");
@@ -195,6 +183,26 @@ const NewTicketsTable = ({ pagination, expandableRows, actions, className, selec
     }
   }, []);
 
+  useEffect(() => {
+    console.log("deviceMac:", deviceMac);
+
+    let defaultData = ticketData;
+
+    if (deviceMac && deviceMac !== "All") {
+      console.log("Inside if block");
+      defaultData = defaultTicket.filter((item) => {
+        return item?.BeaconId && item.BeaconId.toString().toLowerCase().includes(deviceMac.toLowerCase());
+      });
+      setTicketData(defaultData);
+    } else {
+      console.log("Inside else block");
+      setTicketData(defaultTicket);
+    }
+  }, [deviceMac]);
+
+  useEffect(() => {
+    console.log("Filtered data:", ticketData);
+  }, [ticketData]);
   //   useEffect(() => {
   //     const getTickets = (start, end) => {
   //       console.log("inside Fetch Tickets");
@@ -226,6 +234,7 @@ const NewTicketsTable = ({ pagination, expandableRows, actions, className, selec
 
   useEffect(() => {
     let defaultData = ticketData;
+    console.log("search filter trigger");
     if (searchText !== "") {
       defaultData = defaultTicket.filter((item) => {
         return item?.TicketID.toString().toLowerCase().includes(searchText.toLowerCase());
@@ -234,7 +243,7 @@ const NewTicketsTable = ({ pagination, expandableRows, actions, className, selec
     } else {
       setTicketData(defaultTicket);
     }
-  }, [searchText, ticketData]);
+  }, [searchText]);
 
   //   if (status === "loading") {
   //     return (
