@@ -82,7 +82,7 @@ const Pages = ({ currentAccess }) => {
     { page: 32, pathname: "evo-config", component: EvolutionConfig },
     { page: 33, pathname: "all-venues", component: AllVenues },
     { page: 34, pathname: "attendance", component: Attendance },
-    { page: 34, pathname: "tickets-booth", component: tickets },
+    { page: 35, pathname: "tickets-booth", component: tickets },
   ];
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
