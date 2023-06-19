@@ -137,13 +137,12 @@ const menu = [
     link: "/asset-management",
     page: 14,
   },
-
-  {
-    icon: "map",
-    text: "GPS Trackers",
-    link: "/add-tracker",
-    page: 16,
-  },
+  // {
+  //   icon: "map",
+  //   text: "GPS Trackers",
+  //   link: "/add-tracker",
+  //   page: 16,
+  // },
   {
     icon: "map",
     text: "Fleet Tracking",
