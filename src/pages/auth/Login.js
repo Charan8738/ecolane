@@ -53,35 +53,45 @@ const Login = () => {
   const [passState, setPassState] = useState(false);
   const [loginName, setLoginName] = useState();
   const [pass, setPass] = useState();
+
   const onFormSubmit = () => {
     setError(false);
     setLoading(true);
+    let isMounted = true; // Add a flag to check if the component is mounted
+
     axios
       .post("client/login", {
         email: loginName,
         password: pass,
       })
       .then((response) => {
-        setLoading(false);
-
-        if (response.data.access_token && response.data.refresh_token) {
-          messageToast();
-          sessionStorage.setItem("accessToken", response.data.access_token);
-          sessionStorage.setItem("refreshToken", response.data.refresh_token);
-          setTimeout(() => {
-            window.history.pushState(
-              `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`,
-              "auth-login",
-              `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`
-            );
-            window.location.reload();
-          }, 2000);
-
+        if (isMounted) {
           setLoading(false);
+
+          if (response.data.access_token && response.data.refresh_token) {
+            messageToast();
+            sessionStorage.setItem("accessToken", response.data.access_token);
+            sessionStorage.setItem("refreshToken", response.data.refresh_token);
+
+            setTimeout(() => {
+              window.history.pushState(
+                `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`,
+                "auth-login",
+                `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`
+              );
+              window.location.reload();
+            }, 2000);
+
+            setLoading(false);
+          }
+          setError(true);
         }
-        setError(true);
+      })
+      .finally(() => {
+        isMounted = false; // Set the flag to false when the operation is complete
       });
   };
+
   const { errors, register, handleSubmit } = useForm();
   if (sessionStorage.getItem("accessToken")) return <Redirect to="/" />;
   return (
@@ -124,7 +134,7 @@ const Login = () => {
                   <input
                     type="text"
                     id="default-01"
-                    name="name"
+                    name="loginName" // Update the name attribute to "loginName"
                     value={loginName}
                     onChange={(e) => setLoginName(e.target.value)}
                     ref={register({ required: "This field is required" })}
@@ -137,7 +147,7 @@ const Login = () => {
               <FormGroup>
                 <div className="form-label-group">
                   <label className="form-label" htmlFor="password">
-                    Passcode
+                    Password
                   </label>
                   {/* <Link className="link link-primary link-sm" to={`${process.env.PUBLIC_URL}/auth-reset`}>
                     Forgot Code?
@@ -159,7 +169,7 @@ const Login = () => {
                   <input
                     type={passState ? "text" : "password"}
                     id="password"
-                    name="passcode"
+                    name="pass" // Update the name attribute to "pass"
                     value={pass}
                     ref={register({ required: "This field is required" })}
                     placeholder="Enter your passcode"

@@ -125,14 +125,19 @@ const AllVenues = () => {
       BiboRssi_ios: formData.BibobRssi_ios,
     };
     console.log(submittedData);
-    const response = await axios.put("UpdateNewClientVenue", { ...submittedData });
+    const response = await axios.put("UpdateClientConfiguration", { ...submittedData });
     if (response.data === true) {
       const newData = [...data];
       const newIdx = newData.findIndex((item) => item.Id === formData.Id);
       newData[newIdx] = { ...submittedData };
       setData([...newData]);
       onFormCancel();
-      successAlert();
+      const refresh2 = await axios.get("ResetConfigSettingNew");
+      const refresh1 = await axios.get("ResetConfigSetting");
+
+      if (refresh1.status && refresh2.status) {
+        successAlert();
+      }
     } else {
       failureAlert();
     }

@@ -14,6 +14,7 @@ import EvolutionConfig from "../pages/EvolutionConfig";
 import AllVenues from "../pages/AllVenues";
 import Attendance from "../pages/Attendance";
 import tickets from "../pages/tickets";
+import UserSettings from "../pages/UserSettings";
 // const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
 const Homepage = React.lazy(() => import("../pages/Devices"));
@@ -93,6 +94,7 @@ const Pages = ({ currentAccess }) => {
         <Route path={`/tracker-info`} component={TrackerInfo} />
         <Route path={`/vehicle-info`} component={VehicleInfo} />
         <Route path={`/schedule-info`} component={ScheduleInfo} />
+        <Route path={`/user-profile-setting`} component={UserSettings} />
         <Route path={`${process.env.PUBLIC_URL}/device/:id`} component={DeviceConfig}></Route>
         {rolesRoutePages.map(
           (route) =>
