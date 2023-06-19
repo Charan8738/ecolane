@@ -27,6 +27,7 @@ import {
 } from "../components/Component";
 const home = () => {
   let val;
+
   const userId = useSelector(user_id);
   const [newData, setData] = useState();
   const [totalUsers, setTotalUsers] = useState(0);
@@ -176,9 +177,11 @@ const home = () => {
   if (!isLoading && totalUsers) {
     console.log(totalUsers);
   }
+
   return (
     <React.Fragment>
       <Head title="Homepage"></Head>
+
       {finalLoading ? (
         <Content>
           <BlockHead size="sm">
