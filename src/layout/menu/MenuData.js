@@ -137,7 +137,6 @@ const menu = [
     link: "/asset-management",
     page: 14,
   },
-
   // {
   //   icon: "map",
   //   text: "GPS Trackers",
@@ -185,7 +184,7 @@ const menu = [
   },
   {
     icon: "user-list",
-    text: "Visitor History",
+    text: "Rider History",
     link: "/visitorhistory",
     page: 21,
   },
@@ -225,6 +224,12 @@ const menu = [
     text: "Attendance",
     link: "/attendance",
     page: 34,
+  },
+  {
+    icon: "cc-alt2-fill",
+    text: "Run",
+    link: "/run",
+    page: 35,
   },
 ];
 export default menu;

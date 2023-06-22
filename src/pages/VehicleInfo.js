@@ -35,6 +35,7 @@ import axios from "axios";
 import Speedometer, { Arc, Background, Needle, Progress, Marks, Indicator } from "react-speedometer";
 import TripsTable from "../components/table/TripsTable";
 import TeltonikaTripsTable from "../components/table/TeltonikaTripsTable";
+import RidersListTable from "../components/table/RidersListTable";
 import LiveMapTeltonika from "./components/CustomWidgets/Widgets/LiveMapTeltonika";
 import TimeDifference from "../components/TimeDifference";
 const SpeedometerWiddget = ({ value }) => {
@@ -79,10 +80,18 @@ const VehicleInfo = () => {
   const [gsmSignal, setGsmSignal] = useState();
   const [gpsSignal, setGpsSignal] = useState();
   const [timeStamp, setTimeStamp] = useState();
+  const [occupancyData, setOccupancyData] = useState();
+  const [occupancyList, setOccupancyList] = useState([]);
   const imei = location.state?.imei;
   const vehicleType = location.state?.vehicleType;
   const vehicleNo = location.state?.vehicleNo;
+  const DeviceType = location.state?.DeviceType;
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
 
+  const formattedDate = `${year}-${month}-${day}`;
   console.log(vehicleNo);
   const gpschart = {
     labels: timeStamp,
@@ -167,7 +176,35 @@ const VehicleInfo = () => {
         .finally(() => {
           setLoading(false);
         });
-    }, 10000);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+  useEffect(() => {
+    const getOccupancyData = async () => {
+      try {
+        const response = await axios.get(
+          "https://gps.zig-app.com/api/get/mac_data?start=" + formattedDate + "&end=" + formattedDate + "&imei=" + imei
+        );
+        return response.data;
+      } catch (err) {
+        throw err;
+      }
+    };
+    setLoading(true);
+    const timer = setInterval(() => {
+      getOccupancyData()
+        .then((res) => {
+          setOccupancyData({ ...res });
+          // console.log(res.UserData);
+          setOccupancyList([...res.UserData]);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
 
@@ -242,7 +279,7 @@ const VehicleInfo = () => {
             <BlockBetween>
               <BlockHeadContent>
                 <BlockTitle page tag="h3">
-                  {gpsData?.imei ? "Coach Info" : "Error"}
+                  Coach Info
                 </BlockTitle>
                 <BlockDes className="text-soft">
                   <ul className="list-inline">
@@ -328,30 +365,42 @@ const VehicleInfo = () => {
                     {parseFloat(gpsData?.today_odometer).toFixed(2)}
                   </CardTitle>
                 </CardBody>
-                {/* <CardBody>
-                  <CardTitle className="text-primary" tag="h6">
-                    Tripmeter (miles)
-                  </CardTitle>
-                  <CardTitle className="center ff-mono" tag="h4">
-                    {odoData?.Odometerfinalvalue.toFixed(2)}
-                  </CardTitle>
-                </CardBody> */}
               </Card>
             </Col>
-            {viewOption === "realtime" ? (
+            {occupancyData && DeviceType === 3 && occupancyData.Count !== null ? (
               <Col sm="12">
                 <div style={{ width: "100%", height: "522px" }}>
-                  <LiveMapTeltonika imei={imei} vehicleType={vehicleType} />
+                  <LiveMapTeltonika
+                    DeviceType={DeviceType}
+                    count={occupancyData.Count}
+                    imei={imei}
+                    vehicleType={vehicleType}
+                  />
                 </div>
               </Col>
             ) : (
               <Col sm="12">
-                {/* <CustomWidgets gpsData={gpsData} /> */}
+                {/* <Spinner color="primary" type="grow" /> */}
                 <div style={{ width: "100%", height: "522px" }}>
-                  {/* <HistoryMap imei={imei} vehicleType={vehicleType} /> */}
+                  <LiveMapTeltonika DeviceType={DeviceType} imei={imei} vehicleType={vehicleType} />
                 </div>
               </Col>
             )}
+
+            {/* {viewOption === "realtime" ? ( */}
+            {/* <Col sm="12">
+                <div style={{ width: "100%", height: "522px" }}>
+                  <LiveMapTeltonika count={100} imei={imei} vehicleType={vehicleType} />
+                </div>
+              </Col>
+            ) : (
+              <Col sm="12"> */}
+            {/* <CustomWidgets gpsData={gpsData} /> */}
+            {/* <div style={{ width: "100%", height: "522px" }}> */}
+            {/* <HistoryMap imei={imei} vehicleType={vehicleType} /> */}
+            {/* </div>
+              </Col>
+            )} */}
           </Row>
         </Block>
         <br></br>
@@ -488,6 +537,18 @@ const VehicleInfo = () => {
             </Col>
           </Row>
         </Block>
+        {DeviceType === 3 && (
+          <Block>
+            <BlockHead>
+              <BlockHeadContent>
+                <BlockTitle tag="h4">Riders List</BlockTitle>
+              </BlockHeadContent>
+            </BlockHead>
+            <PreviewCard>
+              {occupancyData && <RidersListTable data={occupancyData.UserData} expandableRows pagination />}
+            </PreviewCard>
+          </Block>
+        )}
 
         <Block>
           <BlockHead>

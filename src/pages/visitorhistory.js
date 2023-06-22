@@ -137,7 +137,7 @@ const Visitors_Vip = () => {
         }}
       >
         <BlockTitle page tag="h3">
-          <Title>Visitor History</Title>
+          <Title>Rider History</Title>
         </BlockTitle>
       </div>
       <Content>
@@ -188,7 +188,7 @@ const Visitors_Vip = () => {
                       <th className="d-none d-md-table-cell">User Name</th>
                       <th className="d-none d-sm-table-cell">Tickets</th>
                       <th className="d-none d-sm-table-cell">Email</th>
-                      <th className="d-none d-sm-table-cell">Phonenumber</th>
+                      <th className="d-none d-sm-table-cell">Route Name</th>
                       <th className="d-none d-sm-table-cell">IN Time</th>
                       <th className="d-none d-sm-table-cell">Out Time</th>
                       <th className="d-none d-sm-table-cell">Admit</th>
@@ -213,7 +213,7 @@ const Visitors_Vip = () => {
                                 {item.EmailId}
                               </td>
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
-                                {item.Phone}
+                                {item.Routeid}
                               </td>
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
                                 <Moment format="MMMM Do YYYY, h:mm a">{item.Intime}</Moment>
