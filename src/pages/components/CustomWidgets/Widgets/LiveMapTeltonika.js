@@ -7,8 +7,8 @@ import redTruck from "../../../../assets/images/truck.png";
 import redCar from "../../../../assets/images/car.png";
 import redBike from "../../../../assets/images/motor-sports.png";
 import { PreviewCard } from "../../../../components/Component";
-import { Spinner } from "reactstrap";
-const LiveMapTeltonika = ({ vehicleType, imei }) => {
+import { Spinner, Card, CardBody, CardTitle } from "reactstrap";
+const LiveMapTeltonika = ({ DeviceType, count, vehicleType, imei }) => {
   const VEHICLE_TYPES = { 1: redTruck, 2: redCar, 3: redCar, 4: redBike, 5: redBus, 10: redTruck };
   const [gpsData, setGpsData] = useState();
   const [loading, setLoading] = useState(false);
@@ -60,6 +60,25 @@ const LiveMapTeltonika = ({ vehicleType, imei }) => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <RecenterAutomatically lat={gpsData.latitude} lng={gpsData.longitude} />
+            {DeviceType === 3 && (
+              <div className="leaflet-top leaflet-right">
+                <div className="leaflet-control leaflet-bar" style={{ border: "none" }}>
+                  <div style={{ width: "250px" }}>
+                    <Card>
+                      <CardBody className="card-inner">
+                        <CardTitle className="text-primary" tag="h6">
+                          Realtime Occupancy
+                        </CardTitle>
+                        <CardTitle className="center ff-mono" tag="h4">
+                          {count}
+                        </CardTitle>
+                      </CardBody>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <Marker position={[gpsData.latitude, gpsData.longitude]} icon={busIcon}></Marker>
           </MapContainer>
         </div>

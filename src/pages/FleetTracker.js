@@ -142,7 +142,12 @@ const FleetTracker = () => {
   const redirectToWidget = (imei) => {
     const tracker = trackers.find((item) => item.imei === imei);
     console.log(tracker.vehicleType);
-    history.push("/vehicle-info", { imei: imei, vehicleType: tracker.vehicleType, vehicleNo: tracker.vehicleNo });
+    history.push("/vehicle-info", {
+      imei: imei,
+      vehicleType: tracker.vehicleType,
+      vehicleNo: tracker.vehicleNo,
+      DeviceType: tracker.DeviceType,
+    });
   };
 
   useEffect(() => {
