@@ -5,7 +5,7 @@ import Head from "../layout/head/Head";
 import Swal from "sweetalert2";
 import styled from "styled-components";
 import { user_id } from "../redux/userSlice";
-import { Card, Spinner, UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
+import { Card, Spinner, UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle, Input } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 
@@ -40,7 +40,11 @@ const Visitors_Vip = () => {
   const [mainData, setMainData] = useState([]);
   daysAgo.setDate(date.getDate() - 2);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
+  const [deviceMac, setDeviceMac] = useState("All");
+  const onDeviceSelected = (e) => {
+    console.log(e.target.value);
+    setDeviceMac(e.target.value);
+  };
   const [rangeDate, setRangeDate] = useState({
     start: daysAgo,
     end: new Date(),
@@ -119,6 +123,28 @@ const Visitors_Vip = () => {
     }
   }, [searchText]);
 
+  useEffect(() => {
+    console.log("deviceMac:", deviceMac);
+
+    let defaultData = mainData;
+
+    if (deviceMac && deviceMac !== "All") {
+      console.log("Inside if block");
+      defaultData = mainData.filter((item) => {
+        return (
+          item?.Routeid &&
+          item.Routeid.toString().toLowerCase().includes(deviceMac.toLowerCase()) &&
+          item.Routeid !== ""
+        );
+      });
+      setData(defaultData);
+    } else {
+      console.log("Inside else block");
+      setData([]);
+      setData(mainData);
+    }
+  }, [deviceMac]);
+
   const onFilterChange = (e) => {
     console.log(e.target.value);
     setSearchText(e.target.value);
@@ -145,16 +171,48 @@ const Visitors_Vip = () => {
         <br></br>
         <div className="d-flex">
           <div className="flex-grow-1">
-            <Col sm="3">
-              <DatePicker
-                selected={rangeDate.start}
-                startDate={rangeDate.start}
-                onChange={onRangeChange}
-                endDate={rangeDate.end}
-                selectsRange
-                className="form-control date-picker"
-              />
-            </Col>
+            <Row>
+              <Col sm="2">
+                <div className="form-control-select">
+                  {" "}
+                  <select
+                    name="DataTables_Table_0_length"
+                    className="custom-select custom-select-sm form-control form-control-sm"
+                    onChange={onDeviceSelected}
+                    value={deviceMac}
+                  >
+                    <option value="All">All</option>
+                    <option value="7406">7406</option>
+                    <option value="7407">7407</option>
+                    <option value="7408">7408</option>
+                    <option value="7409">7409</option>
+                    <option value="7410">7410</option>
+                    <option value="7411">7411</option>
+                    <option value="7413">7413</option>
+                    <option value="7414">7414</option>
+                    <option value="7416">7416</option>
+                    {/* <option value="1072">1072</option>
+                    <option value="1073">1073</option> */}
+                    {/* {devices &&
+                      devices.map((device) => <option value={device.IBeaconAMACAddress}>{device.DeviceName}</option>)} */}
+                    {/* <option value="10">All</option>
+                          <option value="25">25</option>
+                          <option value="40">40</option>
+                          <option value="50">50</option> */}
+                  </select>{" "}
+                </div>
+              </Col>
+              <Col sm="3">
+                <DatePicker
+                  selected={rangeDate.start}
+                  startDate={rangeDate.start}
+                  onChange={onRangeChange}
+                  endDate={rangeDate.end}
+                  selectsRange
+                  className="form-control date-picker"
+                />
+              </Col>
+            </Row>
           </div>
           <div>
             <ul className="nk-block-tools g-3">
