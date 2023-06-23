@@ -243,8 +243,8 @@ const Visitors_Vip = () => {
                   <thead className="table-light">
                     <tr>
                       <th className="d-none d-md-table-cell">Pass</th>
-                      <th className="d-none d-md-table-cell">User Name</th>
-                      <th className="d-none d-sm-table-cell">Tickets</th>
+                      {/* <th className="d-none d-md-table-cell">User Name</th>
+                      <th className="d-none d-sm-table-cell">Tickets</th> */}
                       <th className="d-none d-sm-table-cell">Email</th>
                       <th className="d-none d-sm-table-cell">Route Name</th>
                       <th className="d-none d-sm-table-cell">IN Time</th>
@@ -261,12 +261,12 @@ const Visitors_Vip = () => {
                                 <strong>{item.VIP}</strong>
                               </td>
 
-                              <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
+                              {/* <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
                                 {item.UserName}
                               </td>
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
                                 {item.Ticketcount}
-                              </td>
+                              </td> */}
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
                                 {item.EmailId}
                               </td>
