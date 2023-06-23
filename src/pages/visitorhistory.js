@@ -249,7 +249,7 @@ const Visitors_Vip = () => {
                       <th className="d-none d-sm-table-cell">Route Name</th>
                       <th className="d-none d-sm-table-cell">IN Time</th>
                       <th className="d-none d-sm-table-cell">Out Time</th>
-                      <th className="d-none d-sm-table-cell">Admit</th>
+                      {/* <th className="d-none d-sm-table-cell">Admit</th> */}
                     </tr>
                   </thead>
                   <tbody>
@@ -280,7 +280,7 @@ const Visitors_Vip = () => {
                                 <Moment format="MMMM Do YYYY, h:mm a">{item.Outtime}</Moment>
                               </td>
 
-                              <td style={{ padding: "0.75rem 0.25rem" }}>
+                              {/* <td style={{ padding: "0.75rem 0.25rem" }}>
                                 <div className="tb-odr-btns d-none d-md-inline">
                                   <Button
                                     color="primary"
@@ -293,7 +293,7 @@ const Visitors_Vip = () => {
                                     Admit
                                   </Button>
                                 </div>
-                              </td>
+                              </td> */}
                             </tr>
                           );
                         })
