@@ -196,7 +196,10 @@ const VehicleInfo = () => {
         .then((res) => {
           setOccupancyData({ ...res });
           // console.log(res.UserData);
-          setOccupancyList([...res.UserData]);
+          if (res.UserData !== null) {
+            console.log("inside Null");
+            setOccupancyList([...res.UserData]);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -367,12 +370,12 @@ const VehicleInfo = () => {
                 </CardBody>
               </Card>
             </Col>
-            {occupancyData && DeviceType === 3 && occupancyData.Count !== null ? (
+            {occupancyData && DeviceType === 3 && occupancyData.ActiveCrowd !== null ? (
               <Col sm="12">
                 <div style={{ width: "100%", height: "522px" }}>
                   <LiveMapTeltonika
                     DeviceType={DeviceType}
-                    count={occupancyData.Count}
+                    count={occupancyData.ActiveCrowd}
                     imei={imei}
                     vehicleType={vehicleType}
                   />
@@ -545,7 +548,11 @@ const VehicleInfo = () => {
               </BlockHeadContent>
             </BlockHead>
             <PreviewCard>
-              {occupancyData && <RidersListTable data={occupancyData.UserData} expandableRows pagination />}
+              {occupancyData && occupancyData.UserData ? (
+                <RidersListTable data={occupancyData.UserData} expandableRows pagination />
+              ) : (
+                <p>No rider data available.</p>
+              )}
             </PreviewCard>
           </Block>
         )}
