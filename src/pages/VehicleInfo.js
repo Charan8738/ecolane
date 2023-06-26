@@ -421,24 +421,29 @@ const VehicleInfo = () => {
                 amount={parseFloat(gpsData?.today_odometer).toFixed(2)}
               />
             </Col>
-            <Col xxl="3" sm="4">
-              <DataCardAnalytics
-                title="Average Speed (M) "
-                // percentChange={"2.5"}
-                up={true}
-                // chart={<DefaultOrderChart />}
-                amount={analyticsData?.avgSpeed}
-              />
-            </Col>
-            <Col xxl="3" sm="4">
-              <DataCardAnalytics
-                title="No of Stops"
-                // percentChange={"2.5"}
-                up={true}
-                // chart={<DefaultOrderChart />}
-                amount={analyticsData?.noOfStops}
-              />
-            </Col>
+            {DeviceType !== 3 && (
+              <Col xxl="3" sm="4">
+                <DataCardAnalytics
+                  title="Average Speed (M) "
+                  // percentChange={"2.5"}
+                  up={true}
+                  // chart={<DefaultOrderChart />}
+                  amount={analyticsData?.avgSpeed}
+                />
+              </Col>
+            )}
+            {DeviceType !== 3 && (
+              <Col xxl="3" sm="4">
+                <DataCardAnalytics
+                  title="No of Stops"
+                  // percentChange={"2.5"}
+                  up={true}
+                  // chart={<DefaultOrderChart />}
+                  amount={analyticsData?.noOfStops}
+                />
+              </Col>
+            )}
+
             <Col xxl="3" sm="4">
               <DataCardAnalytics
                 title="Top Speed (Mph)"
@@ -448,54 +453,65 @@ const VehicleInfo = () => {
                 amount={analyticsData?.overSpeed}
               />
             </Col>
-            <Col xxl="3" sm="4">
-              <DataCardAnalytics
-                title="Moving hours"
-                // percentChange={"2.5"}
-                up={true}
-                // chart={<DefaultOrderChart />}
-                amount={analyticsData?.movingTime}
-              />
-            </Col>
-            <Col xxl="3" sm="4">
-              <DataCardAnalytics
-                title="Air Conditioner"
-                // percentChange={"2.5"}
-                up={true}
-                // chart={<DefaultOrderChart />}
+            {DeviceType !== 3 && (
+              <Col xxl="3" sm="4">
+                <DataCardAnalytics
+                  title="Moving hours"
+                  // percentChange={"2.5"}
+                  up={true}
+                  // chart={<DefaultOrderChart />}
+                  amount={analyticsData?.movingTime}
+                />
+              </Col>
+            )}
+            {DeviceType !== 3 && (
+              <Col xxl="3" sm="4">
+                <DataCardAnalytics
+                  title="Air Conditioner"
+                  // percentChange={"2.5"}
+                  up={true}
+                  // chart={<DefaultOrderChart />}
 
-                amount={analyticsData?.ac_status === "0" ? "On" : "Off"}
-                // amount={analyticsData.ac_status ? "0" : "not"}
-              />
-            </Col>
-            <Col xxl="3" sm="4">
-              <DataCardAnalytics
-                title="Idling Hours"
-                // percentChange={"2.5"}
-                up={true}
-                // chart={<DefaultOrderChart />}
+                  amount={analyticsData?.ac_status === "0" ? "On" : "Off"}
+                  // amount={analyticsData.ac_status ? "0" : "not"}
+                />
+              </Col>
+            )}
+            {DeviceType !== 3 && (
+              <Col xxl="3" sm="4">
+                <DataCardAnalytics
+                  title="Idling Hours"
+                  // percentChange={"2.5"}
+                  up={true}
+                  // chart={<DefaultOrderChart />}
 
-                amount={analyticsData?.idling}
-              />
-            </Col>
-            <Col xxl="3" sm="4">
-              <DataCardAnalytics
-                title="Built-In Battery (V)"
-                // percentChange={"2.5"}
-                up={true}
-                // chart={<DefaultOrderChart />}
-                amount={analyticsData?.buitBattery}
-              />
-            </Col>
-            <Col xxl="3" sm="4">
-              <DataCardAnalytics
-                title="External Battery (V)"
-                // percentChange={"2.5"}
-                up={true}
-                // chart={<DefaultOrderChart />}
-                amount={analyticsData?.extVoltage}
-              />
-            </Col>
+                  amount={analyticsData?.idling}
+                />
+              </Col>
+            )}
+            {DeviceType !== 3 && (
+              <Col xxl="3" sm="4">
+                <DataCardAnalytics
+                  title="Built-In Battery (V)"
+                  // percentChange={"2.5"}
+                  up={true}
+                  // chart={<DefaultOrderChart />}
+                  amount={analyticsData?.buitBattery}
+                />
+              </Col>
+            )}
+            {DeviceType !== 3 && (
+              <Col xxl="3" sm="4">
+                <DataCardAnalytics
+                  title="External Battery (V)"
+                  // percentChange={"2.5"}
+                  up={true}
+                  // chart={<DefaultOrderChart />}
+                  amount={analyticsData?.extVoltage}
+                />
+              </Col>
+            )}
+
             {/* <Col xxl="3" sm="4">
               <DataCard
                 title="Total Devices"
