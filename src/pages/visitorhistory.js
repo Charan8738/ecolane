@@ -246,7 +246,7 @@ const Visitors_Vip = () => {
                       {/* <th className="d-none d-md-table-cell">User Name</th>
                       <th className="d-none d-sm-table-cell">Tickets</th> */}
                       <th className="d-none d-sm-table-cell">Email</th>
-                      <th className="d-none d-sm-table-cell">Route Name</th>
+                      <th className="d-none d-sm-table-cell">Line Name</th>
                       <th className="d-none d-sm-table-cell">IN Time</th>
                       <th className="d-none d-sm-table-cell">Out Time</th>
                       {/* <th className="d-none d-sm-table-cell">Admit</th> */}
@@ -271,7 +271,7 @@ const Visitors_Vip = () => {
                                 {item.EmailId}
                               </td>
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
-                                {item.Routeid}
+                                {item.LineName}
                               </td>
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
                                 <Moment format="MMMM Do YYYY, h:mm a">{item.Intime}</Moment>
