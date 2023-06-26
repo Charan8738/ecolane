@@ -293,12 +293,12 @@ function deg2rad(deg) {
 }
 const dataTableColumns = [
   {
-    name: "Username",
-    selector: (row) => <span>{row.UserName}</span>,
+    name: "Email",
+    selector: (row) => <span>{row.EmailId}</span>,
     sortable: true,
   },
   {
-    name: "Route Id",
+    name: "Line Name",
     selector: (row) => <span>{row.Routeid}</span>,
     sortable: true,
   },
