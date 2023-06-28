@@ -60,10 +60,12 @@ const AlertManage = () => {
   const [sm, updateSm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [diagnoseImei, setDiagnoseImei] = useState();
+  const [createdSchedule, setCreatedSchedule] = useState(false);
   const [itemPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItems = trackers.slice(indexOfFirstItem, indexOfLastItem);
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const toggle = (type) => {
     setView({
@@ -128,6 +130,7 @@ const AlertManage = () => {
           // setTrackers(newTrackers);
           console.log(newTrackers);
           setTrackers(newTrackers);
+          setCreatedSchedule(true);
           setView({
             edit: false,
             add: false,
@@ -179,6 +182,24 @@ const AlertManage = () => {
         setLoading(false);
       });
   }, []);
+  useEffect(() => {
+    const getAlerts = async () => {
+      const response = await axios.get("https://gps.zig-app.com/api/getSchedules");
+      return response.data;
+    };
+    setLoading(true);
+    getAlerts()
+      .then((res) => {
+        setTrackers([...res]);
+        initialTrackers.current = [...res];
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [createdSchedule]);
   // useEffect(() => {
   //   const getClients = async () => {
   //     const response = await axios.get("api/getUserDetails");
