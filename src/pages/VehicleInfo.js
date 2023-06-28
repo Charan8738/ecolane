@@ -334,7 +334,7 @@ const VehicleInfo = () => {
                     Speed (mph)
                   </CardTitle>
                   <div className="center">
-                    <SpeedometerWidget value={(gpsData?.speed ?? 0) * 0.621371} />
+                    <SpeedometerWiddget value={(gpsData?.speed ?? 0) * 0.621371} />
                   </div>
                 </CardBody>
               </Card>
