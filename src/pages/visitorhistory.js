@@ -132,9 +132,9 @@ const Visitors_Vip = () => {
       console.log("Inside if block");
       defaultData = mainData.filter((item) => {
         return (
-          item?.Routeid &&
-          item.Routeid.toString().toLowerCase().includes(deviceMac.toLowerCase()) &&
-          item.Routeid !== ""
+          item?.LineName &&
+          item.LineName.toString().toLowerCase().includes(deviceMac.toLowerCase()) &&
+          item.LineName !== ""
         );
       });
       setData(defaultData);
@@ -182,15 +182,17 @@ const Visitors_Vip = () => {
                     value={deviceMac}
                   >
                     <option value="All">All</option>
-                    <option value="7406">7406</option>
-                    <option value="7407">7407</option>
-                    <option value="7408">7408</option>
-                    <option value="7409">7409</option>
-                    <option value="7410">7410</option>
-                    <option value="7411">7411</option>
-                    <option value="7413">7413</option>
-                    <option value="7414">7414</option>
-                    <option value="7416">7416</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+
                     {/* <option value="1072">1072</option>
                     <option value="1073">1073</option> */}
                     {/* {devices &&

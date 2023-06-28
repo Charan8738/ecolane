@@ -21,7 +21,7 @@ const CreateScheduleModal = ({ onSubmitHandler, ...props }) => {
   const { errors, register, handleSubmit } = useForm();
   const INITIAL_ADD_FORM = [
     {
-      coach_no: "1",
+      coach_no: "",
       route_no: "1",
       driver_name: "",
     },
@@ -31,6 +31,9 @@ const CreateScheduleModal = ({ onSubmitHandler, ...props }) => {
   const [formData, setFormData] = useState(props.isEdit ? props.formData : INITIAL_ADD_FORM);
   const [routeList, setRouteList] = useState([]);
   const [coachList, setCoachList] = useState([]);
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
+  const coachL = [1013, 1043, 1049, 1055, 1056, 1060, 1070, 1071, 1072, 1073, 1074, 1075, 1076, 1077, 1078];
   const formClass = classNames({
     "form-validate": true,
     "is-alter": true,
@@ -74,7 +77,7 @@ const CreateScheduleModal = ({ onSubmitHandler, ...props }) => {
   };
 
   const addFields = (event) => {
-    let newField = { coach_no: "", route_no: "", driver_name: "" };
+    let newField = { coach_no: "", route_no: "", driver_name: "", start_time: "" };
     setFormFields([...formFields, newField]);
   };
   const removeFields = (index) => {
@@ -132,8 +135,8 @@ const CreateScheduleModal = ({ onSubmitHandler, ...props }) => {
                             handleFormChange(event, index);
                           }}
                         >
-                          {coachList.map((item) => (
-                            <option key={item?.Id}>{item?.Coachno}</option>
+                          {coachL.map((item) => (
+                            <option key={item}>{item}</option>
                           ))}
                         </Input>
                       </div>
@@ -161,7 +164,7 @@ const CreateScheduleModal = ({ onSubmitHandler, ...props }) => {
                       </div>
                     </FormGroup>
                   </Col>
-                  <Col lg="4">
+                  <Col lg="2">
                     <FormGroup className="form-group">
                       <label className="form-label" htmlFor="full-name-1">
                         Driver Name
@@ -179,6 +182,50 @@ const CreateScheduleModal = ({ onSubmitHandler, ...props }) => {
                           ref={register({
                             required: true,
                           })}
+                        />
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col lg="2">
+                    <FormGroup className="form-group">
+                      <label className="form-label" htmlFor="full-name-1">
+                        Start Time
+                      </label>
+                      <div className="form-control-wrap">
+                        <DatePicker
+                          selected={form.start_time}
+                          onChange={(date) => {
+                            handleFormChange({ target: { name: "start_time", value: date } }, index);
+                          }}
+                          name="start_time"
+                          showTimeSelect
+                          showTimeSelectOnly
+                          timeIntervals={15}
+                          timeCaption="Time"
+                          dateFormat="h:mm aa"
+                          className="form-control date-picker"
+                        />
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col lg="2">
+                    <FormGroup className="form-group">
+                      <label className="form-label" htmlFor="full-name-1">
+                        End Time
+                      </label>
+                      <div className="form-control-wrap">
+                        <DatePicker
+                          selected={form.end_time}
+                          onChange={(date) => {
+                            handleFormChange({ target: { name: "end_time", value: date } }, index);
+                          }}
+                          name="end_time"
+                          showTimeSelect
+                          showTimeSelectOnly
+                          timeIntervals={15}
+                          timeCaption="Time"
+                          dateFormat="h:mm aa"
+                          className="form-control date-picker"
                         />
                       </div>
                     </FormGroup>

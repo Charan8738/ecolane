@@ -4,6 +4,7 @@ import exportFromJSON from "export-from-json";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { Col, Modal, ModalBody, Row, Button } from "reactstrap";
 import { DataTablePagination } from "../Component";
+import Moment from "react-moment";
 
 const Export = ({ data }) => {
   const [modal, setModal] = useState(false);
@@ -205,6 +206,26 @@ const dataTableColumns = [
   {
     name: "Driver Name",
     selector: (row) => row.driver_name,
+    sortable: true,
+    hide: "sm",
+  },
+  {
+    name: "Start Time",
+    selector: (row) => (
+      <span>
+        <Moment format="h:mm a">{row.start_time}</Moment>
+      </span>
+    ),
+    sortable: true,
+    hide: "sm",
+  },
+  {
+    name: "End Time",
+    selector: (row) => (
+      <span>
+        <Moment format="h:mm a">{row.end_time}</Moment>
+      </span>
+    ),
     sortable: true,
     hide: "sm",
   },
