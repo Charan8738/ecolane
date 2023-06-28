@@ -31,6 +31,8 @@ const EditScheduleModal = ({ onSubmitHandler, ...props }) => {
   const [formData, setFormData] = useState(props.formData);
   const [routeList, setRouteList] = useState([]);
   const [coachList, setCoachList] = useState([]);
+  const coachL = [1013, 1043, 1049, 1055, 1056, 1060, 1070, 1071, 1072, 1073, 1074, 1075, 1076, 1077, 1078];
+
   const formClass = classNames({
     "form-validate": true,
     "is-alter": true,
@@ -98,7 +100,7 @@ const EditScheduleModal = ({ onSubmitHandler, ...props }) => {
         {/* <PreviewCard> */}
         <BlockHead>
           <BlockHeadContent>
-            <BlockTitle tag="h5">{props.isEdit ? "Edit" : "Create"} Schedule</BlockTitle>
+            <BlockTitle tag="h5">{props.isEdit ? "Create" : "Edit"} Schedule</BlockTitle>
           </BlockHeadContent>
         </BlockHead>
         <Form onSubmit={handleSubmit(() => onSubmitHandler(formFields, updatedDate))}>
@@ -132,8 +134,8 @@ const EditScheduleModal = ({ onSubmitHandler, ...props }) => {
                             handleFormChange(event, index);
                           }}
                         >
-                          {coachList.map((item) => (
-                            <option key={item?.Id}>{item?.Coachno}</option>
+                          {coachL.map((item) => (
+                            <option key={item}>{item}</option>
                           ))}
                         </Input>
                       </div>
@@ -161,7 +163,7 @@ const EditScheduleModal = ({ onSubmitHandler, ...props }) => {
                       </div>
                     </FormGroup>
                   </Col>
-                  <Col lg="4">
+                  <Col lg="2">
                     <FormGroup className="form-group">
                       <label className="form-label" htmlFor="full-name-1">
                         Driver Name
@@ -179,6 +181,50 @@ const EditScheduleModal = ({ onSubmitHandler, ...props }) => {
                           ref={register({
                             required: true,
                           })}
+                        />
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col lg="2">
+                    <FormGroup className="form-group">
+                      <label className="form-label" htmlFor="full-name-1">
+                        Start Time
+                      </label>
+                      <div className="form-control-wrap">
+                        <DatePicker
+                          selected={form.start_time ? new Date(form.start_time) : new Date()}
+                          onChange={(date) => {
+                            handleFormChange({ target: { name: "start_time", value: date } }, index);
+                          }}
+                          name="start_time"
+                          showTimeSelect
+                          showTimeSelectOnly
+                          timeIntervals={15}
+                          timeCaption="Time"
+                          dateFormat="h:mm aa"
+                          className="form-control date-picker"
+                        />
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col lg="2">
+                    <FormGroup className="form-group">
+                      <label className="form-label" htmlFor="full-name-1">
+                        End Time
+                      </label>
+                      <div className="form-control-wrap">
+                        <DatePicker
+                          selected={form.end_time ? new Date(form.end_time) : new Date()}
+                          onChange={(date) => {
+                            handleFormChange({ target: { name: "end_time", value: date } }, index);
+                          }}
+                          name="end_time"
+                          showTimeSelect
+                          showTimeSelectOnly
+                          timeIntervals={15}
+                          timeCaption="Time"
+                          dateFormat="h:mm aa"
+                          className="form-control date-picker"
                         />
                       </div>
                     </FormGroup>
