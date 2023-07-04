@@ -49,14 +49,7 @@ const Dropdown = styled(Select)`
   }
 `;
 
-const options = [
-  { value: "apple", label: "Apple" },
-  { value: "banana", label: "Banana" },
-  { value: "cherry", label: "Cherry" },
-  // Add more options as needed
-];
-
-const MyDropdown = () => {
+const MyDropdown = ({ onChangeHandle, driverlist }) => {
   const customStyles = {
     control: (provided) => ({
       ...provided,
@@ -67,8 +60,16 @@ const MyDropdown = () => {
     }),
   };
 
+  const options = driverlist
+    .filter((driver) => !driver.schedule)
+    .map((driver) => ({
+      value: driver.id,
+      label: `${driver.driver_first_name} ${driver.driver_last_name}`,
+    }));
+
   const handleChange = (selectedOption) => {
     console.log("Selected option:", selectedOption);
+    onChangeHandle(selectedOption);
   };
 
   return (

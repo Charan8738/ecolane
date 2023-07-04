@@ -68,7 +68,13 @@ const menu = [
       {
         icon: "clipboard",
         text: "Bus Schedules",
-        link: "/bus-schedules",
+        link: "/run-cutting-scheduler",
+        page: 30,
+      },
+      {
+        icon: "clipboard",
+        text: "Driver schedules",
+        link: "/driver-schedule",
         page: 30,
       },
       {
