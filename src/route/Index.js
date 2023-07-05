@@ -18,6 +18,7 @@ import UserSettings from "../pages/UserSettings";
 import RunCut from "../pages/RunCut";
 import RunCutting from "../pages/RunCutting";
 import DriverSchedule from "../pages/DriverSchedule";
+import drivers from "../pages/drivers";
 // const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
 const Homepage = React.lazy(() => import("../pages/Devices"));
@@ -90,6 +91,7 @@ const Pages = ({ currentAccess }) => {
     { page: 35, pathname: "run", component: RunCut },
     { page: 30, pathname: "run-cutting-scheduler", component: RunCutting },
     { page: 30, pathname: "driver-schedule", component: DriverSchedule },
+    { page: 30, pathname: "drivers", component: drivers },
   ];
   RunCutting;
   useLayoutEffect(() => {

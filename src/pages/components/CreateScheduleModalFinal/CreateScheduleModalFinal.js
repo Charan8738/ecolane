@@ -32,7 +32,25 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
   const [driverId, setDriverId] = useState();
-  const coachL = [1013, 1043, 1049, 1055, 1056, 1060, 1070, 1071, 1072, 1073, 1074, 1075, 1076, 1077, 1078];
+  const coachL = [
+    1013,
+    1043,
+    1049,
+    1055,
+    1056,
+    1060,
+    1070,
+    1071,
+    1072,
+    1073,
+    1074,
+    1075,
+    1076,
+    1077,
+    1078,
+    "off",
+    "Day Off",
+  ];
   const LineL = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const [driverList, setDriverList] = useState([]);
 
@@ -203,6 +221,7 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
           <tbody>
             {formData.length > 0
               ? formData.map((item, index) => {
+                  const isOff = item.coach_no === "off" || item.coach_no === "Day Off      ";
                   return (
                     <tr key={index}>
                       <th style={{ textAlign: "center", verticalAlign: "middle" }} scope="row">
@@ -221,6 +240,7 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             onChange={(event) => {
                               handleFormChange(event, index);
                             }}
+                            // disabled={isOff}
                           >
                             {coachL.map((item) => (
                               <option key={item}>{item}</option>
@@ -238,6 +258,7 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             onChange={(event) => {
                               handleFormChange(event, index);
                             }}
+                            disabled={isOff}
                           >
                             {LineL.map((item) => (
                               <option key={item}>{item}</option>
@@ -261,6 +282,7 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             dateFormat="h:mm aa"
                             className="form-control date-picker"
                             autoComplete="off"
+                            disabled={isOff}
                           />
                         </div>
                       </StyledTableData>
@@ -280,6 +302,7 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             dateFormat="h:mm aa"
                             className="form-control date-picker"
                             autoComplete="off"
+                            disabled={isOff}
                           />
                         </div>
                       </StyledTableData>
@@ -300,6 +323,7 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             dateFormat="h:mm aa"
                             className="form-control date-picker"
                             autoComplete="off"
+                            disabled={isOff}
                           />
                         </div>
                       </StyledTableData>
@@ -319,6 +343,7 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             dateFormat="h:mm aa"
                             className="form-control date-picker"
                             autoComplete="off"
+                            disabled={isOff}
                           />
                         </div>
                       </StyledTableData>

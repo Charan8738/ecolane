@@ -40,6 +40,9 @@ import Head from "../layout/head/Head";
 import Select from "react-select";
 import MyDropDown from "./MyDropDown";
 import WeeklyDatePicker from "./WeeklyDatePicker";
+import EditScheduleModal from "./components/EditScheduleModal/EditScheduleModal";
+import CreateScheduleModalFinal from "./components/CreateScheduleModalFinal/CreateScheduleModalFinal";
+
 const RunCut = () => {
   const toggle = (type) => {
     setView({
@@ -52,7 +55,12 @@ const RunCut = () => {
   const location = useLocation();
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
-
+  const [view, setView] = useState({
+    edit: false,
+    add: false,
+    diagnose: false,
+  });
+  const [clients, setClients] = useState([]);
   const driverId = location.state?.id;
 
   useEffect(() => {
@@ -72,7 +80,40 @@ const RunCut = () => {
         setLoading(false);
       });
   }, []);
+  const onFormCancel = () => {
+    setView({ edit: false, add: false, diagnose: false });
+  };
+  const onEditSubmit = (data) => {
+    let newData = { data: data, _id: tracker._id, coach_count: data.length };
+    console.log(newData);
 
+    axios
+      .put("https://gps.zig-app.com/api/updateSchedule", newData)
+      .then((res) => {
+        if (res.status === 200) {
+          // const newTrackers = [...scheduleData];
+          // newTrackers.push(data);
+          //   const editedIdx = newTrackers.findIndex((item) => item._id === data._id);
+          //   newTrackers[editedIdx] = { ...data };
+          // schedulesData = newTrackers;
+          // setTrackers(newTrackers);
+          // console.log(newTrackers);
+          //   setTrackers(newTrackers);
+          setUpdateData(true);
+          setView({
+            edit: false,
+            add: false,
+            diagnose: false,
+          });
+          successAlert("Schedule edited successfully");
+        } else {
+          failureAlert("Error");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <React.Fragment>
       <Head title="Run Cutting"></Head>
@@ -84,11 +125,28 @@ const RunCut = () => {
                 Driver Schedule
               </BlockTitle>
             </BlockHeadContent>
+
             <BlockHeadContent>
               <div className="toggle-wrap nk-block-tools-toggle">
                 <div className="toggle-expand-content">
                   <ul className="nk-block-tools g-3">
-                    <li></li>
+                    <li>
+                      {" "}
+                      <Button
+                        color="primary"
+                        className="mr-4"
+                        onClick={() =>
+                          setView({
+                            edit: false,
+                            add: true,
+                            diagnose: false,
+                          })
+                        }
+                      >
+                        <Icon name="edit" className="mr-0.5"></Icon>
+                        <span>Edit Schedule</span>
+                      </Button>
+                    </li>
                     <li className="nk-block-tools-opt">
                       <BlockHeadContent>
                         <Link to={`${process.env.PUBLIC_URL}/run-cutting-scheduler`}>
@@ -142,22 +200,22 @@ const RunCut = () => {
                               {item.day}
                             </th>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.coach_no}
+                              {item.coach_no === "off" ? "Off" : item.coach_no}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.line_no}
+                              {item.line_no === "" ? "Off" : item.line_no}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <Moment format="hh:mm a">{item.time_in}</Moment>
+                              {item.time_in === "" ? "Off" : <Moment format="hh:mm a">{item.time_in}</Moment>}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <Moment format="hh:mm a">{item.time_out}</Moment>
+                              {item.break_in === "" ? "Off" : <Moment format="hh:mm a">{item.break_in}</Moment>}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <Moment format="hh:mm a">{item.break_in}</Moment>
+                              {item.break_out === "" ? "Off" : <Moment format="hh:mm a">{item.break_out}</Moment>}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <Moment format="hh:mm a">{item.break_out}</Moment>
+                              {item.time_out === "" ? "Off" : <Moment format="hh:mm a">{item.time_out}</Moment>}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                               {item.total_hours}
@@ -172,6 +230,23 @@ const RunCut = () => {
           </Card>
         </Block>
       </Content>
+      <Modal isOpen={view.add} toggle={() => onFormCancel()} className="modal-dialog-centered" size="xl">
+        <ModalBody>
+          <a href="#cancel" className="close">
+            {" "}
+            <Icon
+              name="cross-sm"
+              onClick={(ev) => {
+                ev.preventDefault();
+                onFormCancel();
+              }}
+            ></Icon>
+          </a>
+          <div className="p-2">
+            <CreateScheduleModalFinal onSubmitHandler={onEditSubmit} isEdit={true} formData={data} clients={clients} />
+          </div>
+        </ModalBody>
+      </Modal>
     </React.Fragment>
   );
 };

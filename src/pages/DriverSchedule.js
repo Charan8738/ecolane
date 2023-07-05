@@ -153,22 +153,22 @@ const DriverSchedule = () => {
                               {item.driver_name}
                             </th>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.coach_no}
+                              {item.coach_no === "off" ? "Off" : item.coach_no}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.line_no}
+                              {item.line_no === "" ? "Off" : item.line_no}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <Moment format="hh:mm a">{item.time_in}</Moment>
+                              {item.time_in === "" ? "Off" : <Moment format="hh:mm a">{item.time_in}</Moment>}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <Moment format="hh:mm a">{item.time_out}</Moment>
+                              {item.break_in === "" ? "Off" : <Moment format="hh:mm a">{item.break_in}</Moment>}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <Moment format="hh:mm a">{item.break_in}</Moment>
+                              {item.break_out === "" ? "Off" : <Moment format="hh:mm a">{item.break_out}</Moment>}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <Moment format="hh:mm a">{item.break_out}</Moment>
+                              {item.time_out === "" ? "Off" : <Moment format="hh:mm a">{item.time_out}</Moment>}
                             </StyledTableData>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                               {item.total_hours}
