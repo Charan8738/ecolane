@@ -392,7 +392,6 @@ const RunCutting = () => {
         <Modal isOpen={view.add} toggle={() => onFormCancel()} className="modal-dialog-centered" size="xl">
           <ModalBody>
             <a href="#cancel" className="close">
-              {" "}
               <Icon
                 name="cross-sm"
                 onClick={(ev) => {

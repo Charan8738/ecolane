@@ -17,6 +17,7 @@ import {
   BlockBetween,
   PaginationComponent,
   SpecialTable,
+  RSelect,
 } from "../components/Component";
 import {
   Button,
@@ -32,6 +33,7 @@ import {
   Label,
   FormGroup,
   Input,
+  ModalHeader,
 } from "reactstrap";
 import DiagnoseTrackerModal from "./components/DiagnoseTrackerModal/DiagnoseTrackerModal";
 import CreateScheduleModalFinal from "./components/CreateScheduleModalFinal/CreateScheduleModalFinal";
@@ -40,9 +42,11 @@ import { user_id } from "../redux/userSlice";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import backgroundImage from "../assets/images/users_background.png";
+import { useForm } from "react-hook-form";
 
 import axios from "axios";
 const drivers = () => {
+  const { errors, register, handleSubmit } = useForm();
   const history = useHistory();
   const VEHICLE_TYPES = { 1: "Truck", 2: "Car", 3: "Maxi Cab", 4: "Bike", 5: "Bus" };
   const DEVICE_MODE_BADGE = { PARKED: "warning", MOVING: "success", OFFLINE: "danger" };
@@ -53,7 +57,17 @@ const drivers = () => {
     add: false,
     diagnose: false,
   });
-  const [formData, setFormData] = useState({});
+  const userId = useSelector(user_id);
+  const INITIAL_ADD_FORM = {
+    venueRefId: userId,
+    driver_first_name: "",
+    driver_last_name: "",
+    account_status: "Active",
+  };
+
+  const [formData, setFormData] = useState(INITIAL_ADD_FORM);
+  const [addedData, setAddedData] = useState(false);
+  const [EditedDriver, setEditedDriver] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [onSearchText, setSearchText] = useState("");
   const [trackers, setTrackers] = useState([]);
@@ -65,9 +79,51 @@ const drivers = () => {
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItems = trackers.slice(indexOfFirstItem, indexOfLastItem);
-  const userId = useSelector(user_id);
 
+  const onViewClick = (index) => {
+    console.log(index);
+    console.log(currentItems[index]);
+    setFormData(currentItems[index]);
+  };
+  const resetForm = () => {
+    setFormData(INITIAL_ADD_FORM);
+    onFormCancel();
+    // setModalForm(false);
+  };
+
+  const toggleAddedData = () => {
+    setAddedData(!addedData);
+  };
+  const toggleEditedDriver = () => {
+    setEditedDriver(!EditedDriver);
+  };
+  const filterStatus = [
+    { value: "Active", label: "Active" },
+    { value: "Pending", label: "Pending" },
+    { value: "Suspend", label: "Suspend" },
+  ];
   //   const [driverList, setDriverList] = useState([]);
+
+  const onFormSubmit = (e) => {
+    console.log(formData);
+    axios
+      .post("addDriver", formData)
+      .then((res) => {
+        if (res.status === 201) {
+          // setData((prev) => [...prev, res.data]);
+          resetForm();
+          toggleAddedData();
+          successAlert("New Driver added successfully");
+          // setAddedData(true);
+        } else {
+          throw new Error(res.data);
+        }
+      })
+      .catch((err) => {
+        window.alert("Error in creating alerts");
+        console.log(err);
+      });
+  };
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const toggle = (type) => {
     setView({
@@ -101,6 +157,11 @@ const drivers = () => {
       });
   };
 
+  const onChangeHandler = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+    console.log(formData);
+  };
   const onEditClick = (id) => {
     const selectedTracker = trackers.find((item) => item.id === id);
     setFormData({
@@ -108,37 +169,22 @@ const drivers = () => {
     });
   };
 
-  const onEditSubmit = (data, driverId) => {
-    console.log(data);
-    let js = { driver_id: driverId, schedules: data };
-    // console.log(updatedDate);
-    // const updatedVehicle = {
-    //   id: data.id,
-    //   coach_no: data.Coachno,
-    //   route_name: data.routeno,
-    //   driver_name: data.Odometer,
-    //   schedule_date: updatedDate,
-    // };
-    console.log(data.length);
-    console.log(js);
+  const onEditSubmit = () => {
+    console.log(formData);
+
     axios
-      .post("addschedule", js)
+      .put("EditDriver", formData)
       .then((res) => {
         if (res.status === 201) {
-          const newTrackers = [...trackers];
-          newTrackers.push(js);
-          // const editedIdx = newTrackers.findIndex((item) => item.id === data.id);
-          // newTrackers[editedIdx] = { ...data };
+          // console.log(newTrackers);
           // setTrackers(newTrackers);
-          console.log(newTrackers);
-          setTrackers(newTrackers);
-          setCreatedSchedule(true);
+          toggleEditedDriver();
           setView({
             edit: false,
             add: false,
             diagnose: false,
           });
-          successAlert("Tracker edited successfully");
+          successAlert("Driver edited successfully");
         } else {
           failureAlert("Error");
         }
@@ -153,6 +199,12 @@ const drivers = () => {
   const redirectToWidget = (id) => {
     console.log(id);
     history.push("/run", { id: id });
+  };
+  const deleteDriver = async (id) => {
+    console.log(id);
+    const response = await axios.delete("DeleteDriver?id=" + id);
+    successAlert("Driver deleted successfully");
+    toggleEditedDriver();
   };
   useEffect(() => {
     if (onSearchText !== "") {
@@ -214,7 +266,32 @@ const drivers = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [createdSchedule]);
+  }, [addedData]);
+  useEffect(() => {
+    const getAlerts = async () => {
+      try {
+        const response = await axios.get("getDriverList?venueRefId=" + userId);
+        const filteredData = response.data.filter((driver) => driver.id);
+        return filteredData;
+      } catch (error) {
+        console.log(error);
+        return [];
+      }
+    };
+
+    setLoading(true);
+    getAlerts()
+      .then((res) => {
+        setTrackers([...res]);
+        initialTrackers.current = [...res];
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [EditedDriver]);
   //   useEffect(() => {
   //     const getDriverList = async () => {
   //       const response = await axios.get("/getDriverList?venueRefId=" + userId);
@@ -297,12 +374,13 @@ const drivers = () => {
                       <th>Driver Id</th>
                       <th>First Name</th>
                       <th>Last Name</th>
+                      <th>Status</th>
                       <th className="d-none d-sm-table-cell">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {currentItems.length > 0
-                      ? currentItems.map((item) => {
+                      ? currentItems.map((item, index) => {
                           return (
                             <tr key={item.id} className="tb-tnx-item">
                               <td style={{ padding: "0.75rem 0.25rem" }}>
@@ -313,6 +391,21 @@ const drivers = () => {
                               </td>
                               <td style={{ padding: "0.75rem 0.25rem" }}>
                                 <strong>{item.driver_last_name}</strong>
+                              </td>
+                              <td style={{ padding: "0.75rem 0.25rem" }}>
+                                <strong>
+                                  <span
+                                    className={`tb-status text-${
+                                      item.account_status === "Active"
+                                        ? "success"
+                                        : item.account_status === "Pending"
+                                        ? "warning"
+                                        : "danger"
+                                    }`}
+                                  >
+                                    {item.account_status}
+                                  </span>
+                                </strong>
                               </td>
 
                               <td style={{ padding: "0.75rem 0.25rem" }}>
@@ -333,11 +426,26 @@ const drivers = () => {
                                           href="#more"
                                           onClick={(ev) => {
                                             ev.preventDefault();
-                                            redirectToWidget(item.id);
+                                            // redirectToWidget(item.id);
+                                            toggle("edit");
+                                            onViewClick(index);
                                           }}
                                         >
-                                          <Icon name="more-v-alt" />
-                                          <span>View more</span>
+                                          <Icon name="edit-alt" />
+                                          <span>Edit</span>
+                                        </DropdownItem>
+                                      </li>
+                                      <li>
+                                        <DropdownItem
+                                          tag="a"
+                                          href="#more"
+                                          onClick={(ev) => {
+                                            ev.preventDefault();
+                                            deleteDriver(item.id);
+                                          }}
+                                        >
+                                          <Icon name="trash-empty" />
+                                          <span>Delete</span>
                                         </DropdownItem>
                                       </li>
                                     </ul>
@@ -361,7 +469,7 @@ const drivers = () => {
                   ) : (
                     <div className="text-center">
                       <span className="text-silent">
-                        {isLoading ? <Spinner color="primary" /> : "No trackers found"}
+                        {isLoading ? <Spinner color="primary" /> : "No Data available"}
                       </span>
                     </div>
                   )}
@@ -374,7 +482,6 @@ const drivers = () => {
         <Modal isOpen={view.diagnose} toggle={() => onFormCancel()} className="modal-dialog-centered" size="lg">
           <ModalBody>
             <a href="#cancel" className="close">
-              {" "}
               <Icon
                 name="cross-sm"
                 onClick={(ev) => {
@@ -389,25 +496,147 @@ const drivers = () => {
           </ModalBody>
         </Modal>
         {/* Below is the Create Modal*/}
-        <Modal isOpen={view.add} toggle={() => onFormCancel()} className="modal-dialog-centered" size="xl">
+        <Modal isOpen={view.add} toggle={() => onFormCancel()} className="modal-dialog-centered" size="m">
+          <ModalHeader
+            close={
+              <a href="#cancel" className="close">
+                <Icon
+                  name="cross-sm"
+                  onClick={(ev) => {
+                    ev.preventDefault();
+                    onFormCancel();
+                  }}
+                ></Icon>
+              </a>
+            }
+          >
+            Add Driver
+          </ModalHeader>
           <ModalBody>
-            <a href="#cancel" className="close">
-              {" "}
-              <Icon
-                name="cross-sm"
-                onClick={(ev) => {
-                  ev.preventDefault();
-                  onFormCancel();
-                }}
-              ></Icon>
-            </a>
             <div className="p-2">
-              <CreateScheduleModalFinal
-                onSubmitHandler={onEditSubmit}
-                isEdit={false}
-                // formData={formData}
-                clients={clients}
-              />
+              <form onSubmit={handleSubmit(onFormSubmit)}>
+                <FormGroup>
+                  <label className="form-label" htmlFor="first-name">
+                    First Name
+                  </label>
+                  <div className="form-control-wrap">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="driver_first_name"
+                      name="driver_first_name"
+                      value={formData.driver_first_name}
+                      onChange={onChangeHandler}
+                    />
+                  </div>
+                </FormGroup>
+                <FormGroup>
+                  <label className="form-label" htmlFor="last-name">
+                    Last Name
+                  </label>
+                  <div className="form-control-wrap">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="driver_last_name"
+                      name="driver_last_name"
+                      value={formData.driver_last_name}
+                      onChange={onChangeHandler}
+                    />
+                  </div>
+                </FormGroup>
+                <FormGroup>
+                  <label className="form-label">Status</label>
+                  <div className="form-control-wrap">
+                    <RSelect
+                      options={filterStatus}
+                      defaultValue={{
+                        value: "Active",
+                        label: "Active",
+                      }}
+                      onChange={(e) => setFormData({ ...formData, account_status: e.value })}
+                    />
+                  </div>
+                </FormGroup>
+
+                <FormGroup>
+                  <Button color="primary" type="submit" size="lg">
+                    Add Driver
+                  </Button>
+                </FormGroup>
+              </form>
+            </div>
+          </ModalBody>
+        </Modal>
+        <Modal isOpen={view.edit} toggle={() => onFormCancel()} className="modal-dialog-centered" size="m">
+          <ModalHeader
+            close={
+              <a href="#cancel" className="close">
+                <Icon
+                  name="cross-sm"
+                  onClick={(ev) => {
+                    ev.preventDefault();
+                    onFormCancel();
+                  }}
+                ></Icon>
+              </a>
+            }
+          >
+            Edit Driver
+          </ModalHeader>
+          <ModalBody>
+            <div className="p-2">
+              <form onSubmit={handleSubmit(onEditSubmit)}>
+                <FormGroup>
+                  <label className="form-label" htmlFor="first-name">
+                    First Name
+                  </label>
+                  <div className="form-control-wrap">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="driver_first_name"
+                      name="driver_first_name"
+                      value={formData.driver_first_name}
+                      onChange={onChangeHandler}
+                    />
+                  </div>
+                </FormGroup>
+                <FormGroup>
+                  <label className="form-label" htmlFor="last-name">
+                    Last Name
+                  </label>
+                  <div className="form-control-wrap">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="driver_last_name"
+                      name="driver_last_name"
+                      value={formData.driver_last_name}
+                      onChange={onChangeHandler}
+                    />
+                  </div>
+                </FormGroup>
+                <FormGroup>
+                  <label className="form-label">Status</label>
+                  <div className="form-control-wrap">
+                    <RSelect
+                      options={filterStatus}
+                      defaultValue={{
+                        value: "Active",
+                        label: "Active",
+                      }}
+                      onChange={(e) => setFormData({ ...formData, account_status: e.value })}
+                    />
+                  </div>
+                </FormGroup>
+
+                <FormGroup>
+                  <Button color="primary" type="submit" size="lg">
+                    Edit Driver
+                  </Button>
+                </FormGroup>
+              </form>
             </div>
           </ModalBody>
         </Modal>
