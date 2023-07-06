@@ -68,9 +68,16 @@ const menu = [
       {
         icon: "clipboard",
         text: "Bus Schedules",
-        link: "/bus-schedules",
+        link: "/run-cutting-scheduler",
         page: 30,
       },
+      {
+        icon: "clipboard",
+        text: "Driver schedules",
+        link: "/driver-schedule",
+        page: 30,
+      },
+
       {
         icon: "user-alt",
         text: "Visitors",
@@ -230,6 +237,12 @@ const menu = [
     text: "Run",
     link: "/run",
     page: 35,
+  },
+  {
+    icon: "clipboard",
+    text: "Drivers",
+    link: "/drivers",
+    page: 30,
   },
 ];
 export default menu;

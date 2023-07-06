@@ -34,15 +34,16 @@ import { Link } from "react-router-dom";
 import { useLocation, Redirect } from "react-router-dom";
 import Content from "../layout/content/Content";
 import Moment from "react-moment";
+import moment from "moment";
+
 import axios from "axios";
+import DatePicker from "react-datepicker";
 
 import Head from "../layout/head/Head";
 import Select from "react-select";
 import MyDropDown from "./MyDropDown";
 import WeeklyDatePicker from "./WeeklyDatePicker";
-import EditScheduleModal from "./components/EditScheduleModal/EditScheduleModal";
-import EditScheduleModalFinal from "./components/EditScheduleModalFinal/EditScheduleModalFinal";
-const RunCut = () => {
+const DriverSchedule = () => {
   const toggle = (type) => {
     setView({
       edit: type === "edit" ? true : false,
@@ -50,21 +51,19 @@ const RunCut = () => {
       details: type === "details" ? true : false,
     });
   };
+  const [updatedDate, setUpdatedDate] = useState(new Date());
+
   const [sm, updateSm] = useState(false);
   const location = useLocation();
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [view, setView] = useState({
-    edit: false,
-    add: false,
-    diagnose: false,
-  });
-  const [clients, setClients] = useState([]);
-  const driverId = location.state?.id;
+
+  const driverId = 1;
 
   useEffect(() => {
     const getSchedules = async () => {
-      const response = await axios.get("getSchedule?driver_id=" + driverId);
+      const day = moment(updatedDate).format("dddd");
+      const response = await axios.get("getSchedulesbasedDays?day=" + day);
       return response.data;
     };
     setLoading(true);
@@ -78,41 +77,8 @@ const RunCut = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
-  const onFormCancel = () => {
-    setView({ edit: false, add: false, diagnose: false });
-  };
-  const onEditSubmit = (data) => {
-    let newData = { data: data, _id: tracker._id, coach_count: data.length };
-    console.log(newData);
+  }, [updatedDate]);
 
-    axios
-      .put("https://gps.zig-app.com/api/updateSchedule", newData)
-      .then((res) => {
-        if (res.status === 200) {
-          // const newTrackers = [...scheduleData];
-          // newTrackers.push(data);
-          //   const editedIdx = newTrackers.findIndex((item) => item._id === data._id);
-          //   newTrackers[editedIdx] = { ...data };
-          // schedulesData = newTrackers;
-          // setTrackers(newTrackers);
-          // console.log(newTrackers);
-          //   setTrackers(newTrackers);
-          setUpdateData(true);
-          setView({
-            edit: false,
-            add: false,
-            diagnose: false,
-          });
-          successAlert("Schedule edited successfully");
-        } else {
-          failureAlert("Error");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   return (
     <React.Fragment>
       <Head title="Run Cutting"></Head>
@@ -124,28 +90,11 @@ const RunCut = () => {
                 Driver Schedule
               </BlockTitle>
             </BlockHeadContent>
-
-            <BlockHeadContent>
+            {/* <BlockHeadContent>
               <div className="toggle-wrap nk-block-tools-toggle">
                 <div className="toggle-expand-content">
                   <ul className="nk-block-tools g-3">
-                    <li>
-                      {" "}
-                      <Button
-                        color="primary"
-                        className="mr-4"
-                        onClick={() =>
-                          setView({
-                            edit: false,
-                            add: true,
-                            diagnose: false,
-                          })
-                        }
-                      >
-                        <Icon name="edit" className="mr-0.5"></Icon>
-                        <span>Edit Schedule</span>
-                      </Button>
-                    </li>
+                    <li></li>
                     <li className="nk-block-tools-opt">
                       <BlockHeadContent>
                         <Link to={`${process.env.PUBLIC_URL}/run-cutting-scheduler`}>
@@ -162,19 +111,24 @@ const RunCut = () => {
                   </ul>
                 </div>
               </div>
-            </BlockHeadContent>
+            </BlockHeadContent> */}
           </BlockBetween>
         </BlockHead>
         <Block>
           <Card>
             <CardBody className="card-inner">
               {/* <MyDropDown /> */}
+              <Col lg="2">
+                <div className="form-control-wrap">
+                  <DatePicker selected={updatedDate} onChange={setUpdatedDate} className="form-control date-picker" />{" "}
+                </div>
+              </Col>
               <br></br>
               <table className="table table-bordered">
                 <thead>
                   <tr>
                     <StyledTableHeader style={{ textAlign: "center", verticalAlign: "middle" }} scope="col">
-                      Day
+                      Driver
                     </StyledTableHeader>
                     <StyledTableHeader style={{ textAlign: "center", verticalAlign: "middle" }} scope="col">
                       Coach No
@@ -196,7 +150,7 @@ const RunCut = () => {
                         return (
                           <tr>
                             <th style={{ textAlign: "center", verticalAlign: "middle" }} scope="row">
-                              {item.day}
+                              {item.driver_name}
                             </th>
                             <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                               {item.coach_no === "off" ? "Off" : item.coach_no}
@@ -229,23 +183,6 @@ const RunCut = () => {
           </Card>
         </Block>
       </Content>
-      <Modal isOpen={view.add} toggle={() => onFormCancel()} className="modal-dialog-centered" size="xl">
-        <ModalBody>
-          <a href="#cancel" className="close">
-            {" "}
-            <Icon
-              name="cross-sm"
-              onClick={(ev) => {
-                ev.preventDefault();
-                onFormCancel();
-              }}
-            ></Icon>
-          </a>
-          <div className="p-2">
-            <EditScheduleModalFinal onSubmitHandler={onEditSubmit} isEdit={true} formData={data} clients={clients} />
-          </div>
-        </ModalBody>
-      </Modal>
     </React.Fragment>
   );
 };
@@ -331,4 +268,4 @@ const TestData = [
   },
 ];
 
-export default RunCut;
+export default DriverSchedule;

@@ -16,6 +16,9 @@ import Attendance from "../pages/Attendance";
 import tickets from "../pages/tickets";
 import UserSettings from "../pages/UserSettings";
 import RunCut from "../pages/RunCut";
+import RunCutting from "../pages/RunCutting";
+import DriverSchedule from "../pages/DriverSchedule";
+import drivers from "../pages/drivers";
 // const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
 const Homepage = React.lazy(() => import("../pages/Devices"));
@@ -79,14 +82,18 @@ const Pages = ({ currentAccess }) => {
     { page: 26, pathname: "analytics", component: Analytics },
     { page: 27, pathname: "vehicle-setup", component: VehicleSetup },
     { page: 28, pathname: "device-setup", component: DeviceSetup },
-    { page: 30, pathname: "bus-schedules", component: AlertManage },
+    // { page: 30, pathname: "bus-schedules", component: AlertManage },
     { page: 31, pathname: "home", component: home },
     { page: 32, pathname: "evo-config", component: EvolutionConfig },
     { page: 33, pathname: "all-venues", component: AllVenues },
     { page: 34, pathname: "attendance", component: Attendance },
     { page: 35, pathname: "tickets-booth", component: tickets },
     { page: 35, pathname: "run", component: RunCut },
+    { page: 30, pathname: "run-cutting-scheduler", component: RunCutting },
+    { page: 30, pathname: "driver-schedule", component: DriverSchedule },
+    { page: 30, pathname: "drivers", component: drivers },
   ];
+  RunCutting;
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
   });
