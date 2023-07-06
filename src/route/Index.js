@@ -88,10 +88,10 @@ const Pages = ({ currentAccess }) => {
     { page: 33, pathname: "all-venues", component: AllVenues },
     { page: 34, pathname: "attendance", component: Attendance },
     { page: 35, pathname: "tickets-booth", component: tickets },
-    { page: 35, pathname: "run", component: RunCut },
-    { page: 30, pathname: "run-cutting-scheduler", component: RunCutting },
-    { page: 30, pathname: "driver-schedule", component: DriverSchedule },
-    { page: 30, pathname: "drivers", component: drivers },
+    // { page: 30, pathname: "run", component: RunCut },
+    // { page: 30, pathname: "run-cutting-scheduler", component: RunCutting },
+    // { page: 30, pathname: "driver-schedule", component: DriverSchedule },
+    // { page: 30, pathname: "drivers", component: drivers },
   ];
   RunCutting;
   useLayoutEffect(() => {
@@ -100,6 +100,10 @@ const Pages = ({ currentAccess }) => {
   return (
     <Suspense fallback={<div />}>
       <Switch>
+        <Route path={`/run`} component={RunCut} />
+        <Route path={`/run-cutting-scheduler`} component={RunCutting} />
+        <Route path={`/driver-schedule`} component={DriverSchedule} />
+        <Route path={`/drivers`} component={drivers} />
         <Route path={`/tracker-info`} component={TrackerInfo} />
         <Route path={`/vehicle-info`} component={VehicleInfo} />
         <Route path={`/schedule-info`} component={ScheduleInfo} />
@@ -108,7 +112,7 @@ const Pages = ({ currentAccess }) => {
         {rolesRoutePages.map(
           (route) =>
             /* Page 27 made static below and at Menu.js line 282. Make sure to remove at both places*/
-            [...currentAccess].includes(route.page) && (
+            [...currentAccess, 30].includes(route.page) && (
               <Route
                 key={route.page}
                 page={route.page}

@@ -87,6 +87,31 @@ const menu = [
     ],
   },
   {
+    icon: "cc-alt2-fill",
+    text: "Bus Schedules setup",
+    page: 30,
+    subMenu: [
+      {
+        icon: "clipboard",
+        text: "Bus Schedules",
+        link: "/run-cutting-scheduler",
+        page: 30,
+      },
+      {
+        icon: "clipboard",
+        text: "Driver schedules",
+        link: "/driver-schedule",
+        page: 30,
+      },
+      {
+        icon: "clipboard",
+        text: "Drivers",
+        link: "/drivers",
+        page: 30,
+      },
+    ],
+  },
+  {
     icon: "user-list-fill",
     text: "Client Approval",
     link: "/clients",
@@ -184,12 +209,6 @@ const menu = [
   // },
 
   {
-    icon: "chat-fill",
-    text: "Support",
-    link: "/support",
-    page: 20,
-  },
-  {
     icon: "user-list",
     text: "Rider History",
     link: "/visitorhistory",
@@ -239,10 +258,10 @@ const menu = [
     page: 35,
   },
   {
-    icon: "clipboard",
-    text: "Drivers",
-    link: "/drivers",
-    page: 30,
+    icon: "chat-fill",
+    text: "Support",
+    link: "/support",
+    page: 20,
   },
 ];
 export default menu;
