@@ -138,7 +138,7 @@ const RunCutting = () => {
             add: false,
             diagnose: false,
           });
-          successAlert("Tracker edited successfully");
+          successAlert("Schedule created successfully");
         } else {
           failureAlert("Error");
         }
