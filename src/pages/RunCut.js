@@ -41,8 +41,7 @@ import Select from "react-select";
 import MyDropDown from "./MyDropDown";
 import WeeklyDatePicker from "./WeeklyDatePicker";
 import EditScheduleModal from "./components/EditScheduleModal/EditScheduleModal";
-import CreateScheduleModalFinal from "./components/CreateScheduleModalFinal/CreateScheduleModalFinal";
-
+import EditScheduleModalFinal from "./components/EditScheduleModalFinal/EditScheduleModalFinal";
 const RunCut = () => {
   const toggle = (type) => {
     setView({
@@ -243,7 +242,7 @@ const RunCut = () => {
             ></Icon>
           </a>
           <div className="p-2">
-            <CreateScheduleModalFinal onSubmitHandler={onEditSubmit} isEdit={true} formData={data} clients={clients} />
+            <EditScheduleModalFinal onSubmitHandler={onEditSubmit} isEdit={true} formData={data} clients={clients} />
           </div>
         </ModalBody>
       </Modal>
