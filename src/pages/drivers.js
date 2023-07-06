@@ -468,7 +468,9 @@ const drivers = () => {
                     />
                   ) : (
                     <div className="text-center">
-                      <span className="text-silent">{isLoading ? <Spinner color="primary" /> : "No Driver"}</span>
+                      <span className="text-silent">
+                        {isLoading ? <Spinner color="primary" /> : "No Data available"}
+                      </span>
                     </div>
                   )}
                 </div>

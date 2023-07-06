@@ -221,7 +221,7 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
           <tbody>
             {formData.length > 0
               ? formData.map((item, index) => {
-                  const isOff = item.coach_no === "off" || item.coach_no === "Day Off      ";
+                  const isOff = item.coach_no === "off" || item.coach_no === "Day Off";
                   return (
                     <tr key={index}>
                       <th style={{ textAlign: "center", verticalAlign: "middle" }} scope="row">
