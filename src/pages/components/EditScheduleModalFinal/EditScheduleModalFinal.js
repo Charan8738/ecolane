@@ -272,6 +272,7 @@ const EditScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                       <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                         <div className="form-control-select">
                           <DatePicker
+                            // selected={new Date("2023-07-04T22:45:00.238Z")}
                             selected={item.time_in ? new Date(item.time_in) : null}
                             onChange={(date) => {
                               handleFormChange({ target: { name: "time_in", value: date } }, index);
@@ -292,7 +293,7 @@ const EditScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                       <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                         <div className="form-control-select">
                           <DatePicker
-                            selected={item.time_in ? new Date(item.break_in) : null}
+                            selected={item.break_in ? new Date(item.break_in) : null}
                             onChange={(date) => {
                               handleFormChange({ target: { name: "break_in", value: date } }, index);
                             }}
@@ -313,7 +314,7 @@ const EditScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                         {" "}
                         <div className="form-control-select">
                           <DatePicker
-                            selected={item.time_in ? new Date(item.break_out) : null}
+                            selected={item.break_out ? new Date(item.break_out) : null}
                             onChange={(date) => {
                               handleFormChange({ target: { name: "break_out", value: date } }, index);
                             }}
@@ -333,7 +334,7 @@ const EditScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                       <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                         <div className="form-control-select">
                           <DatePicker
-                            selected={item.time_in ? new Date(item.time_out) : null}
+                            selected={item.time_out ? new Date(item.time_out) : null}
                             onChange={(date) => {
                               handleFormChange({ target: { name: "time_out", value: date } }, index);
                             }}
@@ -351,9 +352,7 @@ const EditScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                         </div>
                       </StyledTableData>
                       <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                        {/* {item.total_hours !== "" ? item.total_hours.toFixed(2) : ""} */}
-                        {/* {item.total_hours !== "" ? item.total_hours.toFixed(2) : ""} */}
-                        {item.total_hours ? new Date(item.time_out) : null}
+                        {item.total_hours}
                       </StyledTableData>
                     </tr>
                   );
