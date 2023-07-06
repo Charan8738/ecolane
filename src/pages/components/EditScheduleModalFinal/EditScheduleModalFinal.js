@@ -369,7 +369,7 @@ const EditScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
             type="submit"
             onClick={handleSubmit(() => onSubmitHandler(formFields, driverId))}
           >
-            Create Schedule
+            Edit Schedule
           </Button>
         </Col>
       </Row>

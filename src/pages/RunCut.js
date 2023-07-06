@@ -53,6 +53,7 @@ const RunCut = () => {
   const [sm, updateSm] = useState(false);
   const location = useLocation();
   const [data, setData] = useState([]);
+  const [updateData, setUpdateData] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [view, setView] = useState({
     edit: false,
@@ -79,25 +80,34 @@ const RunCut = () => {
         setLoading(false);
       });
   }, []);
+  useEffect(() => {
+    const getSchedules = async () => {
+      const response = await axios.get("getSchedule?driver_id=" + driverId);
+      return response.data;
+    };
+    setLoading(true);
+    getSchedules()
+      .then((res) => {
+        setData([...res]);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [updateData]);
   const onFormCancel = () => {
     setView({ edit: false, add: false, diagnose: false });
   };
   const onEditSubmit = (data) => {
-    let newData = { data: data, _id: tracker._id, coach_count: data.length };
+    let newData = { driver_id: driverId, schedules: data };
     console.log(newData);
 
     axios
-      .put("https://gps.zig-app.com/api/updateSchedule", newData)
+      .put("addschedule", newData)
       .then((res) => {
         if (res.status === 200) {
-          // const newTrackers = [...scheduleData];
-          // newTrackers.push(data);
-          //   const editedIdx = newTrackers.findIndex((item) => item._id === data._id);
-          //   newTrackers[editedIdx] = { ...data };
-          // schedulesData = newTrackers;
-          // setTrackers(newTrackers);
-          // console.log(newTrackers);
-          //   setTrackers(newTrackers);
           setUpdateData(true);
           setView({
             edit: false,
