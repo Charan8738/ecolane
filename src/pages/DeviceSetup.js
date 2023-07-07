@@ -153,7 +153,7 @@ const DeviceSetup = () => {
   }, [onSearchText]);
   useEffect(() => {
     const getTrackers = async () => {
-      const response = await axios.get("https://gps-v2.zig-app.com/api/getdeviceDetails/" + userId);
+      const response = await axios.get("gpsData?client_id=" + userId);
       return response.data;
     };
     setLoading(true);

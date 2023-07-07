@@ -319,7 +319,7 @@ const VehicleInfo = () => {
                       onChange={(event) => setViewOption(event.target.value)}
                     >
                       <option value="realtime">Realtime Tracking</option>
-                      <option value="history">History Playback</option>
+                      {/* <option value="history">History Playback</option> */}
                     </Input>
                   </div>
                 </div>
