@@ -240,6 +240,12 @@ const menu = [
     page: 26,
   },
   {
+    icon: "property-alt",
+    text: "Lima Analytics",
+    link: "/analytics",
+    page: 36,
+  },
+  {
     icon: "cc-alt2-fill",
     text: "All Venues",
     link: "/all-venues",
