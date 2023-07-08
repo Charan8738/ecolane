@@ -242,7 +242,7 @@ const menu = [
   {
     icon: "property-alt",
     text: "Lima Analytics",
-    link: "/analytics",
+    link: "/lima-analytics",
     page: 36,
   },
   {
