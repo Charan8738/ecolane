@@ -187,7 +187,7 @@ export const successAlert = (msg, position) => {
 export const failureAlert = (msg) => {
   Swal.fire({
     icon: "error",
-    title: "Oops...",
+    title: "Error",
     text: msg,
     focusConfirm: true,
   });
