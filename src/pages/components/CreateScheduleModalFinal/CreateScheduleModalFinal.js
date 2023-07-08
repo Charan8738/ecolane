@@ -100,24 +100,46 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
       });
   }, []);
   const handleFormChange = (event, index) => {
-    console.log(index, event.target.name);
     let data = [...formFields];
     data[index][event.target.name] = event.target.value;
-    console.log(data);
 
     const timeIn = data[index].time_in;
     const timeOut = data[index].time_out;
     const breakIn = data[index].break_in;
     const breakOut = data[index].break_out;
+
+    // Compare and update the times
+    if (timeIn && timeOut && timeOut < timeIn) {
+      data[index].time_out = timeIn; // Set time_out to be greater than time_in
+    }
+
+    if (timeIn && breakIn && breakIn < timeIn) {
+      data[index].break_in = timeIn; // Set break_in to be greater than time_in
+    }
+
+    if (timeIn && breakOut && breakOut < timeIn) {
+      data[index].break_out = timeIn; // Set break_out to be greater than time_in
+    }
+
+    if (breakIn && breakOut && breakOut < breakIn) {
+      data[index].break_out = breakIn; // Set break_out to be greater than break_in
+    }
+
+    if (breakOut && timeOut && timeOut < breakOut) {
+      data[index].time_out = breakOut; // Set time_out to be greater than break_out
+    }
+
+    // Calculate total hours
     if (timeIn && timeOut) {
       const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
       const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
 
       const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
       const breakHours = breakInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
-      console.log("break hours" + breakHours);
-      data[index].total_hours = totalHours.toFixed(2) - breakHours.toFixed(2); // Round to 2 decimal places
+
+      data[index].total_hours = (totalHours - breakHours).toFixed(2); // Round to 2 decimal places
     }
+    console.log(data);
     setFormFields(data);
   };
 
@@ -302,7 +324,9 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             dateFormat="h:mm aa"
                             className="form-control date-picker"
                             autoComplete="off"
-                            disabled={isOff}
+                            disabled={isOff || item.time_in === ""}
+                            minTime={item.time_in ? new Date(item.time_in) : undefined} // Set the minimum time based on start_time
+                            maxTime={new Date(9999, 0, 1, 23, 59)}
                           />
                         </div>
                       </StyledTableData>
@@ -323,7 +347,9 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             dateFormat="h:mm aa"
                             className="form-control date-picker"
                             autoComplete="off"
-                            disabled={isOff}
+                            disabled={isOff || item.break_in === ""}
+                            minTime={item.break_in ? new Date(item.break_in) : undefined} // Set the minimum time based on time_in
+                            maxTime={new Date(9999, 0, 1, 23, 59)} // Set a high value as the maximum time
                           />
                         </div>
                       </StyledTableData>
@@ -343,12 +369,14 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             dateFormat="h:mm aa"
                             className="form-control date-picker"
                             autoComplete="off"
-                            disabled={isOff}
+                            disabled={isOff || item.break_out === ""}
+                            minTime={item.break_out ? new Date(item.break_out) : undefined} // Set the minimum time based on time_in
+                            maxTime={new Date(9999, 0, 1, 23, 59)} // Set a high value as the maximum time
                           />
                         </div>
                       </StyledTableData>
                       <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                        {item.total_hours !== "" ? item.total_hours.toFixed(2) : ""}
+                        {item.total_hours}
                       </StyledTableData>
                     </tr>
                   );

@@ -96,7 +96,7 @@ const RunCutting = () => {
           });
           successAlert("Schedule created successfully");
         } else {
-          failureAlert("Error");
+          failureAlert((msg = "Test"));
         }
       });
   };
@@ -108,6 +108,13 @@ const RunCutting = () => {
     });
   };
 
+  const closeModal = () => {
+    setView({
+      edit: false,
+      add: false,
+      diagnose: false,
+    });
+  };
   const onEditSubmit = (data, driverId) => {
     console.log(data);
     let js = { driver_id: driverId, schedules: data };
@@ -140,7 +147,7 @@ const RunCutting = () => {
           });
           successAlert("Schedule created successfully");
         } else {
-          failureAlert("Error");
+          failureAlert("Please select a driver");
         }
       })
       .catch((err) => {
