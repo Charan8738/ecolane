@@ -312,7 +312,7 @@ const Visitors_Vip = () => {
                     />
                   ) : (
                     <div className="text-center">
-                      <span className="text-silent">{isLoading ? <Spinner color="primary" /> : "No Vip Visitors"}</span>
+                      <span className="text-silent">{isLoading ? <Spinner color="primary" /> : "No Riders"}</span>
                     </div>
                   )}
                 </div>
