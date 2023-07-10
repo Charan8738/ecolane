@@ -224,7 +224,7 @@ const EditScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
           <tbody>
             {formData.length > 0
               ? formData.map((item, index) => {
-                  const isOff = item.coach_no === "off" || item.coach_no === "Day Off      ";
+                  const isOff = item.coach_no === "off" || item.coach_no === "Day Off";
                   return (
                     <tr key={index}>
                       <th style={{ textAlign: "center", verticalAlign: "middle" }} scope="row">
@@ -306,7 +306,9 @@ const EditScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             dateFormat="h:mm aa"
                             className="form-control date-picker"
                             autoComplete="off"
-                            disabled={isOff}
+                            disabled={isOff || item.time_in === ""}
+                            minTime={item.time_in ? new Date(item.time_in) : undefined} // Set the minimum time based on start_time
+                            maxTime={new Date(9999, 0, 1, 23, 59)}
                           />
                         </div>
                       </StyledTableData>
@@ -327,7 +329,9 @@ const EditScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             dateFormat="h:mm aa"
                             className="form-control date-picker"
                             autoComplete="off"
-                            disabled={isOff}
+                            disabled={isOff || item.break_in === ""}
+                            minTime={item.break_in ? new Date(item.break_in) : undefined} // Set the minimum time based on time_in
+                            maxTime={new Date(9999, 0, 1, 23, 59)} // Set a high value as the maximum time
                           />
                         </div>
                       </StyledTableData>
@@ -347,7 +351,9 @@ const EditScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
                             dateFormat="h:mm aa"
                             className="form-control date-picker"
                             autoComplete="off"
-                            disabled={isOff}
+                            disabled={isOff || item.break_out === ""}
+                            minTime={item.break_out ? new Date(item.break_out) : undefined} // Set the minimum time based on time_in
+                            maxTime={new Date(9999, 0, 1, 23, 59)} // Set a high value as the maximum time
                           />
                         </div>
                       </StyledTableData>
