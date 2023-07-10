@@ -69,7 +69,8 @@ const DriverSchedule = () => {
     setLoading(true);
     getSchedules()
       .then((res) => {
-        setData([...res]);
+        const responseData = res.filter((item) => !item.coach_no.includes("Day Off"));
+        setData([...responseData]);
       })
       .catch((err) => {
         console.log(err);
@@ -145,38 +146,42 @@ const DriverSchedule = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.length > 0
-                    ? data.map((item) => {
-                        return (
-                          <tr>
-                            <th style={{ textAlign: "center", verticalAlign: "middle" }} scope="row">
-                              {item.driver_name}
-                            </th>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.coach_no === "off" ? "Off" : item.coach_no}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.line_no === "" ? "Off" : item.line_no}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.time_in === "" ? "Off" : <Moment format="hh:mm a">{item.time_in}</Moment>}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.break_in === "" ? "Off" : <Moment format="hh:mm a">{item.break_in}</Moment>}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.break_out === "" ? "Off" : <Moment format="hh:mm a">{item.break_out}</Moment>}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.time_out === "" ? "Off" : <Moment format="hh:mm a">{item.time_out}</Moment>}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.total_hours}
-                            </StyledTableData>
-                          </tr>
-                        );
-                      })
-                    : null}
+                  {data.length > 0 ? (
+                    data.map((item) => {
+                      return (
+                        <tr>
+                          <th style={{ textAlign: "center", verticalAlign: "middle" }} scope="row">
+                            {item.driver_name}
+                          </th>
+                          <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                            {item.coach_no === "off" ? "Off" : item.coach_no}
+                          </StyledTableData>
+                          <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                            {item.line_no === "" ? "Off" : item.line_no}
+                          </StyledTableData>
+                          <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                            {item.time_in === "" ? "Off" : <Moment format="hh:mm a">{item.time_in}</Moment>}
+                          </StyledTableData>
+                          <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                            {item.break_in === "" ? "Off" : <Moment format="hh:mm a">{item.break_in}</Moment>}
+                          </StyledTableData>
+                          <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                            {item.break_out === "" ? "Off" : <Moment format="hh:mm a">{item.break_out}</Moment>}
+                          </StyledTableData>
+                          <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                            {item.time_out === "" ? "Off" : <Moment format="hh:mm a">{item.time_out}</Moment>}
+                          </StyledTableData>
+                          <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                            {item.total_hours}
+                          </StyledTableData>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <span>{"No Schedules added"}</span>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </CardBody>
@@ -191,6 +196,10 @@ const StyledTableHeader = styled.th`
   vertical-align: middle;
 `;
 const StyledTableData = styled.td`
+  text-align: center;
+  vertical-align: middle;
+`;
+const StyledTableRow = styled.tr`
   text-align: center;
   vertical-align: middle;
 `;

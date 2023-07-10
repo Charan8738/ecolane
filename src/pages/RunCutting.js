@@ -154,6 +154,7 @@ const RunCutting = () => {
         console.log(err);
       });
   };
+
   const onFormCancel = () => {
     setView({ edit: false, add: false, diagnose: false });
   };
@@ -409,7 +410,7 @@ const RunCutting = () => {
             </a>
             <div className="p-2">
               <CreateScheduleModalFinal
-                onSubmitHandler={onEditSubmit}
+                onSubmitHandler={closeModal}
                 isEdit={false}
                 // formData={formData}
                 clients={clients}

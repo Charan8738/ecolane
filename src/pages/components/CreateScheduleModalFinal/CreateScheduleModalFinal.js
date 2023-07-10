@@ -20,10 +20,83 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { RenderComponent, FormControlMap } from "../../form-components/FormComponents";
 import { user_id } from "../../../redux/userSlice";
+import { successAlert, failureAlert } from "../../../utils/Utils";
+
 import { useSelector } from "react-redux";
 const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
-  const { errors, register, handleSubmit } = useForm();
-
+  const { errors, register, handleSubmit, reset } = useForm();
+  const INITIAL_ADD_FORM = [
+    {
+      day: "Monday",
+      coach_no: "",
+      line_no: "",
+      time_in: "",
+      time_out: "",
+      break_in: "",
+      break_out: "",
+      total_hours: "",
+    },
+    {
+      day: "Tuesday",
+      coach_no: "",
+      line_no: "",
+      time_in: "",
+      time_out: "",
+      break_in: "",
+      break_out: "",
+      total_hours: "",
+    },
+    {
+      day: "Wednesday",
+      coach_no: "",
+      line_no: "",
+      time_in: "",
+      time_out: "",
+      break_in: "",
+      break_out: "",
+      total_hours: "",
+    },
+    {
+      day: "Thursday",
+      coach_no: "",
+      line_no: "",
+      time_in: "",
+      time_out: "",
+      break_in: "",
+      break_out: "",
+      total_hours: "",
+    },
+    {
+      day: "Friday",
+      coach_no: "",
+      line_no: "",
+      time_in: "",
+      time_out: "",
+      break_in: "",
+      break_out: "",
+      total_hours: "",
+    },
+    {
+      day: "Saturday",
+      coach_no: "",
+      line_no: "",
+      time_in: "",
+      time_out: "",
+      break_in: "",
+      break_out: "",
+      total_hours: "",
+    },
+    {
+      day: "Sunday",
+      coach_no: "",
+      line_no: "",
+      time_in: "",
+      time_out: "",
+      break_in: "",
+      break_out: "",
+      total_hours: "",
+    },
+  ];
   const [updatedDate, setUpdatedDate] = useState(new Date());
   const [formFields, setFormFields] = useState(INITIAL_ADD_FORM);
   const [formData, setFormData] = useState(props.isEdit ? props.formData : INITIAL_ADD_FORM);
@@ -51,6 +124,7 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
     "off",
     "Day Off",
   ];
+
   const LineL = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const [driverList, setDriverList] = useState([]);
 
@@ -196,14 +270,45 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
   }, 0);
 
   const resetform = () => {
-    setFormData(INITIAL_ADD_FORM);
+    console.log("inside reset");
+    setFormData([...INITIAL_ADD_FORM]);
+    setFormFields(INITIAL_ADD_FORM);
+  };
+
+  const onEditSubmit = async (data, driverId) => {
+    try {
+      console.log(data);
+      let js = { driver_id: driverId, schedules: data };
+      console.log(data.length);
+      console.log(js);
+      const res = await axios.post("addschedule", js);
+      if (res.status === 201) {
+        // const newTrackers = [...trackers];
+        // newTrackers.push(js);
+        // console.log(newTrackers);
+        // setTrackers(newTrackers);
+        // setCreatedSchedule(true);
+        // setView({
+        //   edit: false,
+        //   add: false,
+        //   diagnose: false,
+        // });
+        resetform();
+        successAlert("Schedule created successfully");
+        onSubmitHandler();
+      } else {
+        resetform();
+        failureAlert("Please select a driver");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <div>
       <Block>
         <h3>Create Schedule</h3>
-
         <MyDropDown onChangeHandle={onChangeHandler} driverlist={driverList} />
         <div style={{ textAlign: "right" }}>
           <h5>
@@ -387,12 +492,7 @@ const CreateScheduleModalFinal = ({ onSubmitHandler, ...props }) => {
       </Block>
       <Row className="g-4">
         <Col xl="12">
-          <Button
-            color="primary"
-            size="lg"
-            type="submit"
-            onClick={handleSubmit(() => onSubmitHandler(formFields, driverId))}
-          >
+          <Button color="primary" size="lg" type="submit" onClick={() => onEditSubmit(formFields, driverId)}>
             Create Schedule
           </Button>
         </Col>
