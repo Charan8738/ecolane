@@ -19,6 +19,7 @@ import RunCut from "../pages/RunCut";
 import RunCutting from "../pages/RunCutting";
 import DriverSchedule from "../pages/DriverSchedule";
 import drivers from "../pages/drivers";
+import CreateSchedule from "../pages/CreateSchedule";
 // const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
 const Homepage = React.lazy(() => import("../pages/Devices"));
@@ -102,6 +103,7 @@ const Pages = ({ currentAccess }) => {
   return (
     <Suspense fallback={<div />}>
       <Switch>
+        <Route path={`/create-schedule`} component={CreateSchedule} />
         <Route path={`/run`} component={RunCut} />
         <Route path={`/run-cutting-scheduler`} component={RunCutting} />
         <Route path={`/driver-schedule`} component={DriverSchedule} />

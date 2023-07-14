@@ -88,7 +88,7 @@ const DriverSchedule = () => {
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle className="text-primary" page tag="h3">
-                Driver Schedule
+                Create Schedule
               </BlockTitle>
             </BlockHeadContent>
             {/* <BlockHeadContent>
