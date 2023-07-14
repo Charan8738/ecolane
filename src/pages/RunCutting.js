@@ -162,6 +162,9 @@ const RunCutting = () => {
     console.log(id);
     history.push("/run", { id: id });
   };
+  const redirectToCreateSchedulePage = () => {
+    history.push("/create-schedule");
+  };
   useEffect(() => {
     if (onSearchText !== "") {
       const filteredObject = trackers.filter((item) => {
@@ -271,7 +274,7 @@ const RunCutting = () => {
                 className="toggle d-none d-md-inline-flex"
                 color="primary"
                 onClick={() => {
-                  toggle("add");
+                  redirectToCreateSchedulePage();
                 }}
               >
                 <Icon name="plus"></Icon>
