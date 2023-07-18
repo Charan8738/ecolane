@@ -27,24 +27,30 @@ import {
 } from "../components/Component";
 import axios from "axios";
 import backgroundImage from "../assets/images/visitor_history.png";
+import "./total.css";
 
 const Visitors_Vip = () => {
   const client_id = useSelector(user_id);
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemPerPage] = useState(7);
+  const [itemPerPage] = useState(10);
   const date = new Date();
   const daysAgo = new Date(date.getTime());
   const [searchText, setSearchText] = useState("");
   const [mainData, setMainData] = useState([]);
   daysAgo.setDate(date.getDate() - 2);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const indexOfLastItem = currentPage * itemPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemPerPage;
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
   const [deviceMac, setDeviceMac] = useState("All");
   const onDeviceSelected = (e) => {
     console.log(e.target.value);
     setDeviceMac(e.target.value);
   };
+
+  const initialData = useRef([]);
   const [rangeDate, setRangeDate] = useState({
     start: daysAgo,
     end: new Date(),
@@ -78,6 +84,7 @@ const Visitors_Vip = () => {
       rangeDate.end +
       "&Clientid=" +
       client_id;
+    setLoading(true);
     const fetchData = async () => {
       if (rangeDate.start && rangeDate.end) {
         const startDate =
@@ -85,20 +92,25 @@ const Visitors_Vip = () => {
         const endDate =
           rangeDate.end.getFullYear() + "-" + (rangeDate.end.getMonth() + 1) + "-" + rangeDate.end.getDate();
         try {
+          setData([]);
           const response = await fetch(
             "https://zig-web.com/ZIGSmartWebLima/api/ZIGShuttle/GetVIPUsersMOCA?Startdate=" +
-              startDate +
-              "&Enddate=" +
-              endDate +
-              "&Clientid=" +
-              client_id
+            startDate +
+            "&Enddate=" +
+            endDate +
+            "&Clientid=" +
+            client_id
           );
-          const json = await response.json();
-          console.log(json);
-          //data = json.purchasetickets;
-          setData(json);
-          setMainData([...json]);
-          // initialData.current = [...json];
+          setLoading(false);
+
+          if (response.status === 200) {
+            const json = await response.json();
+            console.log(json);
+            //data = json.purchasetickets;
+            setData(json);
+            setMainData([...json]);
+            initialData.current = [...json];
+          }
         } catch (error) {
           console.log("error", error);
         }
@@ -106,25 +118,24 @@ const Visitors_Vip = () => {
     };
 
     fetchData();
-  }, [rangeDate]);
+  }, [rangeDate, client_id]);
 
   useEffect(() => {
-    try {
-      if (searchText !== "") {
-        const filteredObject = mainData.filter((item) => {
-          return item.UserName.toLowerCase().includes(searchText.toLowerCase());
-        });
-        setData([...filteredObject]);
-      } else {
-        setData([...mainData]);
-      }
-    } catch (error) {
-      console.log("Error:", error);
+
+    if (searchText !== "") {
+      const filteredObject = initialData.current.filter((item) => {
+        return item.EmailId.toLowerCase().includes(searchText.toLowerCase());
+      });
+      setData([...filteredObject]);
+    } else {
+      setData([...initialData.current]);
     }
+    setCurrentPage(1);
+
   }, [searchText]);
 
   useEffect(() => {
-    console.log("deviceMac:", deviceMac);
+    // console.log("deviceMac:", deviceMac);
 
     let defaultData = mainData;
 
@@ -139,15 +150,24 @@ const Visitors_Vip = () => {
       });
       setData(defaultData);
     } else {
-      console.log("Inside else block");
+      // console.log("Inside else block");
       setData([]);
       setData(mainData);
     }
   }, [deviceMac]);
 
   const onFilterChange = (e) => {
-    console.log(e.target.value);
-    setSearchText(e.target.value);
+    const searchText = e.target.value;
+    setSearchText(searchText);
+    // Handle backspace event
+    if (e.nativeEvent.inputType === "deleteContentBackward" && searchText.length === 0) {
+      setData([...initialData.current]);
+    } else {
+      const filteredData = initialData.current.filter((item) =>
+        item.EmailId.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setData(filteredData);
+    }
   };
   return (
     <React.Fragment>
@@ -227,7 +247,7 @@ const Visitors_Vip = () => {
                     type="text"
                     className="form-control"
                     id="default-04"
-                    placeholder="Search by Username"
+                    placeholder="Search by Email"
                     onChange={(e) => onFilterChange(e)}
                   />
                 </div>
@@ -255,34 +275,34 @@ const Visitors_Vip = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.length > 0
-                      ? data.map((item, index) => {
-                          return (
-                            <tr key={item.EmailId} className="tb-tnx-item">
-                              <td style={{ padding: "0.75rem 0.25rem" }}>
-                                <strong>{item.VIP}</strong>
-                              </td>
+                    {currentItems.length > 0
+                      ? currentItems.map((item, id) => {
+                        return (
+                          <tr key={id} className="tb-tnx-item">
+                            <td style={{ padding: "0.75rem 0.25rem" }}>
+                              <strong>{item.VIP}</strong>
+                            </td>
 
-                              {/* <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
+                            {/* <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
                                 {item.UserName}
                               </td>
                               <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
                                 {item.Ticketcount}
                               </td> */}
-                              <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
-                                {item.EmailId}
-                              </td>
-                              <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
-                                {item.LineName}
-                              </td>
-                              <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
-                                <Moment format="MMMM Do YYYY, h:mm a">{item.Intime}</Moment>
-                              </td>
-                              <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
-                                <Moment format="MMMM Do YYYY, h:mm a">{item.Outtime}</Moment>
-                              </td>
+                            <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
+                              {item.EmailId}
+                            </td>
+                            <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
+                              {item.LineName}
+                            </td>
+                            <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
+                              <Moment format="MMMM Do YYYY, h:mm a">{item.Intime}</Moment>
+                            </td>
+                            <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
+                              <Moment format="MMMM Do YYYY, h:mm a">{item.Outtime}</Moment>
+                            </td>
 
-                              {/* <td style={{ padding: "0.75rem 0.25rem" }}>
+                            {/* <td style={{ padding: "0.75rem 0.25rem" }}>
                                 <div className="tb-odr-btns d-none d-md-inline">
                                   <Button
                                     color="primary"
@@ -296,13 +316,13 @@ const Visitors_Vip = () => {
                                   </Button>
                                 </div>
                               </td> */}
-                            </tr>
-                          );
-                        })
+                          </tr>
+                        );
+                      })
                       : null}
                   </tbody>
                 </table>
-                <div className="card-inner">
+                <div className="pagination-container">
                   {data.length > 0 ? (
                     <PaginationComponent
                       itemPerPage={itemPerPage}
@@ -312,7 +332,7 @@ const Visitors_Vip = () => {
                     />
                   ) : (
                     <div className="text-center">
-                      <span className="text-silent">{isLoading ? <Spinner color="primary" /> : "No Riders"}</span>
+                      <span className="text-silent">{isLoading ? <Spinner color="primary" /> : "No Vip Visitors"}</span>
                     </div>
                   )}
                 </div>
