@@ -29,7 +29,7 @@ import {
   Button,
   Row,
 } from "../components/Component";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { useLocation, Redirect } from "react-router-dom";
 import Content from "../layout/content/Content";
@@ -55,6 +55,8 @@ const RunCut = () => {
   const [data, setData] = useState([]);
   const [updateData, setUpdateData] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const history = useHistory();
+
   const [view, setView] = useState({
     edit: false,
     add: false,
@@ -62,7 +64,12 @@ const RunCut = () => {
   });
   const [clients, setClients] = useState([]);
   const driverId = location.state?.id;
+  const imei = location.state?.Macaddress;
 
+  const redirectToRunCuttingPage = () => {
+    console.log(data);
+    history.push("/edit-schedule", { data: data, driverId: driverId });
+  };
   useEffect(() => {
     const getSchedules = async () => {
       const response = await axios.get("getSchedule?driver_id=" + driverId);
@@ -141,7 +148,7 @@ const RunCut = () => {
                   <ul className="nk-block-tools g-3">
                     <li>
                       {" "}
-                      <Button
+                      {/* <Button
                         color="primary"
                         className="mr-4"
                         onClick={() =>
@@ -151,7 +158,8 @@ const RunCut = () => {
                             diagnose: false,
                           })
                         }
-                      >
+                      > */}
+                      <Button color="primary" className="mr-4" onClick={() => redirectToRunCuttingPage()}>
                         <Icon name="edit" className="mr-0.5"></Icon>
                         <span>Edit Schedule</span>
                       </Button>
