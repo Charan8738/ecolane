@@ -123,7 +123,7 @@ const Visitors_Vip = () => {
   useEffect(() => {
 
     if (searchText !== "") {
-      const filteredObject = initialData.current.filter((item) => {
+      const filteredObject = mainData.filter((item) => {
         return item.EmailId.toLowerCase().includes(searchText.toLowerCase());
       });
       setData([...filteredObject]);
@@ -332,7 +332,7 @@ const Visitors_Vip = () => {
                     />
                   ) : (
                     <div className="text-center">
-                      <span className="text-silent">{isLoading ? <Spinner color="primary" /> : "No Vip Visitors"}</span>
+                      <span className="text-silent">{isLoading ? <Spinner color="primary" /> : "No Rider History"}</span>
                     </div>
                   )}
                 </div>
