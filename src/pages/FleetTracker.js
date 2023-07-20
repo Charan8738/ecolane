@@ -58,7 +58,7 @@ const FleetTracker = () => {
   const [formData, setFormData] = useState({});
   const [isLoading, setLoading] = useState(false);
   const [onSearchText, setSearchText] = useState("");
-  const [trackers, setTrackers] = useState([]);
+  const [trackers, setTrackers] = useState([]); 
   const [sm, updateSm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [diagnoseImei, setDiagnoseImei] = useState();
@@ -76,7 +76,17 @@ const FleetTracker = () => {
     });
   };
   const onFilterChange = (e) => {
-    setSearchText(e.target.value);
+    const searchText=e.target.value;
+    setSearchText(searchText);
+    if(e.nativeEvent.inputType==="deleteContentBackward" && searchText.length===0){
+      setTrackers([...initialTrackers.current])
+    }
+    else{
+      const filteredData = initialTrackers.current.filter((item)=>
+      item.vehicleNo.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setTrackers(filteredData);
+    }
   };
   const onSubmitHandler = (data) => {
     axios
@@ -162,6 +172,7 @@ const FleetTracker = () => {
     } else {
       setFilteredTrackers(trackers);
     }
+    setCurrentPage(1);
   }, [viewOption, trackers]);
 
   useEffect(() => {
@@ -174,6 +185,7 @@ const FleetTracker = () => {
     } else {
       setTrackers([...initialTrackers.current]);
     }
+     setCurrentPage(1);
   }, [onSearchText]);
   useEffect(() => {
     const getTrackers = async () => {
@@ -417,8 +429,17 @@ const FleetTracker = () => {
                               </td>
                             </tr>
                           );
-                        })
-                      : null}
+                        }
+                        ) : (
+                          <tr>
+                            <td colSpan="7" className="text-center" style={{fontSize:15.5,paddingTop:18,paddingBottom:0}}>
+                              {viewOption === "Moving" && <span>No moving vehicles</span>}
+                              {viewOption === "Idle" && <span>No idle vehicles</span>}
+                              {viewOption === "Parked" && <span>No parked vehicles</span>}
+                              {viewOption === "Offline" && <span>No offline vehicles</span>}
+                            </td>
+                          </tr>
+                        )}
                   </tbody>
                 </table>
 
@@ -426,7 +447,7 @@ const FleetTracker = () => {
                   {trackers.length > 0 ? (
                     <PaginationComponent
                       itemPerPage={itemPerPage}
-                      totalItems={trackers.length}
+                      totalItems={filteredTrackers.length}
                       paginate={paginate}
                       currentPage={currentPage}
                     />
