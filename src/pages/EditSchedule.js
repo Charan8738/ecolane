@@ -158,25 +158,7 @@ const EditSchedule = () => {
   //     }
   //     return count;
   //   }, 0);
-  const coachL = [
-    1013,
-    1043,
-    1049,
-    1055,
-    1056,
-    1060,
-    1070,
-    1071,
-    1072,
-    1073,
-    1074,
-    1075,
-    1076,
-    1077,
-    1078,
-    "off",
-    "Day Off",
-  ];
+  const coachL = ["Select", 1055, 1056, 1060, 1070, 1071, 1073, 1074, 1076, 1077, 1078, "off", "Day Off", "TBD"];
 
   const addFields = (day, index) => {
     let newField = {
@@ -205,7 +187,7 @@ const EditSchedule = () => {
     data.splice(index, 1);
     setFormFields(data);
   };
-  const LineL = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const LineL = ["Select", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const userId = useSelector(user_id);
   const handleFormChange = (event, index) => {
     console.log(index, event.target.name);
