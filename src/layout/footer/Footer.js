@@ -6,7 +6,7 @@ const Footer = () => {
     <div className="nk-footer">
       <div className="container-fluid">
         <div className="nk-footer-wrap">
-          <div className="nk-footer-copyright"> &copy; 2022 ZED Digital</div>
+          <div className="nk-footer-copyright"> &copy; 2023 ZED Digital</div>
           <div className="nk-footer-links">
             <ul className="nav nav-sm">
               <li className="nav-item">
