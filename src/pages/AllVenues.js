@@ -7,6 +7,7 @@ import Nouislider from "nouislider-react";
 import classNames from "classnames";
 import Swal from "sweetalert2";
 import { SketchPicker } from "react-color";
+import { toast } from "react-toastify";
 import Head from "../layout/head/Head";
 import {
   PreviewCard,
@@ -46,6 +47,40 @@ const successAlert = () => {
     text: "Venue updated successfully",
   });
 };
+const successAuthAlert = () => {
+  Swal.fire({
+    icon: "success",
+    title: "Success",
+    text: "Authenticated successfully",
+  });
+};
+const CloseButton = () => {
+  return (
+    <span className="btn-trigger toast-close-button" role="button">
+      <Icon name="cross"></Icon>
+    </span>
+  );
+};
+const CustomAuthToast = () => {
+  return (
+    <div className="toastr-text">
+      <h5>Authenticated Successfully</h5>
+      <p>Your have Access to update.</p>
+    </div>
+  );
+};
+const messageAuthToast = () => {
+  toast.success(<CustomAuthToast />, {
+    position: "bottom-right",
+    autoClose: false,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: false,
+    closeButton: <CloseButton />,
+  });
+};
 const failureAlert = () => {
   Swal.fire({
     icon: "error",
@@ -55,9 +90,19 @@ const failureAlert = () => {
     timer: 1500,
   });
 };
+const failureAuthAlert = () => {
+  Swal.fire({
+    icon: "error",
+    title: "Oops...",
+    text: "Authentication Failed",
+    showConfirmButton: false,
+    timer: 1500,
+  });
+};
 const AllVenues = () => {
   const client_id = useSelector(user_id);
   const [formData, setFormData] = useState({});
+  const [authFormData, setAuthFormData] = useState({});
 
   const [data, setData] = useState([]);
   const initialData = useRef([]);
@@ -74,6 +119,9 @@ const AllVenues = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const { errors, register, handleSubmit } = useForm();
   const [view, setView] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
 
   const getRssiValueFromFt = (x) => {
     return -45 - 5 * x;
@@ -86,9 +134,18 @@ const AllVenues = () => {
     setView(false);
     resetForm();
   };
+  const onAuthFormCancel = () => {
+    setShowAuthModal(false);
+    setAuthFormData({});
+  };
   const onInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const onAuthInputChange = (e) => {
+    setAuthFormData({ ...authFormData,[e.target.name]: e.target.value });
+    console.log(authFormData);
+  };
+  
   const resetForm = () => {
     setFormData({});
   };
@@ -118,29 +175,57 @@ const AllVenues = () => {
     });
     setView(true);
   };
+
+  const checkAuthentication = async () => {
+    // if (activeTab && !isAuthenticated) {
+      setShowAuthModal(true);
+    //   console.log("Not Authenticated, Please Authenticate");
+    //   return false;
+    // }
+
+    console.log("Authenticated!");
+    //return true;
+  };
+
+  const onAuthSubmit = () => {
+    //console.log(authFormData.userName);
+    if (authFormData.userName.toLowerCase() === "Karthik@zed.digital".toLowerCase() && authFormData.userPasscode === "Polgara!@12") {
+      console.log("Authenticated Successfully");
+      setShowAuthModal(false);
+      messageAuthToast();
+      onEditSubmit();
+    }
+    else {
+      console.log("Authentication has Failed");
+      failureAuthAlert();
+    }
+  };
+
   const onEditSubmit = async () => {
+
+
     let submittedData = {
       ...formData,
 
       BiboRssi_ios: formData.BibobRssi_ios,
     };
     console.log(submittedData);
-    // const response = await axios.put("UpdateClientConfiguration", { ...submittedData });
-    // if (response.data === true) {
-    //   const newData = [...data];
-    //   const newIdx = newData.findIndex((item) => item.Id === formData.Id);
-    //   newData[newIdx] = { ...submittedData };
-    //   setData([...newData]);
-    //   onFormCancel();
-    //   const refresh2 = await axios.get("ResetConfigSettingNew");
-    //   const refresh1 = await axios.get("ResetConfigSetting");
+    const response = await axios.put("UpdateClientConfiguration", { ...submittedData });
+    if (response.data === true) {
+      const newData = [...data];
+      const newIdx = newData.findIndex((item) => item.Id === formData.Id);
+      newData[newIdx] = { ...submittedData };
+      setData([...newData]);
+      onFormCancel();
+      const refresh2 = await axios.get("ResetConfigSettingNew");
+      const refresh1 = await axios.get("ResetConfigSetting");
 
-    //   if (refresh1.status && refresh2.status) {
-    //     successAlert();
-    //   }
-    // } else {
-    //   failureAlert();
-    // }
+      if (refresh1.status && refresh2.status) {
+        successAlert();
+      }
+    } else {
+      failureAlert();
+    }
   };
   const tabWiseErrors = [0, 0, 0, 0, 0];
   if (Object.entries(errors).length > 0) {
@@ -362,7 +447,7 @@ const AllVenues = () => {
             </div>
           </Card>
         </Block>
-        <Modal isOpen={view} toggle={() => onFormCancel()} className="modal-dialog-centered" size="xl">
+        <Modal isOpen={view} toggle={() => onFormCancel()} style={{zIndex:1000}} className="modal-dialog-centered" size="xl">
           <ModalBody>
             <a href="#cancel" className="close">
               {" "}
@@ -376,7 +461,7 @@ const AllVenues = () => {
             </a>
             <div className="p-2">
               <h5 className="title">Edit</h5>
-              <form onSubmit={handleSubmit(onEditSubmit)}>
+              <form onSubmit={handleSubmit(checkAuthentication)}>
                 <PreviewCard>
                   <Nav tabs>
                     {[
@@ -521,7 +606,7 @@ const AllVenues = () => {
                             </label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.Status === 0}
                                   onClick={(e) => {
@@ -530,7 +615,7 @@ const AllVenues = () => {
                                 >
                                   Enable
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.Status === 1}
                                   onClick={(e) => {
@@ -714,28 +799,28 @@ const AllVenues = () => {
                             <label className="form-label">A Validation Mode</label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.Validationmode !== 0}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode: 0 }))}
                                 >
                                   Dual Connection
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.Validationmode !== 1}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode: 1 }))}
                                 >
                                   MQTT Mode
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.Validationmode !== 2}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode: 2 }))}
                                 >
                                   BLE Mode
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.Validationmode !== 3}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode: 3 }))}
@@ -751,28 +836,28 @@ const AllVenues = () => {
                             <label className="form-label">B Validation Mode</label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.Validationmode_B !== 0}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode_B: 0 }))}
                                 >
                                   Dual Connection
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.Validationmode_B !== 1}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode_B: 1 }))}
                                 >
                                   MQTT Mode
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.Validationmode_B !== 2}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode_B: 2 }))}
                                 >
                                   BLE Mode
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.Validationmode_B !== 3}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode_B: 3 }))}
@@ -1161,7 +1246,7 @@ const AllVenues = () => {
                       <br></br>
                       <Row>
                         <Col sm="3">
-                          <Label htmlFor="Clientpayment" className="form-label">
+                          <Label htmlFor="service_enable" className="form-label">
                             Service Enable
                           </Label>
                           <div className="form-control-wrap">
@@ -1191,7 +1276,7 @@ const AllVenues = () => {
                             </label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.ibeacon_Status === 0}
                                   onClick={(e) => {
@@ -1200,7 +1285,7 @@ const AllVenues = () => {
                                 >
                                   Enable
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.ibeacon_Status === 1}
                                   onClick={(e) => {
@@ -1220,7 +1305,7 @@ const AllVenues = () => {
                             </label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.ibeaconAndroidStatus === 0}
                                   onClick={(e) => {
@@ -1229,7 +1314,7 @@ const AllVenues = () => {
                                 >
                                   Enable
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
                                   outline={formData?.ibeaconAndroidStatus === 1}
                                   onClick={(e) => {
@@ -1244,25 +1329,25 @@ const AllVenues = () => {
                         </Col>
                         <Col sm="3">
                           <FormGroup>
-                            <label className="form-label" htmlFor="smartVenues">
+                            <label className="form-label" htmlFor="Smart_Venues">
                               Smart Venues
                             </label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button
+                                <Button type="button"
                                   color="primary"
-                                  outline={formData?.smartVenues === 0}
+                                  outline={formData?.Smart_Venues === 0}
                                   onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, smartVenues: 1 }));
+                                    setFormData((prev) => ({ ...prev, Smart_Venues: 1 }));
                                   }}
                                 >
                                   Enable
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
-                                  outline={formData?.smartVenues === 1}
+                                  outline={formData?.Smart_Venues === 1}
                                   onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, smartVenues: 0 }));
+                                    setFormData((prev) => ({ ...prev, Smart_Venues: 0 }));
                                   }}
                                 >
                                   Disable
@@ -1378,35 +1463,35 @@ const AllVenues = () => {
                         </Col>
                         <Col sm="3">
                           <div className="form-group">
-                            <label className="form-label">Freq Interval Line</label>
+                            <label className="form-label" htmlFor="Frequency_Interval_Line">Freq Interval Line</label>
                             <div className="form-control-wrap">
                               <input
                                 ref={register({ required: true })}
                                 className="form-control"
                                 type="text"
-                                id="freqIntervalLine"
-                                name="freqIntervalLine"
+                                id="Frequency_Interval_Line"
+                                name="Frequency_Interval_Line"
                                 onChange={(e) => onInputChange(e)}
-                                value={formData?.freqIntervalLine}
+                                value={formData?.Frequency_Interval_Line}
                               />
-                              {errors.freqIntervalLine && <span className="invalid">This field is required</span>}
+                              {errors.Frequency_Interval_Line && <span className="invalid">This field is required</span>}
                             </div>
                           </div>
                         </Col>
                         <Col sm="3">
                           <div className="form-group">
-                            <label className="form-label">Freq Interval Realtime Bus</label>
+                            <label className="form-label" htmlFor="Frequency_Interval_Realtime_Bus">Freq Interval Realtime Bus</label>
                             <div className="form-control-wrap">
                               <input
                                 ref={register({ required: true })}
                                 className="form-control"
                                 type="text"
-                                id="freqIntervalrealBus"
-                                name="freqIntervalrealBus"
+                                id="Frequency_Interval_Realtime_Bus"
+                                name="Frequency_Interval_Realtime_Bus"
                                 onChange={(e) => onInputChange(e)}
-                                value={formData?.freqIntervalrealBus}
+                                value={formData?.Frequency_Interval_Realtime_Bus}
                               />
-                              {errors.freqIntervalrealBus && <span className="invalid">This field is required</span>}
+                              {errors.Frequency_Interval_Realtime_Bus && <span className="invalid">This field is required</span>}
                             </div>
                           </div>
                         </Col>
@@ -1488,7 +1573,7 @@ const AllVenues = () => {
                       <Row className="gy-4">
                         <Col sm="3">
                           <FormGroup>
-                            <Label htmlFor="uberStatus" className="form-label">
+                            <Label htmlFor="Uber_Status" className="form-label">
                               Uber Status
                             </Label>
                             <div className="form-control-wrap">
@@ -1496,19 +1581,19 @@ const AllVenues = () => {
                                 <input
                                   type="checkbox"
                                   className="custom-control-input form-control"
-                                  id="uberStatus"
-                                  name="uberStatus"
+                                  id="Uber_Status"
+                                  name="Uber_Status"
                                   placeholder=""
                                   onChange={(e) =>
                                     setFormData((prev) => ({
                                       ...prev,
-                                      uberStatus: !formData?.uberStatus,
+                                      Uber_Status: !formData?.Uber_Status,
                                     }))
                                   }
-                                  checked={formData?.uberStatus}
+                                  checked={formData?.Uber_Status}
                                 />
-                                <label className="custom-control-label" htmlFor="uberStatus">
-                                  {formData?.uberStatus ? "True" : "False"}
+                                <label className="custom-control-label" htmlFor="Uber_Status">
+                                  {formData?.Uber_Status ? "True" : "False"}
                                 </label>
                               </div>
                             </div>
@@ -1516,7 +1601,7 @@ const AllVenues = () => {
                         </Col>
                         <Col sm="3">
                           <div className="form-group">
-                            <label className="form-label" htmlFor="lyftStatus">
+                            <label className="form-label" htmlFor="Lyft_Status">
                               Lyft Status
                             </label>
                             <div className="form-control-wrap">
@@ -1525,16 +1610,16 @@ const AllVenues = () => {
                                   ref={register()}
                                   type="checkbox"
                                   className="custom-control-input form-control"
-                                  id="lyftStatus"
-                                  name="lyftStatus"
-                                  checked={formData?.lyftStatus}
+                                  id="Lyft_Status"
+                                  name="Lyft_Status"
+                                  checked={formData?.Lyft_Status}
                                   onChange={(e) =>
-                                    setFormData((prev) => ({ ...prev, lyftStatus: !formData?.lyftStatus }))
+                                    setFormData((prev) => ({ ...prev, Lyft_Status: !formData?.Lyft_Status }))
                                   }
                                   placeholder=""
                                 />
-                                <label className="custom-control-label" htmlFor="lyftStatus">
-                                  {formData?.lyftStatus ? "True" : "False"}
+                                <label className="custom-control-label" htmlFor="Lyft_Status">
+                                  {formData?.Lyft_Status ? "True" : "False"}
                                 </label>
                               </div>
                             </div>
@@ -1542,7 +1627,7 @@ const AllVenues = () => {
                         </Col>
                         <Col sm="3">
                           <div className="form-group">
-                            <label className="form-label" htmlFor="louveloStatus">
+                            <label className="form-label" htmlFor="Louvelo_Status">
                               Louvelo Status
                             </label>
                             <div className="form-control-wrap">
@@ -1551,16 +1636,16 @@ const AllVenues = () => {
                                   ref={register()}
                                   type="checkbox"
                                   className="custom-control-input form-control"
-                                  id="louveloStatus"
-                                  name="louveloStatus"
-                                  checked={formData?.louveloStatus}
+                                  id="Louvelo_Status"
+                                  name="Louvelo_Status"
+                                  checked={formData?.Louvelo_Status}
                                   onChange={(e) =>
-                                    setFormData((prev) => ({ ...prev, louveloStatus: !formData?.louveloStatus }))
+                                    setFormData((prev) => ({ ...prev, Louvelo_Status: !formData?.Louvelo_Status }))
                                   }
                                   placeholder=""
                                 />
-                                <label className="custom-control-label" htmlFor="louveloStatus">
-                                  {formData?.louveloStatus ? "True" : "False"}
+                                <label className="custom-control-label" htmlFor="Louvelo_Status">
+                                  {formData?.Louvelo_Status ? "True" : "False"}
                                 </label>
                               </div>
                             </div>
@@ -1568,25 +1653,25 @@ const AllVenues = () => {
                         </Col>
                         <Col sm="3">
                           <FormGroup>
-                            <label className="form-label" htmlFor="enablePayment">
+                            <label className="form-label" htmlFor="Enable_Payment">
                               Enable Payment
                             </label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button
+                                <Button type="button"
                                   color="primary"
-                                  outline={formData?.enablePayment === 0}
+                                  outline={formData?.Enable_Payment === 0}
                                   onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, enablePayment: 1 }));
+                                    setFormData((prev) => ({ ...prev, Enable_Payment: 1 }));
                                   }}
                                 >
                                   Enable
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
-                                  outline={formData?.enablePayment === 1}
+                                  outline={formData?.Enable_Payment === 1}
                                   onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, enablePayment: 0 }));
+                                    setFormData((prev) => ({ ...prev, Enable_Payment: 0 }));
                                   }}
                                 >
                                   Disable
@@ -1597,25 +1682,25 @@ const AllVenues = () => {
                         </Col>
                         <Col sm="3">
                           <FormGroup>
-                            <label className="form-label" htmlFor="microtransitFullTrip">
+                            <label className="form-label" htmlFor="Microtransit_Full_Trip">
                               Microtransit Full Trip
                             </label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button
+                                <Button type="button"
                                   color="primary"
-                                  outline={formData?.microtransitFullTrip === 0}
+                                  outline={formData?.Microtransit_Full_Trip === 0}
                                   onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, microtransitFullTrip: 1 }));
+                                    setFormData((prev) => ({ ...prev, Microtransit_Full_Trip: 1 }));
                                   }}
                                 >
                                   Show
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
-                                  outline={formData?.microtransitFullTrip === 1}
+                                  outline={formData?.Microtransit_Full_Trip === 1}
                                   onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, microtransitFullTrip: 0 }));
+                                    setFormData((prev) => ({ ...prev, Microtransit_Full_Trip: 0 }));
                                   }}
                                 >
                                   Hide
@@ -1626,25 +1711,25 @@ const AllVenues = () => {
                         </Col>
                         <Col sm="3">
                           <FormGroup>
-                            <label className="form-label" htmlFor="microtransitFirstMile">
+                            <label className="form-label" htmlFor="Microtransit_First_Mile">
                               Microtransit First Mile
                             </label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button
+                                <Button type="button"
                                   color="primary"
-                                  outline={formData?.microtransitFirstMile === 0}
+                                  outline={formData?.Microtransit_First_Mile === 0}
                                   onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, microtransitFirstMile: 1 }));
+                                    setFormData((prev) => ({ ...prev, Microtransit_First_Mile: 1 }));
                                   }}
                                 >
                                   Show
                                 </Button>
-                                <Button
+                                <Button type="button"
                                   color="primary"
-                                  outline={formData?.microtransitFirstMile === 1}
+                                  outline={formData?.Microtransit_First_Mile === 1}
                                   onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, microtransitFirstMile: 0 }));
+                                    setFormData((prev) => ({ ...prev, Microtransit_First_Mile: 0 }));
                                   }}
                                 >
                                   Hide
@@ -1678,7 +1763,7 @@ const AllVenues = () => {
                       <Row className="gy-4">
                         <Col sm="3">
                           <div className="form-group">
-                            <label className="form-label" htmlFor="forcePermission">
+                            <label className="form-label" htmlFor="Force_Permission">
                               Force Permission
                             </label>
                             <div className="form-control-wrap">
@@ -1687,16 +1772,16 @@ const AllVenues = () => {
                                   ref={register()}
                                   type="checkbox"
                                   className="custom-control-input form-control"
-                                  id="forcePermission"
-                                  name="forcePermission"
-                                  checked={formData?.forcePermission}
+                                  id="Force_Permission"
+                                  name="Force_Permission"
+                                  checked={formData?.Force_Permission}
                                   onChange={(e) =>
-                                    setFormData((prev) => ({ ...prev, forcePermission: !formData?.forcePermission }))
+                                    setFormData((prev) => ({ ...prev, Force_Permission: !formData?.Force_Permission }))
                                   }
                                   placeholder=""
                                 />
-                                <label className="custom-control-label" htmlFor="forcePermission">
-                                  {formData?.forcePermission ? "True" : "False"}
+                                <label className="custom-control-label" htmlFor="Force_Permission">
+                                  {formData?.Force_Permission ? "True" : "False"}
                                 </label>
                               </div>
                             </div>
@@ -1704,7 +1789,7 @@ const AllVenues = () => {
                         </Col>
                         <Col sm="3">
                           <FormGroup>
-                            <Label htmlFor="permissionTitle" className="form-label">
+                            <Label htmlFor="Permission_Title" className="form-label">
                               Permission Title
                             </Label>
                             <div className="form-control-wrap">
@@ -1712,18 +1797,18 @@ const AllVenues = () => {
                                 ref={register({ required: true })}
                                 className="form-control"
                                 type="text"
-                                id="permissionTitle"
-                                name="permissionTitle"
-                                value={formData?.permissionTitle ?? "NA"}
+                                id="Permission_Title"
+                                name="Permission_Title"
+                                value={formData?.Permission_Title ?? "NA"}
                                 onChange={(e) => onInputChange(e)}
                               />
-                              {errors.permissionTitle && <span className="invalid">This field is required</span>}
+                              {errors.Permission_Title && <span className="invalid">This field is required</span>}
                             </div>
                           </FormGroup>
                         </Col>
                         <Col sm="3">
                           <FormGroup>
-                            <Label htmlFor="permissionMessage" className="form-label">
+                            <Label htmlFor="Permission_Message" className="form-label">
                               Permission Message
                             </Label>
                             <div className="form-control-wrap">
@@ -1731,18 +1816,18 @@ const AllVenues = () => {
                                 ref={register({ required: true })}
                                 className="form-control"
                                 type="text"
-                                id="permissionMessage"
-                                name="permissionMessage"
-                                value={formData?.permissionMessage ?? "NA"}
+                                id="Permission_Message"
+                                name="Permission_Message"
+                                value={formData?.Permission_Message ?? "NA"}
                                 onChange={(e) => onInputChange(e)}
                               />
-                              {errors.permissionMessage && <span className="invalid">This field is required</span>}
+                              {errors.Permission_Message && <span className="invalid">This field is required</span>}
                             </div>
                           </FormGroup>
                         </Col>
                         <Col sm="3">
                           <FormGroup>
-                            <Label htmlFor="permissionDesc" className="form-label">
+                            <Label htmlFor="Permission_Description" className="form-label">
                               Permission Description
                             </Label>
                             <div className="form-control-wrap">
@@ -1750,12 +1835,12 @@ const AllVenues = () => {
                                 ref={register({ required: true })}
                                 className="form-control"
                                 type="text"
-                                id="permissionDesc"
-                                name="permissionDesc"
-                                value={formData?.permissionDesc ?? "NA"}
+                                id="Permission_Description"
+                                name="Permission_Description"
+                                value={formData?.Permission_Description ?? "NA"}
                                 onChange={(e) => onInputChange(e)}
                               />
-                              {errors.permissionDesc && <span className="invalid">This field is required</span>}
+                              {errors.Permission_Description && <span className="invalid">This field is required</span>}
                             </div>
                           </FormGroup>
                         </Col>
@@ -1773,6 +1858,64 @@ const AllVenues = () => {
                     </FormGroup>
                   </Col>
                 </Row>
+              </form>
+            </div>
+          </ModalBody>
+        </Modal>
+        <Modal isOpen={showAuthModal} toggle={() => onAuthFormCancel()} style={{zIndex:5000}} className="modal-dialog-centered" size="m">
+          <ModalBody>
+            <a href="#cancel" className="close">
+              {" "}
+              <Icon
+                name="cross-sm"
+                onClick={(ev) => {
+                  ev.preventDefault();
+                  onAuthFormCancel();
+                }}
+              ></Icon>
+            </a>
+            <div className="p-2">
+              <h5 className="title">Authentication</h5>
+              <form onSubmit={handleSubmit(onAuthSubmit)}>
+                <FormGroup>
+                  <Label htmlFor="userName" className="form-label">
+                    User Name
+                  </Label>
+                  <div className="form-control-wrap">
+                    <input
+                      ref={register({ required: true })}
+                      className="form-control"
+                      type="text"
+                      id="userName"
+                      name="userName"
+                      onChange={(e) => onAuthInputChange(e)}
+                      // value={formData?.userName}
+                    />
+                    {errors.userName && <span className="invalid">This field is required</span>}
+                  </div>
+                </FormGroup>
+                <FormGroup>
+                  <Label htmlFor="userPasscode" className="form-label">
+                    Password
+                  </Label>
+                  <div className="form-control-wrap">
+                    <input
+                      ref={register({ required: true })}
+                      className="form-control"
+                      type="password"
+                      id="userPasscode"
+                      name="userPasscode"
+                      onChange={(e) => onAuthInputChange(e)}
+                      //value={formData?.userPasscode}
+                    />
+                    {errors.userPasscode && <span className="invalid">This field is required</span>}
+                  </div>
+                </FormGroup>
+                <FormGroup className="mt-2">
+                  <Button color="primary" size="lg" type="submit">
+                    Submit
+                  </Button>
+                </FormGroup>
               </form>
             </div>
           </ModalBody>
