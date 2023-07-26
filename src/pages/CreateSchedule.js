@@ -182,7 +182,7 @@ const CreateSchedule = () => {
     data.splice(index, 1);
     setFormFields(data);
   };
-  const LineL = ["Select", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const LineL = ["Select", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "1 & 4", "9 & 10"];
   const userId = useSelector(user_id);
   const handleFormChange = (event, index) => {
     let data = [...formFields];

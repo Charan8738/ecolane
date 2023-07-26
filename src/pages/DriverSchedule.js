@@ -69,7 +69,7 @@ const DriverSchedule = () => {
     setLoading(true);
     getSchedules()
       .then((res) => {
-        const responseData = res.filter((item) => !item.coach_no.includes("Day Off"));
+        const responseData = res.filter((item) => !item.coach_no.includes("Day Off") && item.coach_no !== "");
         setData([...responseData]);
       })
       .catch((err) => {
