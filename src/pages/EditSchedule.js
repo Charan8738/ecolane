@@ -197,16 +197,31 @@ const EditSchedule = () => {
 
     const timeIn = new Date(data[index].time_in);
     const timeOut = new Date(data[index].time_out);
-    const breakIn = new Date(data[index].break_in);
-    const breakOut = new Date(data[index].break_out);
-    if (timeIn && timeOut) {
-      const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
-      const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
+    const breakIn = "";
+    const breakOut = "";
+    if (data[index].break_in !== "" && data[index].break_out !== "") {
+      breakIn = new Date(data[index].break_in);
+      breakOut = new Date(data[index].break_out);
+    }
 
-      const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
-      const breakHours = breakInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
-      console.log("break hours" + breakHours);
-      data[index].total_hours = totalHours.toFixed(2) - breakHours.toFixed(2); // Round to 2 decimal places
+    if (timeIn && timeOut) {
+      if (breakIn !== "" && breakOut !== "") {
+        const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
+        const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
+
+        const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+        const breakHours = breakInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+        console.log("break hours new" + breakIn);
+        data[index].total_hours = totalHours.toFixed(2) - breakHours.toFixed(2); // Round to 2 decimal places
+      } else {
+        const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
+        // const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
+
+        const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+        // const breakHours = breakInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+        // console.log("break hours" + breakHours);
+        data[index].total_hours = totalHours.toFixed(2); // Round to 2 decimal places
+      }
     }
     setFormFields(data);
   };
@@ -463,7 +478,7 @@ const EditSchedule = () => {
                                   dateFormat="h:mm aa"
                                   className="form-control date-picker"
                                   autoComplete="off"
-                                  disabled={isOff || item.time_in === ""}
+                                  // disabled={isOff || item.time_in === ""}
                                   minTime={item.time_in ? new Date(item.time_in) : undefined} // Set the minimum time based on start_time
                                   maxTime={new Date(9999, 0, 1, 23, 59)}
                                 />
@@ -486,9 +501,9 @@ const EditSchedule = () => {
                                   dateFormat="h:mm aa"
                                   className="form-control date-picker"
                                   autoComplete="off"
-                                  disabled={isOff || item.break_in === ""}
+                                  // disabled={isOff || item.break_in === ""}
                                   minTime={item.break_in ? new Date(item.break_in) : undefined} // Set the minimum time based on time_in
-                                  maxTime={new Date(9999, 0, 1, 23, 59)} // Set a high value as the maximum time
+                                  maxTime={item.break_in ? new Date(9999, 0, 1, 23, 59) : undefined} // Set a high value as the maximum time
                                 />
                               </div>
                             </StyledTableData>
@@ -508,8 +523,8 @@ const EditSchedule = () => {
                                   dateFormat="h:mm aa"
                                   className="form-control date-picker"
                                   autoComplete="off"
-                                  disabled={isOff || item.break_out === ""}
-                                  minTime={item.break_out ? new Date(item.break_out) : undefined} // Set the minimum time based on time_in
+                                  disabled={isOff || item.time_in === ""}
+                                  minTime={item.break_out ? new Date(item.break_out) : new Date(item.time_in)} // Set the minimum time based on time_in
                                   maxTime={new Date(9999, 0, 1, 23, 59)} // Set a high value as the maximum time
                                 />
                               </div>

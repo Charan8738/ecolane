@@ -216,13 +216,19 @@ const CreateSchedule = () => {
 
     // Calculate total hours
     if (timeIn && timeOut) {
-      const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
-      const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
+      if (breakIn && breakOut) {
+        const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
+        const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
+        const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+        const breakHours = breakInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
 
-      const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
-      const breakHours = breakInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+        data[index].total_hours = (totalHours - breakHours).toFixed(2); // Round to 2 decimal places
+      } else {
+        const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
+        const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
 
-      data[index].total_hours = (totalHours - breakHours).toFixed(2); // Round to 2 decimal places
+        data[index].total_hours = totalHours.toFixed(2); // Round to 2 decimal places
+      }
     }
     console.log(data);
     setFormFields(data);
@@ -499,7 +505,7 @@ const CreateSchedule = () => {
                                   dateFormat="h:mm aa"
                                   className="form-control date-picker"
                                   autoComplete="off"
-                                  disabled={isOff || item.time_in === ""}
+                                  // disabled={isOff || item.time_in === ""}
                                   minTime={item.time_in ? new Date(item.time_in) : undefined} // Set the minimum time based on start_time
                                   maxTime={new Date(9999, 0, 1, 23, 59)}
                                 />
@@ -522,9 +528,9 @@ const CreateSchedule = () => {
                                   dateFormat="h:mm aa"
                                   className="form-control date-picker"
                                   autoComplete="off"
-                                  disabled={isOff || item.break_in === ""}
+                                  // disabled={isOff || item.break_in === ""}
                                   minTime={item.break_in ? new Date(item.break_in) : undefined} // Set the minimum time based on time_in
-                                  maxTime={new Date(9999, 0, 1, 23, 59)} // Set a high value as the maximum time
+                                  maxTime={item.break_in ? new Date(9999, 0, 1, 23, 59) : undefined} // Set a high value as the maximum time
                                 />
                               </div>
                             </StyledTableData>
@@ -544,8 +550,8 @@ const CreateSchedule = () => {
                                   dateFormat="h:mm aa"
                                   className="form-control date-picker"
                                   autoComplete="off"
-                                  disabled={isOff || item.break_out === ""}
-                                  minTime={item.break_out ? new Date(item.break_out) : undefined} // Set the minimum time based on time_in
+                                  disabled={isOff || item.time_in === ""}
+                                  minTime={item.break_out ? new Date(item.break_out) : new Date(item.time_in)} // Set the minimum time based on time_in
                                   maxTime={new Date(9999, 0, 1, 23, 59)} // Set a high value as the maximum time
                                 />
                               </div>
