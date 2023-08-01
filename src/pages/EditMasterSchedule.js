@@ -114,7 +114,7 @@ const EditMasterSchedule = () => {
   const [fieldCounts, setFieldCounts] = useState({});
   const redirectRun = () => {
     // console.log(formFields[0].driver_id);
-    history.push("/edit-master-schedule", { id: formFields[0].driver_id });
+    history.push("/master-run-cutting", { id: formFields[0].driver_id, mid: formFields[0].m_id });
   };
   //   const mondayCount = formFields.reduce((count, item) => {
   //     if (item.day === "Monday") {
@@ -272,7 +272,7 @@ const EditMasterSchedule = () => {
     console.log(newData);
 
     axios
-      .put("addschedule", newData)
+      .put("EditMasterSchedule", newData)
       .then((res) => {
         if (res.status === 200) {
           //   setUpdateData(true);

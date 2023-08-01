@@ -88,7 +88,7 @@ const MasterRunCut = () => {
   };
   const redirectToRunCuttingPage = () => {
     console.log(data);
-    history.push("/edit-schedule", { data: data, driverId: driverId });
+    history.push("/edit-master-schedule", { data: data, driverId: driverId });
   };
   const redirectToCreateSchedule = () => {
     console.log(data);
