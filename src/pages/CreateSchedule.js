@@ -26,6 +26,8 @@ import { useSelector } from "react-redux";
 import { user_id } from "../redux/userSlice";
 import { Form, FormGroup, Label, Input, Card, CardBody } from "reactstrap";
 import { successAlert, failureAlert } from "../utils/Utils";
+import MyDropdownMaster from "./MyDropDownMaster";
+import Swal from "sweetalert2";
 
 const CreateSchedule = () => {
   const history = useHistory();
@@ -106,7 +108,9 @@ const CreateSchedule = () => {
     history.push("/run-cutting-scheduler");
   };
   const [driverId, setDriverId] = useState();
+  const [masterId, setMasterId] = useState();
   const [driverList, setDriverList] = useState([]);
+  const [masterList, setMasterList] = useState([]);
   const [formFields, setFormFields] = useState(INITIAL_ADD_FORM);
 
   const [formData, setFormData] = useState(INITIAL_ADD_FORM);
@@ -251,6 +255,21 @@ const CreateSchedule = () => {
     console.log(data);
     setDriverId(data.value);
   };
+  const onChangeMasterIdHandler = (data) => {
+    console.log("Handler");
+    console.log(data);
+    setMasterId(data.value);
+  };
+
+  useEffect(() => {
+    const getDriverList = async () => {
+      const response = await axios.get("/getMaster?venueRefId=" + userId);
+      return response.data;
+    };
+    getDriverList().then((res) => {
+      setMasterList([...res]);
+    });
+  }, []);
 
   useEffect(() => {
     const getDriverList = async () => {
@@ -261,6 +280,7 @@ const CreateSchedule = () => {
       setDriverList([...res]);
     });
   }, []);
+
   const calculateTotalHoursForRow = (item) => {
     const timeIn = item.time_in;
     const timeOut = item.time_out;
@@ -323,6 +343,54 @@ const CreateSchedule = () => {
       console.log(err);
     }
   };
+
+  const getImportedData = async () => {
+    const response = await axios.get("/getMasterDriverSchedule?driver_id=" + driverId + "&m_id=" + masterId);
+    return response.data;
+  };
+  const importConfirmation = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to import from the schedule?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, import it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const iData = getImportedData();
+        console.log(iData);
+        Swal.fire("Imported!", "Schedule has been successfully imported", "success");
+      }
+    });
+  };
+
+  const throwDriverError = () => {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Please select a driver",
+      focusConfirm: false,
+    });
+  };
+  const throwMasterError = () => {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Please select Master",
+      focusConfirm: false,
+    });
+  };
+  const importFromMaster = () => {
+    if (driverId) {
+      if (masterId) {
+        importConfirmation();
+      } else {
+        throwMasterError();
+      }
+    } else {
+      throwDriverError();
+    }
+  };
   return (
     <React.Fragment>
       <Head title="Create Schedule"></Head>
@@ -361,7 +429,21 @@ const CreateSchedule = () => {
           <CardBody>
             <Block>
               {/* <h3>Create Schedule </h3> */}
-              <MyDropdown onChangeHandle={onChangeHandler} driverlist={driverList} />
+              <Row>
+                <Col className="m-2">
+                  <MyDropdown onChangeHandle={onChangeHandler} driverlist={driverList} />
+                </Col>
+                <Col className="m-2">
+                  <MyDropdownMaster onChangeHandle={onChangeMasterIdHandler} masterList={masterList} />
+                </Col>
+                <Col className="m-2">
+                  <Button onClick={importFromMaster} color="primary">
+                    <Icon name="download" />
+                    <span>Import from Master</span>
+                  </Button>
+                </Col>
+              </Row>
+
               {/* <MyDropDown onChangeHandle={onChangeHandler} driverlist={driverList} /> */}
               <div className="m-2" style={{ textAlign: "right" }}>
                 <h5>
