@@ -65,10 +65,12 @@ const Venue = () => {
   const onRangeChange = (dates) => {
     const [start, end] = dates;
     setRangeDate({ start: start, end: end });
+    setData([]);
   };
 
   useEffect(() => {
     let intervalId;
+
     if (rangeDate.start && rangeDate.end) {
       const startDate =
         rangeDate.start.getFullYear() + "-" + (rangeDate.start.getMonth() + 1) + "-" + rangeDate.start.getDate();
@@ -76,10 +78,13 @@ const Venue = () => {
         rangeDate.end.getFullYear() + "-" + (rangeDate.end.getMonth() + 1) + "-" + rangeDate.end.getDate();
       const url = `https://ecolane-api.zig-web.com/api/Zigshuttle/GetPurchaseticket?startDate=${startDate}&endDate=${endDate}&client_id=${client_id}`;
       const fetchData = async () => {
+        setLoading(true);
+
         try {
           const response = await fetch(url);
+          setLoading(false);
           const json = await response.json();
-          console.log(response.purchasetickets);
+          // console.log(response.purchasetickets);
           //data = json.purchasetickets;
           let sortedData = [...json.purchasetickets].sort((a, b) => b.PurchasedDate.localeCompare(a.PurchasedDate));
           setData(sortedData);
@@ -89,10 +94,11 @@ const Venue = () => {
         }
       };
 
-      intervalId = setInterval(() => {
-        fetchData();
-        // getTickets(startDate, endDate);
-      }, 3000);
+      fetchData();
+      return () => {
+        const controller = new AbortController();
+        controller.abort();
+      };
     }
 
     return () => clearTimeout(intervalId);
@@ -115,10 +121,23 @@ const Venue = () => {
   const [ticketsDate, setTicketsDate] = useState([]);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const [sm, updateSm] = useState(false); // ----> Responsivenes
+
   const onFilterChange = (e) => {
-    setSearchText(e.target.value);
+    const searchText = e.target.value;
+    setSearchText(searchText);
+     // Handle backspace event
+     if (e.nativeEvent.inputType === "deleteContentBackward" && searchText.length === 0) {
+      setData([...initialData.current]);
+    } else {
+      const filteredData = initialData.current.filter((item) =>
+        item.TicketID.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setData(filteredData);  
+    }
   };
+  
   useEffect(() => {
+    setLoading(true);
     const getData = async () => {
       const response = await axios.get("https://ecolane-api.zig-web.com/api/User/GetAnalyticsV3?client_id=1");
       return response.data;
@@ -136,6 +155,7 @@ const Venue = () => {
       .finally(() => {
         setLoading(false);
       });
+      setCurrentPage(1);
   }, []);
 
   // Splits and converts the data into array
@@ -147,17 +167,20 @@ const Venue = () => {
 
       setTicketsData(ticketsData);
       setTicketsDate(ticketsDate);
+      
     }
+    setCurrentPage(1);
   }, [MonthlyTicketsDatas]);
   useEffect(() => {
     if (onSearchText !== "") {
-      const filteredObject = data.filter((items) => {
+      const filteredObject = initialData.current.filter((items) => {
         return items.TicketID.toString().toLowerCase().includes(onSearchText.toLowerCase());
       });
       setData([...filteredObject]);
     } else {
       setData([...initialData.current]);
     }
+    setCurrentPage(1);
   }, [onSearchText]);
   const [startDate, setStartDate] = useState(new Date());
   function onChangeDateHandler(value) {
@@ -313,7 +336,7 @@ const Venue = () => {
                   })
                 : null}
             </DataTableBody>
-            <div className="card-inner">
+            <div className="pagination-container">
               {data.length > 0 ? (
                 <PaginationComponent
                   itemPerPage={itemPerPage}
@@ -340,7 +363,7 @@ const Title = styled.h3`
 `;
 
 const BarChartExample = ({ stacked, ticketsDate, ticketsData }) => {
-  console.log(ticketsData);
+  // console.log(ticketsData);
   const barChartData = {
     labels: ticketsDate,
     dataUnit: "People",
