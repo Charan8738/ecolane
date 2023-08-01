@@ -158,25 +158,7 @@ const EditSchedule = () => {
   //     }
   //     return count;
   //   }, 0);
-  const coachL = [
-    1013,
-    1043,
-    1049,
-    1055,
-    1056,
-    1060,
-    1070,
-    1071,
-    1072,
-    1073,
-    1074,
-    1075,
-    1076,
-    1077,
-    1078,
-    "off",
-    "Day Off",
-  ];
+  const coachL = ["Select", 1055, 1056, 1060, 1070, 1071, 1073, 1074, 1076, 1077, 1078, "off", "Day Off", "TBD"];
 
   const addFields = (day, index) => {
     let newField = {
@@ -205,7 +187,7 @@ const EditSchedule = () => {
     data.splice(index, 1);
     setFormFields(data);
   };
-  const LineL = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const LineL = ["Select", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "1 & 4", "9 & 10"];
   const userId = useSelector(user_id);
   const handleFormChange = (event, index) => {
     console.log(index, event.target.name);
@@ -215,16 +197,31 @@ const EditSchedule = () => {
 
     const timeIn = new Date(data[index].time_in);
     const timeOut = new Date(data[index].time_out);
-    const breakIn = new Date(data[index].break_in);
-    const breakOut = new Date(data[index].break_out);
-    if (timeIn && timeOut) {
-      const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
-      const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
+    const breakIn = "";
+    const breakOut = "";
+    if (data[index].break_in !== "" && data[index].break_out !== "") {
+      breakIn = new Date(data[index].break_in);
+      breakOut = new Date(data[index].break_out);
+    }
 
-      const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
-      const breakHours = breakInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
-      console.log("break hours" + breakHours);
-      data[index].total_hours = totalHours.toFixed(2) - breakHours.toFixed(2); // Round to 2 decimal places
+    if (timeIn && timeOut) {
+      if (breakIn !== "" && breakOut !== "") {
+        const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
+        const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
+
+        const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+        const breakHours = breakInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+        console.log("break hours new" + breakIn);
+        data[index].total_hours = totalHours.toFixed(2) - breakHours.toFixed(2); // Round to 2 decimal places
+      } else {
+        const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
+        // const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
+
+        const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+        // const breakHours = breakInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+        // console.log("break hours" + breakHours);
+        data[index].total_hours = totalHours.toFixed(2); // Round to 2 decimal places
+      }
     }
     setFormFields(data);
   };
@@ -401,165 +398,197 @@ const EditSchedule = () => {
                     ? formFields.map((item, index) => {
                         const isOff = item.coach_no === "off" || item.coach_no === "Day Off";
                         return (
-                          <tr key={index}>
-                            <th style={{ textAlign: "center", verticalAlign: "middle" }} scope="row">
-                              {item.day}
-                            </th>
-                            <StyledTableData
-                              style={{ width: "100px", textAlign: "center", verticalAlign: "middle" }}
-                              scope="col"
-                            >
-                              <div className="form-control-select">
-                                <Input
-                                  type="select"
-                                  name="coach_no"
-                                  id="coach_no"
-                                  value={item.coach_no}
-                                  onChange={(event) => {
-                                    handleFormChange(event, index);
-                                  }}
-                                  // disabled={isOff}
-                                >
-                                  {coachL.map((item) => (
-                                    <option key={item}>{item}</option>
-                                  ))}
-                                </Input>
-                              </div>
-                            </StyledTableData>
-                            <StyledTableData style={{ width: "100px", textAlign: "center", verticalAlign: "middle" }}>
-                              <div className="form-control-select">
-                                <Input
-                                  type="select"
-                                  name="line_no"
-                                  id="line_no"
-                                  value={item.line_no}
-                                  onChange={(event) => {
-                                    handleFormChange(event, index);
-                                  }}
-                                  disabled={isOff}
-                                >
-                                  {LineL.map((item) => (
-                                    <option key={item}>{item}</option>
-                                  ))}
-                                </Input>
-                              </div>
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <div className="form-control-select">
-                                <DatePicker
-                                  // selected={new Date("2023-07-04T22:45:00.238Z")}
-                                  selected={item.time_in ? new Date(item.time_in) : null}
-                                  onChange={(date) => {
-                                    handleFormChange({ target: { name: "time_in", value: date } }, index);
-                                  }}
-                                  name="time_in"
-                                  showTimeSelect
-                                  showTimeSelectOnly
-                                  // value={item.start_time}
-                                  timeIntervals={15}
-                                  timeCaption="Time"
-                                  dateFormat="h:mm aa"
-                                  className="form-control date-picker"
-                                  autoComplete="off"
-                                  disabled={isOff}
-                                />
-                              </div>
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <div className="form-control-select">
-                                <DatePicker
-                                  selected={item.break_in ? new Date(item.break_in) : null}
-                                  onChange={(date) => {
-                                    handleFormChange({ target: { name: "break_in", value: date } }, index);
-                                  }}
-                                  name="break_in"
-                                  showTimeSelect
-                                  showTimeSelectOnly
-                                  // value={item.break_in}
-                                  timeIntervals={15}
-                                  timeCaption="Time"
-                                  dateFormat="h:mm aa"
-                                  className="form-control date-picker"
-                                  autoComplete="off"
-                                  disabled={isOff || item.time_in === ""}
-                                  minTime={item.time_in ? new Date(item.time_in) : undefined} // Set the minimum time based on start_time
-                                  maxTime={new Date(9999, 0, 1, 23, 59)}
-                                />
-                              </div>
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {" "}
-                              <div className="form-control-select">
-                                <DatePicker
-                                  selected={item.break_out ? new Date(item.break_out) : null}
-                                  onChange={(date) => {
-                                    handleFormChange({ target: { name: "break_out", value: date } }, index);
-                                  }}
-                                  name="break_out"
-                                  showTimeSelect
-                                  showTimeSelectOnly
-                                  // value={item.break_out}
-                                  timeIntervals={15}
-                                  timeCaption="Time"
-                                  dateFormat="h:mm aa"
-                                  className="form-control date-picker"
-                                  autoComplete="off"
-                                  disabled={isOff || item.break_in === ""}
-                                  minTime={item.break_in ? new Date(item.break_in) : undefined} // Set the minimum time based on time_in
-                                  maxTime={new Date(9999, 0, 1, 23, 59)} // Set a high value as the maximum time
-                                />
-                              </div>
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <div className="form-control-select">
-                                <DatePicker
-                                  selected={item.time_out ? new Date(item.time_out) : null}
-                                  onChange={(date) => {
-                                    handleFormChange({ target: { name: "time_out", value: date } }, index);
-                                  }}
-                                  name="time_out"
-                                  showTimeSelect
-                                  showTimeSelectOnly
-                                  // value={item.time_out}
-                                  timeIntervals={15}
-                                  timeCaption="Time"
-                                  dateFormat="h:mm aa"
-                                  className="form-control date-picker"
-                                  autoComplete="off"
-                                  disabled={isOff || item.break_out === ""}
-                                  minTime={item.break_out ? new Date(item.break_out) : undefined} // Set the minimum time based on time_in
-                                  maxTime={new Date(9999, 0, 1, 23, 59)} // Set a high value as the maximum time
-                                />
-                              </div>
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.total_hours}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              <Row>
-                                <Col className="m-2" sm="3">
-                                  <Button
-                                    onClick={() => addFields(item.day, index)}
-                                    className="btn-square btn-icon"
-                                    color="primary"
-                                    size="sm"
+                          <React.Fragment key={index}>
+                            <tr>
+                              <th style={{ textAlign: "center", verticalAlign: "middle" }} scope="row">
+                                {item.day}
+                              </th>
+                              <StyledTableData
+                                style={{ width: "100px", textAlign: "center", verticalAlign: "middle" }}
+                                scope="col"
+                              >
+                                <div className="form-control-select">
+                                  <Input
+                                    type="select"
+                                    name="coach_no"
+                                    id="coach_no"
+                                    value={item.coach_no}
+                                    onChange={(event) => {
+                                      handleFormChange(event, index);
+                                    }}
+                                    // disabled={isOff}
                                   >
-                                    <Icon name="plus" />
-                                  </Button>
-                                </Col>
-                                <Col className="m-2" sm="3">
-                                  <Button
-                                    onClick={() => removeFields(index)}
-                                    className="btn-square btn-icon"
-                                    color="danger"
-                                    size="sm"
+                                    {coachL.map((item) => (
+                                      <option key={item}>{item}</option>
+                                    ))}
+                                  </Input>
+                                </div>
+                              </StyledTableData>
+                              <StyledTableData style={{ width: "100px", textAlign: "center", verticalAlign: "middle" }}>
+                                <div className="form-control-select">
+                                  <Input
+                                    type="select"
+                                    name="line_no"
+                                    id="line_no"
+                                    value={item.line_no}
+                                    onChange={(event) => {
+                                      handleFormChange(event, index);
+                                    }}
+                                    disabled={isOff}
                                   >
-                                    <Icon name="minus" />
-                                  </Button>
-                                </Col>
-                              </Row>
-                            </StyledTableData>
-                          </tr>
+                                    {LineL.map((item) => (
+                                      <option key={item}>{item}</option>
+                                    ))}
+                                  </Input>
+                                </div>
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                <div className="form-control-select">
+                                  <DatePicker
+                                    // selected={new Date("2023-07-04T22:45:00.238Z")}
+                                    selected={item.time_in ? new Date(item.time_in) : null}
+                                    onChange={(date) => {
+                                      handleFormChange({ target: { name: "time_in", value: date } }, index);
+                                    }}
+                                    name="time_in"
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    // value={item.start_time}
+                                    timeIntervals={15}
+                                    timeCaption="Time"
+                                    dateFormat="h:mm aa"
+                                    className="form-control date-picker"
+                                    autoComplete="off"
+                                    disabled={isOff}
+                                  />
+                                </div>
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                <div className="form-control-select">
+                                  <DatePicker
+                                    selected={item.break_in ? new Date(item.break_in) : null}
+                                    onChange={(date) => {
+                                      handleFormChange({ target: { name: "break_in", value: date } }, index);
+                                    }}
+                                    name="break_in"
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    // value={item.break_in}
+                                    timeIntervals={15}
+                                    timeCaption="Time"
+                                    dateFormat="h:mm aa"
+                                    className="form-control date-picker"
+                                    autoComplete="off"
+                                    // disabled={isOff || item.time_in === ""}
+                                    minTime={item.time_in ? new Date(item.time_in) : undefined} // Set the minimum time based on start_time
+                                    maxTime={new Date(9999, 0, 1, 23, 59)}
+                                  />
+                                </div>
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                {" "}
+                                <div className="form-control-select">
+                                  <DatePicker
+                                    selected={item.break_out ? new Date(item.break_out) : null}
+                                    onChange={(date) => {
+                                      handleFormChange({ target: { name: "break_out", value: date } }, index);
+                                    }}
+                                    name="break_out"
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    // value={item.break_out}
+                                    timeIntervals={15}
+                                    timeCaption="Time"
+                                    dateFormat="h:mm aa"
+                                    className="form-control date-picker"
+                                    autoComplete="off"
+                                    // disabled={isOff || item.break_in === ""}
+                                    minTime={item.break_in ? new Date(item.break_in) : undefined} // Set the minimum time based on time_in
+                                    maxTime={item.break_in ? new Date(9999, 0, 1, 23, 59) : undefined} // Set a high value as the maximum time
+                                  />
+                                </div>
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                <div className="form-control-select">
+                                  <DatePicker
+                                    selected={item.time_out ? new Date(item.time_out) : null}
+                                    onChange={(date) => {
+                                      handleFormChange({ target: { name: "time_out", value: date } }, index);
+                                    }}
+                                    name="time_out"
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    // value={item.time_out}
+                                    timeIntervals={15}
+                                    timeCaption="Time"
+                                    dateFormat="h:mm aa"
+                                    className="form-control date-picker"
+                                    autoComplete="off"
+                                    disabled={isOff || item.time_in === ""}
+                                    minTime={item.break_out ? new Date(item.break_out) : new Date(item.time_in)} // Set the minimum time based on time_in
+                                    maxTime={new Date(9999, 0, 1, 23, 59)} // Set a high value as the maximum time
+                                  />
+                                </div>
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                {item.total_hours}
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                <Row>
+                                  <Col className="m-2" sm="3">
+                                    <Button
+                                      onClick={() => addFields(item.day, index)}
+                                      className="btn-square btn-icon"
+                                      color="primary"
+                                      size="sm"
+                                    >
+                                      <Icon name="plus" />
+                                    </Button>
+                                  </Col>
+                                  <Col className="m-2" sm="3">
+                                    <Button
+                                      onClick={() => removeFields(index)}
+                                      className="btn-square btn-icon"
+                                      color="danger"
+                                      size="sm"
+                                    >
+                                      <Icon name="minus" />
+                                    </Button>
+                                  </Col>
+                                </Row>
+                              </StyledTableData>
+                            </tr>
+                            <tr>
+                              <td colSpan="8">
+                                <div className="form-control-wrap">
+                                  <div className="input-group input-group">
+                                    <div className="input-group-prepend">
+                                      <span className="input-group-text" id="inputGroup-sizing">
+                                        Comments
+                                      </span>
+                                    </div>
+                                    {/* <input
+                                      name="comments"
+                                      onChange={(event) => {
+                                        handleFormChange(event, index);
+                                      }}
+                                      type="text"
+                                      className="form-control"
+                                    /> */}
+                                    <textarea
+                                      rows={3}
+                                      name="comments"
+                                      onChange={(event) => {
+                                        handleFormChange(event, index);
+                                      }}
+                                      className="form-control"
+                                      value={item.comments}
+                                    ></textarea>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          </React.Fragment>
                         );
                       })
                     : null}

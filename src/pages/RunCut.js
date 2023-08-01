@@ -212,32 +212,37 @@ const RunCut = () => {
                   {data.length > 0
                     ? data.map((item) => {
                         return (
-                          <tr>
-                            <th style={{ textAlign: "center", verticalAlign: "middle" }} scope="row">
-                              {item.day}
-                            </th>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.coach_no === "off" ? "Off" : item.coach_no}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.line_no === "" ? "Off" : item.line_no}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.time_in === "" ? "Off" : <Moment format="hh:mm a">{item.time_in}</Moment>}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.break_in === "" ? "Off" : <Moment format="hh:mm a">{item.break_in}</Moment>}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.break_out === "" ? "Off" : <Moment format="hh:mm a">{item.break_out}</Moment>}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.time_out === "" ? "Off" : <Moment format="hh:mm a">{item.time_out}</Moment>}
-                            </StyledTableData>
-                            <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
-                              {item.total_hours}
-                            </StyledTableData>
-                          </tr>
+                          <React.Fragment>
+                            <tr>
+                              <th style={{ textAlign: "center", verticalAlign: "middle" }} scope="row">
+                                {item.day}
+                              </th>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                {item.coach_no === "off" ? "Off" : item.coach_no}
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                {item.line_no === "" ? "Off" : item.line_no}
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                {item.time_in === "" ? "Off" : <Moment format="hh:mm a">{item.time_in}</Moment>}
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                {item.break_in === "" ? "Off" : <Moment format="hh:mm a">{item.break_in}</Moment>}
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                {item.break_out === "" ? "Off" : <Moment format="hh:mm a">{item.break_out}</Moment>}
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                {item.time_out === "" ? "Off" : <Moment format="hh:mm a">{item.time_out}</Moment>}
+                              </StyledTableData>
+                              <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                {item.total_hours}
+                              </StyledTableData>
+                            </tr>
+                            <tr style={item.comments ? { color: "red", fontWeight: 800 } : {}}>
+                              <td colSpan="8">{item.comments ? item.comments : "No Comments"}</td>
+                            </tr>
+                          </React.Fragment>
                         );
                       })
                     : null}
