@@ -197,8 +197,8 @@ const EditMasterSchedule = () => {
 
     const timeIn = new Date(data[index].time_in);
     const timeOut = new Date(data[index].time_out);
-    const breakIn = "";
-    const breakOut = "";
+    let breakIn = "";
+    let breakOut = "";
     if (data[index].break_in !== "" && data[index].break_out !== "") {
       breakIn = new Date(data[index].break_in);
       breakOut = new Date(data[index].break_out);

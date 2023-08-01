@@ -226,7 +226,7 @@ const CreateSchedule = () => {
     }
 
     // Calculate total hours
-    if (timeIn && timeOut) {
+    if (timeOut instanceof Date && !isNaN(timeOut.getTime()) && timeIn instanceof Date && !isNaN(timeIn.getTime())) {
       if (breakIn && breakOut) {
         const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
         const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
@@ -235,10 +235,16 @@ const CreateSchedule = () => {
 
         data[index].total_hours = (totalHours - breakHours).toFixed(2); // Round to 2 decimal places
       } else {
-        const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
-        const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
-
-        data[index].total_hours = totalHours.toFixed(2); // Round to 2 decimal places
+        if (
+          timeOut instanceof Date &&
+          !isNaN(timeOut.getTime()) &&
+          timeIn instanceof Date &&
+          !isNaN(timeIn.getTime())
+        ) {
+          const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
+          const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+          data[index].total_hours = totalHours.toFixed(2); // Round to 2 decimal places
+        }
       }
     }
     console.log(data);
@@ -282,7 +288,18 @@ const CreateSchedule = () => {
     const breakIn = item.break_in;
     const breakOut = item.break_out;
 
-    if (timeIn && timeOut && breakIn && breakOut) {
+    if (
+      timeIn instanceof Date &&
+      !isNaN(timeIn.getTime()) &&
+      timeOut instanceof Date &&
+      !isNaN(timeOut.getTime()) &&
+      breakIn instanceof Date &&
+      !isNaN(breakIn.getTime()) &&
+      breakOut instanceof Date &&
+      !isNaN(breakOut.getTime()) &&
+      timeOut > timeIn &&
+      breakOut > breakIn
+    ) {
       const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
       const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
 
@@ -341,6 +358,10 @@ const CreateSchedule = () => {
 
   const getImportedData = async () => {
     const response = await axios.get("/getMasterDriverSchedule?driver_id=" + driverId + "&m_id=" + masterId);
+    if (response.status === 200) {
+      setFormData(response.data);
+      setFormFields(response.data);
+    }
     return response.data;
   };
   const importConfirmation = () => {
@@ -562,14 +583,14 @@ const CreateSchedule = () => {
                               <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                                 <div className="form-control-select">
                                   <DatePicker
-                                    selected={item.time_in}
+                                    selected={item.time_in ? new Date(item.time_in) : null}
                                     onChange={(date) => {
                                       handleFormChange({ target: { name: "time_in", value: date } }, index);
                                     }}
                                     name="time_in"
                                     showTimeSelect
                                     showTimeSelectOnly
-                                    value={item.start_time}
+                                    // value={item.start_time}
                                     timeIntervals={15}
                                     timeCaption="Time"
                                     dateFormat="h:mm aa"
@@ -582,14 +603,14 @@ const CreateSchedule = () => {
                               <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                                 <div className="form-control-select">
                                   <DatePicker
-                                    selected={item.break_in}
+                                    selected={item.break_in ? new Date(item.break_in) : null}
                                     onChange={(date) => {
                                       handleFormChange({ target: { name: "break_in", value: date } }, index);
                                     }}
                                     name="break_in"
                                     showTimeSelect
                                     showTimeSelectOnly
-                                    value={item.break_in}
+                                    // value={item.break_in}
                                     timeIntervals={15}
                                     timeCaption="Time"
                                     dateFormat="h:mm aa"
@@ -605,14 +626,14 @@ const CreateSchedule = () => {
                                 {" "}
                                 <div className="form-control-select">
                                   <DatePicker
-                                    selected={item.break_out}
+                                    selected={item.break_out ? new Date(item.break_out) : null}
                                     onChange={(date) => {
                                       handleFormChange({ target: { name: "break_out", value: date } }, index);
                                     }}
                                     name="break_out"
                                     showTimeSelect
                                     showTimeSelectOnly
-                                    value={item.break_out}
+                                    // value={item.break_out}
                                     timeIntervals={15}
                                     timeCaption="Time"
                                     dateFormat="h:mm aa"
@@ -627,14 +648,14 @@ const CreateSchedule = () => {
                               <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                                 <div className="form-control-select">
                                   <DatePicker
-                                    selected={item.time_out}
+                                    selected={item.time_out ? new Date(item.time_out) : null}
                                     onChange={(date) => {
                                       handleFormChange({ target: { name: "time_out", value: date } }, index);
                                     }}
                                     name="time_out"
                                     showTimeSelect
                                     showTimeSelectOnly
-                                    value={item.time_out}
+                                    // value={item.time_out}
                                     timeIntervals={15}
                                     timeCaption="Time"
                                     dateFormat="h:mm aa"
@@ -765,6 +786,7 @@ const CreateSchedule = () => {
                                       onChange={(event) => {
                                         handleFormChange(event, index);
                                       }}
+                                      value={item.comments ? item.comments : null}
                                       className="form-control"
                                     ></textarea>
                                   </div>

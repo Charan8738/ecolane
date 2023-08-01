@@ -26,6 +26,8 @@ import { useSelector } from "react-redux";
 import { user_id } from "../redux/userSlice";
 import { Form, FormGroup, Label, Input, Card, CardBody } from "reactstrap";
 import { successAlert, failureAlert } from "../utils/Utils";
+import MyDropdownMaster from "./MyDropDownMaster";
+import Swal from "sweetalert2";
 
 const EditSchedule = () => {
   const history = useHistory();
@@ -107,6 +109,8 @@ const EditSchedule = () => {
   const dId = location.state?.driverId;
   console.log(dId);
   const [driverId, setDriverId] = useState(dId);
+  const [masterId, setMasterId] = useState();
+  const [masterList, setMasterList] = useState([]);
   const [driverList, setDriverList] = useState([]);
   const [formFields, setFormFields] = useState(formDa);
 
@@ -197,8 +201,8 @@ const EditSchedule = () => {
 
     const timeIn = new Date(data[index].time_in);
     const timeOut = new Date(data[index].time_out);
-    const breakIn = "";
-    const breakOut = "";
+    let breakIn = "";
+    let breakOut = "";
     if (data[index].break_in !== "" && data[index].break_out !== "") {
       breakIn = new Date(data[index].break_in);
       breakOut = new Date(data[index].break_out);
@@ -262,6 +266,16 @@ const EditSchedule = () => {
   //     return acc;
   //   }, 0);
 
+  useEffect(() => {
+    const getDriverList = async () => {
+      const response = await axios.get("/getMaster?venueRefId=" + userId);
+      return response.data;
+    };
+    getDriverList().then((res) => {
+      setMasterList([...res]);
+    });
+  }, []);
+
   const resetform = () => {
     console.log("inside reset");
     setFormData([...INITIAL_ADD_FORM]);
@@ -287,6 +301,92 @@ const EditSchedule = () => {
         console.log(err);
       });
   };
+
+  // const getImportedData = async () => {
+  //   const response = await axios.get("/getMasterDriverSchedule?driver_id=" + dId + "&m_id=" + masterId);
+  //   if (response.status === 200) {
+  //     setFormData(response.data);
+  //     setFormFields(response.data);
+  //   }
+  //   return response.data;
+  // };
+
+  const getImportedData = async () => {
+    const response = await axios.get("/getMasterDriverSchedule?driver_id=" + dId + "&m_id=" + masterId);
+    if (response.status === 200) {
+      const newData = [...response.data]; // Create a copy of the response data array
+
+      // Loop through the new data and update the fields in the copied state
+      newData.forEach((newSchedule) => {
+        const existingSchedule = setFormData.find((schedule) => schedule.day === newSchedule.day);
+        if (existingSchedule) {
+          // Update specific fields in the existing schedule object
+          existingSchedule.coach_no = newSchedule.coach_no;
+          existingSchedule.line_no = newSchedule.line_no;
+          existingSchedule.time_in = newSchedule.time_in;
+          existingSchedule.time_out = newSchedule.time_out;
+          existingSchedule.break_in = newSchedule.break_in;
+          existingSchedule.break_out = newSchedule.break_out;
+          existingSchedule.total_hours = newSchedule.total_hours;
+          existingSchedule.comments = newSchedule.comments;
+        }
+      });
+
+      // Update the state with the updated copied data
+      setFormData(newData);
+      setFormFields(newData);
+    }
+  };
+
+  const importConfirmation = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to import from the schedule?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, import it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const iData = getImportedData();
+        console.log(iData);
+        Swal.fire("Imported!", "Schedule has been successfully imported", "success");
+      }
+    });
+  };
+
+  const throwDriverError = () => {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Please select a driver",
+      focusConfirm: false,
+    });
+  };
+  const throwMasterError = () => {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Please select Master",
+      focusConfirm: false,
+    });
+  };
+  const onChangeMasterIdHandler = (data) => {
+    console.log("Handler");
+    console.log(data);
+    setMasterId(data.value);
+  };
+  const importFromMaster = () => {
+    if (dId) {
+      if (masterId) {
+        importConfirmation();
+      } else {
+        throwMasterError();
+      }
+    } else {
+      throwDriverError();
+    }
+  };
+
   return (
     <React.Fragment>
       <Head title="Edit Schedule"></Head>
@@ -326,6 +426,17 @@ const EditSchedule = () => {
         </BlockHead>
         <Card>
           <CardBody>
+            <Row>
+              <Col className="m-2">
+                <MyDropdownMaster onChangeHandle={onChangeMasterIdHandler} masterList={masterList} />
+              </Col>
+              <Col className="m-2">
+                <Button onClick={importFromMaster} color="primary">
+                  <Icon name="download" />
+                  <span>Import from Master</span>
+                </Button>
+              </Col>
+            </Row>
             <Block>
               <div className="m-2" style={{ textAlign: "right" }}>
                 <h5>{/* Total Hours: <span style={{ fontSize: "25px" }}>{totalHoursSum.toFixed(2)}</span> */}</h5>
