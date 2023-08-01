@@ -93,6 +93,12 @@ const menu = [
     subMenu: [
       {
         icon: "clipboard",
+        text: "Drivers",
+        link: "/drivers",
+        page: 30,
+      },
+      {
+        icon: "clipboard",
         text: "Bus Schedules",
         link: "/run-cutting-scheduler",
         page: 30,
@@ -105,8 +111,8 @@ const menu = [
       },
       {
         icon: "clipboard",
-        text: "Drivers",
-        link: "/drivers",
+        text: "Master Schedules",
+        link: "/create-master",
         page: 30,
       },
     ],

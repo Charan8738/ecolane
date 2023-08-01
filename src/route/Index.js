@@ -21,6 +21,12 @@ import DriverSchedule from "../pages/DriverSchedule";
 import drivers from "../pages/drivers";
 import CreateSchedule from "../pages/CreateSchedule";
 import EditSchedule from "../pages/EditSchedule";
+import MasterSchedule from "../pages/MasterSchedule";
+import addMaster from "../pages/addMaster";
+import MasterDriver from "../pages/MasterDriver";
+import MasterRunCut from "../pages/MasterRunCut";
+import CreateMasterSchedule from "../pages/CreateMasterSchedule";
+import EditMasterSchedule from "../pages/EditMasterSchedule";
 // const FleetTracker = React.lazy(() => import("../pages/FleetTracker"));
 const AssetManagement = React.lazy(() => import("../pages/AssetManagement"));
 const Homepage = React.lazy(() => import("../pages/Devices"));
@@ -105,8 +111,11 @@ const Pages = ({ currentAccess }) => {
     <Suspense fallback={<div />}>
       <Switch>
         <Route path={`/create-schedule`} component={CreateSchedule} />
+        <Route path={`/create-ms-schedule`} component={CreateMasterSchedule} />
+        <Route path={`/edit-master-schedule`} component={EditMasterSchedule} />
         <Route path={`/edit-schedule`} component={EditSchedule} />
         <Route path={`/run`} component={RunCut} />
+        <Route path={`/master-run-cutting`} component={MasterRunCut} />
         <Route path={`/run-cutting-scheduler`} component={RunCutting} />
         <Route path={`/driver-schedule`} component={DriverSchedule} />
         <Route path={`/drivers`} component={drivers} />
@@ -114,6 +123,9 @@ const Pages = ({ currentAccess }) => {
         <Route path={`/vehicle-info`} component={VehicleInfo} />
         <Route path={`/schedule-info`} component={ScheduleInfo} />
         <Route path={`/user-profile-setting`} component={UserSettings} />
+        <Route path={`/create-master-schedule`} component={MasterSchedule} />
+        <Route path={`/create-master`} component={addMaster} />
+        <Route path={`/master-driver`} component={MasterDriver} />
         <Route path={`${process.env.PUBLIC_URL}/device/:id`} component={DeviceConfig}></Route>
         {rolesRoutePages.map(
           (route) =>
