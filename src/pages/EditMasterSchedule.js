@@ -26,10 +26,8 @@ import { useSelector } from "react-redux";
 import { user_id } from "../redux/userSlice";
 import { Form, FormGroup, Label, Input, Card, CardBody } from "reactstrap";
 import { successAlert, failureAlert } from "../utils/Utils";
-import MyDropdownMaster from "./MyDropDownMaster";
-import Swal from "sweetalert2";
 
-const EditSchedule = () => {
+const EditMasterSchedule = () => {
   const history = useHistory();
   const location = useLocation();
   const INITIAL_ADD_FORM = [
@@ -109,8 +107,6 @@ const EditSchedule = () => {
   const dId = location.state?.driverId;
   console.log(dId);
   const [driverId, setDriverId] = useState(dId);
-  const [masterId, setMasterId] = useState();
-  const [masterList, setMasterList] = useState([]);
   const [driverList, setDriverList] = useState([]);
   const [formFields, setFormFields] = useState(formDa);
 
@@ -118,7 +114,7 @@ const EditSchedule = () => {
   const [fieldCounts, setFieldCounts] = useState({});
   const redirectRun = () => {
     // console.log(formFields[0].driver_id);
-    history.push("/run", { id: formFields[0].driver_id });
+    history.push("/master-run-cutting", { id: formFields[0].driver_id, mid: formFields[0].m_id });
   };
   //   const mondayCount = formFields.reduce((count, item) => {
   //     if (item.day === "Monday") {
@@ -266,16 +262,6 @@ const EditSchedule = () => {
   //     return acc;
   //   }, 0);
 
-  useEffect(() => {
-    const getDriverList = async () => {
-      const response = await axios.get("/getMaster?venueRefId=" + userId);
-      return response.data;
-    };
-    getDriverList().then((res) => {
-      setMasterList([...res]);
-    });
-  }, []);
-
   const resetform = () => {
     console.log("inside reset");
     setFormData([...INITIAL_ADD_FORM]);
@@ -286,7 +272,7 @@ const EditSchedule = () => {
     console.log(newData);
 
     axios
-      .put("addschedule", newData)
+      .put("EditMasterSchedule", newData)
       .then((res) => {
         if (res.status === 200) {
           //   setUpdateData(true);
@@ -301,106 +287,6 @@ const EditSchedule = () => {
         console.log(err);
       });
   };
-
-  // const getImportedData = async () => {
-  //   const response = await axios.get("/getMasterDriverSchedule?driver_id=" + dId + "&m_id=" + masterId);
-  //   if (response.status === 200) {
-  //     setFormData(response.data);
-  //     setFormFields(response.data);
-  //   }
-  //   return response.data;
-  // };
-
-  const getImportedData = async () => {
-    const response = await axios.get("/getMasterDriverSchedule?driver_id=" + dId + "&m_id=" + masterId);
-    if (response.status === 200) {
-      const newData = response.data; // Use the response data directly, no need to create a copy
-
-      // Loop through the new data and update the fields in the formData array
-      const updatedFormData = formData.map((existingSchedule) => {
-        const newSchedule = newData.find(
-          (schedule) => schedule.day === existingSchedule.day && schedule.driver_id === existingSchedule.driver_id
-        );
-
-        if (newSchedule) {
-          // Create a new object with the updated fields
-          return {
-            ...existingSchedule,
-            coach_no: newSchedule.coach_no,
-            line_no: newSchedule.line_no,
-            time_in: newSchedule.time_in,
-            time_out: newSchedule.time_out,
-            break_in: newSchedule.break_in,
-            break_out: newSchedule.break_out,
-            total_hours: newSchedule.total_hours,
-            comments: newSchedule.comments,
-          };
-        } else {
-          // If there's no matching new schedule, return the existing schedule as is
-          return existingSchedule;
-        }
-      });
-
-      // Update the state with the updated data
-      setFormData({
-        ...formData,
-        schedules: updatedFormData,
-      });
-
-      // You can also update the formFields if needed
-      setFormFields(updatedFormData);
-    }
-  };
-
-  const importConfirmation = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to import from the schedule?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Yes, import it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const iData = getImportedData();
-        console.log(iData);
-        Swal.fire("Imported!", "Schedule has been successfully imported", "success");
-      }
-    });
-  };
-
-  const throwDriverError = () => {
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Please select a driver",
-      focusConfirm: false,
-    });
-  };
-  const throwMasterError = () => {
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Please select Master",
-      focusConfirm: false,
-    });
-  };
-  const onChangeMasterIdHandler = (data) => {
-    console.log("Handler");
-    console.log(data);
-    setMasterId(data.value);
-  };
-  const importFromMaster = () => {
-    if (dId) {
-      if (masterId) {
-        importConfirmation();
-      } else {
-        throwMasterError();
-      }
-    } else {
-      throwDriverError();
-    }
-  };
-
   return (
     <React.Fragment>
       <Head title="Edit Schedule"></Head>
@@ -440,17 +326,6 @@ const EditSchedule = () => {
         </BlockHead>
         <Card>
           <CardBody>
-            <Row>
-              <Col className="m-2">
-                <MyDropdownMaster onChangeHandle={onChangeMasterIdHandler} masterList={masterList} />
-              </Col>
-              <Col className="m-2">
-                <Button onClick={importFromMaster} color="primary">
-                  <Icon name="download" />
-                  <span>Import from Master</span>
-                </Button>
-              </Col>
-            </Row>
             <Block>
               <div className="m-2" style={{ textAlign: "right" }}>
                 <h5>{/* Total Hours: <span style={{ fontSize: "25px" }}>{totalHoursSum.toFixed(2)}</span> */}</h5>
@@ -748,4 +623,4 @@ const StyledTableData = styled.td`
   text-align: center;
   vertical-align: middle;
 `;
-export default EditSchedule;
+export default EditMasterSchedule;

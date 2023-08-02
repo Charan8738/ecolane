@@ -26,12 +26,16 @@ import { useSelector } from "react-redux";
 import { user_id } from "../redux/userSlice";
 import { Form, FormGroup, Label, Input, Card, CardBody } from "reactstrap";
 import { successAlert, failureAlert } from "../utils/Utils";
-import MyDropdownMaster from "./MyDropDownMaster";
-import Swal from "sweetalert2";
 
-const EditSchedule = () => {
+const CreateMasterSchedule = () => {
   const history = useHistory();
   const location = useLocation();
+  const dId = location.state?.driverId;
+  const dname = location.state?.dname;
+  const mid = location.state?.mid;
+
+  console.log(mid);
+  console.log(dname);
   const INITIAL_ADD_FORM = [
     {
       day: "Monday",
@@ -42,6 +46,7 @@ const EditSchedule = () => {
       break_in: "",
       break_out: "",
       total_hours: "",
+      comments: "",
     },
     {
       day: "Tuesday",
@@ -52,6 +57,7 @@ const EditSchedule = () => {
       break_in: "",
       break_out: "",
       total_hours: "",
+      comments: "",
     },
     {
       day: "Wednesday",
@@ -62,6 +68,7 @@ const EditSchedule = () => {
       break_in: "",
       break_out: "",
       total_hours: "",
+      comments: "",
     },
     {
       day: "Thursday",
@@ -72,6 +79,7 @@ const EditSchedule = () => {
       break_in: "",
       break_out: "",
       total_hours: "",
+      comments: "",
     },
     {
       day: "Friday",
@@ -82,6 +90,7 @@ const EditSchedule = () => {
       break_in: "",
       break_out: "",
       total_hours: "",
+      comments: "",
     },
     {
       day: "Saturday",
@@ -92,6 +101,7 @@ const EditSchedule = () => {
       break_in: "",
       break_out: "",
       total_hours: "",
+      comments: "",
     },
     {
       day: "Sunday",
@@ -102,66 +112,64 @@ const EditSchedule = () => {
       break_in: "",
       break_out: "",
       total_hours: "",
+      comments: "",
     },
   ];
 
-  const formDa = location.state?.data;
-  const dId = location.state?.driverId;
-  console.log(dId);
-  const [driverId, setDriverId] = useState(dId);
-  const [masterId, setMasterId] = useState();
-  const [masterList, setMasterList] = useState([]);
-  const [driverList, setDriverList] = useState([]);
-  const [formFields, setFormFields] = useState(formDa);
-
-  const [formData, setFormData] = useState(formDa);
-  const [fieldCounts, setFieldCounts] = useState({});
-  const redirectRun = () => {
-    // console.log(formFields[0].driver_id);
-    history.push("/run", { id: formFields[0].driver_id });
+  const redirectToRunCuttingPage = () => {
+    history.push("master-run-cutting", { id: dId, mid: mid });
   };
-  //   const mondayCount = formFields.reduce((count, item) => {
-  //     if (item.day === "Monday") {
-  //       return count + 1;
-  //     }
-  //     return count;
-  //   }, 0);
-  //   const tuesdayCount = formFields.reduce((count, item) => {
-  //     if (item.day === "Tuesday") {
-  //       return count + 1;
-  //     }
-  //     return count;
-  //   }, 0);
-  //   const wednesdayCount = formFields.reduce((count, item) => {
-  //     if (item.day === "Wednesday") {
-  //       return count + 1;
-  //     }
-  //     return count;
-  //   }, 0);
-  //   const thursdayCount = formFields.reduce((count, item) => {
-  //     if (item.day === "Thursday") {
-  //       return count + 1;
-  //     }
-  //     return count;
-  //   }, 0);
-  //   const fridayCount = formFields.reduce((count, item) => {
-  //     if (item.day === "Friday") {
-  //       return count + 1;
-  //     }
-  //     return count;
-  //   }, 0);
-  //   const saturdayCount = formFields.reduce((count, item) => {
-  //     if (item.day === "Saturday") {
-  //       return count + 1;
-  //     }
-  //     return count;
-  //   }, 0);
-  //   const sundayCount = formFields.reduce((count, item) => {
-  //     if (item.day === "Sunday") {
-  //       return count + 1;
-  //     }
-  //     return count;
-  //   }, 0);
+  const redirectToRunCuttingScheduler = () => {
+    history.push("run-cutting-scheduler", { id: dId, mid: mid });
+  };
+  const [driverId, setDriverId] = useState();
+  const [driverList, setDriverList] = useState([]);
+  const [formFields, setFormFields] = useState(INITIAL_ADD_FORM);
+
+  const [formData, setFormData] = useState(INITIAL_ADD_FORM);
+  const [fieldCounts, setFieldCounts] = useState({});
+  const mondayCount = formFields.reduce((count, item) => {
+    if (item.day === "Monday") {
+      return count + 1;
+    }
+    return count;
+  }, 0);
+  const tuesdayCount = formFields.reduce((count, item) => {
+    if (item.day === "Tuesday") {
+      return count + 1;
+    }
+    return count;
+  }, 0);
+  const wednesdayCount = formFields.reduce((count, item) => {
+    if (item.day === "Wednesday") {
+      return count + 1;
+    }
+    return count;
+  }, 0);
+  const thursdayCount = formFields.reduce((count, item) => {
+    if (item.day === "Thursday") {
+      return count + 1;
+    }
+    return count;
+  }, 0);
+  const fridayCount = formFields.reduce((count, item) => {
+    if (item.day === "Friday") {
+      return count + 1;
+    }
+    return count;
+  }, 0);
+  const saturdayCount = formFields.reduce((count, item) => {
+    if (item.day === "Saturday") {
+      return count + 1;
+    }
+    return count;
+  }, 0);
+  const sundayCount = formFields.reduce((count, item) => {
+    if (item.day === "Sunday") {
+      return count + 1;
+    }
+    return count;
+  }, 0);
   const coachL = ["Select", 1055, 1056, 1060, 1070, 1071, 1073, 1074, 1076, 1077, 1078, "off", "Day Off", "TBD"];
 
   const addFields = (day, index) => {
@@ -194,40 +202,59 @@ const EditSchedule = () => {
   const LineL = ["Select", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "1 & 4", "9 & 10"];
   const userId = useSelector(user_id);
   const handleFormChange = (event, index) => {
-    console.log(index, event.target.name);
     let data = [...formFields];
     data[index][event.target.name] = event.target.value;
-    console.log(data);
 
-    const timeIn = new Date(data[index].time_in);
-    const timeOut = new Date(data[index].time_out);
-    let breakIn = "";
-    let breakOut = "";
-    if (data[index].break_in !== "" && data[index].break_out !== "") {
-      breakIn = new Date(data[index].break_in);
-      breakOut = new Date(data[index].break_out);
+    const timeIn = data[index].time_in;
+    const timeOut = data[index].time_out;
+    const breakIn = data[index].break_in;
+    const breakOut = data[index].break_out;
+
+    // Compare and update the times
+    if (timeIn && timeOut && timeOut < timeIn) {
+      data[index].time_out = timeIn; // Set time_out to be greater than time_in
     }
 
+    if (timeIn && breakIn && breakIn < timeIn) {
+      data[index].break_in = timeIn; // Set break_in to be greater than time_in
+    }
+
+    if (timeIn && breakOut && breakOut < timeIn) {
+      data[index].break_out = timeIn; // Set break_out to be greater than time_in
+    }
+
+    if (breakIn && breakOut && breakOut < breakIn) {
+      data[index].break_out = breakIn; // Set break_out to be greater than break_in
+    }
+
+    if (breakOut && timeOut && timeOut < breakOut) {
+      data[index].time_out = breakOut; // Set time_out to be greater than break_out
+    }
+
+    // Calculate total hours
     if (timeIn && timeOut) {
-      if (breakIn !== "" && breakOut !== "") {
+      if (breakIn && breakOut) {
         const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
         const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
-
         const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
         const breakHours = breakInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
-        console.log("break hours new" + breakIn);
-        data[index].total_hours = totalHours.toFixed(2) - breakHours.toFixed(2); // Round to 2 decimal places
+
+        data[index].total_hours = (totalHours - breakHours).toFixed(2); // Round to 2 decimal places
       } else {
         const diffInMilliseconds = timeOut.getTime() - timeIn.getTime();
-        // const breakInMilliseconds = breakOut.getTime() - breakIn.getTime();
-
         const totalHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
-        // const breakHours = breakInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
-        // console.log("break hours" + breakHours);
+
         data[index].total_hours = totalHours.toFixed(2); // Round to 2 decimal places
       }
     }
+    console.log(data);
     setFormFields(data);
+  };
+
+  const onChangeHandler = (data) => {
+    console.log("Handler");
+    console.log(data);
+    setDriverId(data.value);
   };
 
   useEffect(() => {
@@ -258,158 +285,59 @@ const EditSchedule = () => {
     return "";
   };
 
-  //   const totalHoursSum = formData.reduce((acc, item) => {
-  //     const totalHoursForRow = calculateTotalHoursForRow(item);
-  //     if (totalHoursForRow !== "") {
-  //       acc += parseFloat(totalHoursForRow);
-  //     }
-  //     return acc;
-  //   }, 0);
-
-  useEffect(() => {
-    const getDriverList = async () => {
-      const response = await axios.get("/getMaster?venueRefId=" + userId);
-      return response.data;
-    };
-    getDriverList().then((res) => {
-      setMasterList([...res]);
-    });
-  }, []);
+  const totalHoursSum = formData.reduce((acc, item) => {
+    const totalHoursForRow = calculateTotalHoursForRow(item);
+    if (totalHoursForRow !== "") {
+      acc += parseFloat(totalHoursForRow);
+    }
+    return acc;
+  }, 0);
 
   const resetform = () => {
     console.log("inside reset");
     setFormData([...INITIAL_ADD_FORM]);
     setFormFields(INITIAL_ADD_FORM);
   };
-  const onEditSubmit = (data, driverId) => {
-    let newData = { driver_id: driverId, schedules: data };
-    console.log(newData);
+  const onEditSubmit = async (data, driverId) => {
+    try {
+      console.log(data);
 
-    axios
-      .put("addschedule", newData)
-      .then((res) => {
-        if (res.status === 200) {
-          //   setUpdateData(true);
-
-          successAlert("Schedule edited successfully");
-          redirectRun(driverId);
-        } else {
-          failureAlert("Error");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // const getImportedData = async () => {
-  //   const response = await axios.get("/getMasterDriverSchedule?driver_id=" + dId + "&m_id=" + masterId);
-  //   if (response.status === 200) {
-  //     setFormData(response.data);
-  //     setFormFields(response.data);
-  //   }
-  //   return response.data;
-  // };
-
-  const getImportedData = async () => {
-    const response = await axios.get("/getMasterDriverSchedule?driver_id=" + dId + "&m_id=" + masterId);
-    if (response.status === 200) {
-      const newData = response.data; // Use the response data directly, no need to create a copy
-
-      // Loop through the new data and update the fields in the formData array
-      const updatedFormData = formData.map((existingSchedule) => {
-        const newSchedule = newData.find(
-          (schedule) => schedule.day === existingSchedule.day && schedule.driver_id === existingSchedule.driver_id
-        );
-
-        if (newSchedule) {
-          // Create a new object with the updated fields
-          return {
-            ...existingSchedule,
-            coach_no: newSchedule.coach_no,
-            line_no: newSchedule.line_no,
-            time_in: newSchedule.time_in,
-            time_out: newSchedule.time_out,
-            break_in: newSchedule.break_in,
-            break_out: newSchedule.break_out,
-            total_hours: newSchedule.total_hours,
-            comments: newSchedule.comments,
-          };
-        } else {
-          // If there's no matching new schedule, return the existing schedule as is
-          return existingSchedule;
-        }
-      });
-
-      // Update the state with the updated data
-      setFormData({
-        ...formData,
-        schedules: updatedFormData,
-      });
-
-      // You can also update the formFields if needed
-      setFormFields(updatedFormData);
-    }
-  };
-
-  const importConfirmation = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to import from the schedule?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Yes, import it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const iData = getImportedData();
-        console.log(iData);
-        Swal.fire("Imported!", "Schedule has been successfully imported", "success");
-      }
-    });
-  };
-
-  const throwDriverError = () => {
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Please select a driver",
-      focusConfirm: false,
-    });
-  };
-  const throwMasterError = () => {
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Please select Master",
-      focusConfirm: false,
-    });
-  };
-  const onChangeMasterIdHandler = (data) => {
-    console.log("Handler");
-    console.log(data);
-    setMasterId(data.value);
-  };
-  const importFromMaster = () => {
-    if (dId) {
-      if (masterId) {
-        importConfirmation();
+      let js = { master_schedule_id: mid, master_schedule: [{ driver_id: dId, schedules: data }] };
+      console.log(data.length);
+      console.log(js);
+      const res = await axios.post("addMasterSchedule", js);
+      if (res.status === 201) {
+        // const newTrackers = [...trackers];
+        // newTrackers.push(js);
+        // console.log(newTrackers);
+        // setTrackers(newTrackers);
+        // setCreatedSchedule(true);
+        // setView({
+        //   edit: false,
+        //   add: false,
+        //   diagnose: false,
+        // });
+        resetform();
+        successAlert("Schedule created successfully");
+        redirectToRunCuttingPage();
+        // onSubmitHandler();
       } else {
-        throwMasterError();
+        resetform();
+        failureAlert("Please select a driver");
       }
-    } else {
-      throwDriverError();
+    } catch (err) {
+      console.log(err);
     }
   };
-
   return (
     <React.Fragment>
-      <Head title="Edit Schedule"></Head>
+      <Head title="Create Schedule"></Head>
       <Content>
         <BlockHead size="sm">
           <BlockBetween>
             <BlockHeadContent>
               <BlockTitle className="text-primary" page tag="h3">
-                Edit Schedule
+                Create Schedule
               </BlockTitle>
             </BlockHeadContent>
             <BlockHeadContent>
@@ -418,18 +346,15 @@ const EditSchedule = () => {
                   <ul className="nk-block-tools g-3">
                     <li className="nk-block-tools-opt">
                       <BlockHeadContent>
-                        <Button
-                          color="light"
-                          onClick={() => redirectRun()}
-                          outline
-                          className="bg-white d-none d-sm-inline-flex"
-                        >
-                          <Icon name="arrow-left"></Icon>
-                          <span>Back</span>
-                        </Button>
-                        <Button color="light" outline className="btn-icon bg-white d-inline-flex d-sm-none">
-                          <Icon name="arrow-left"></Icon>
-                        </Button>
+                        <Link to={`${process.env.PUBLIC_URL}/run-cutting-scheduler`}>
+                          <Button color="light" outline className="bg-white d-none d-sm-inline-flex">
+                            <Icon name="arrow-left"></Icon>
+                            <span>Back</span>
+                          </Button>
+                          <Button color="light" outline className="btn-icon bg-white d-inline-flex d-sm-none">
+                            <Icon name="arrow-left"></Icon>
+                          </Button>
+                        </Link>
                       </BlockHeadContent>
                     </li>
                   </ul>
@@ -440,26 +365,21 @@ const EditSchedule = () => {
         </BlockHead>
         <Card>
           <CardBody>
-            <Row>
-              <Col className="m-2">
-                <MyDropdownMaster onChangeHandle={onChangeMasterIdHandler} masterList={masterList} />
-              </Col>
-              <Col className="m-2">
-                <Button onClick={importFromMaster} color="primary">
-                  <Icon name="download" />
-                  <span>Import from Master</span>
-                </Button>
-              </Col>
-            </Row>
             <Block>
+              <h3>{dname}</h3>
+              {/* <MyDropdown onChangeHandle={onChangeHandler} driverlist={driverList} /> */}
+              {/* <MyDropDown onChangeHandle={onChangeHandler} driverlist={driverList} /> */}
+
               <div className="m-2" style={{ textAlign: "right" }}>
-                <h5>{/* Total Hours: <span style={{ fontSize: "25px" }}>{totalHoursSum.toFixed(2)}</span> */}</h5>
+                <h5>
+                  Total Hours: <span style={{ fontSize: "25px" }}>{totalHoursSum.toFixed(2)}</span>
+                </h5>
               </div>
               <table className="table table-bordered">
                 <thead>
                   <tr>
                     <StyledTableHeader
-                      className=" table-dark"
+                      className="table-dark"
                       style={{ textAlign: "center", verticalAlign: "middle" }}
                       scope="col"
                     >
@@ -522,6 +442,8 @@ const EditSchedule = () => {
                   {formFields.length > 0
                     ? formFields.map((item, index) => {
                         const isOff = item.coach_no === "off" || item.coach_no === "Day Off";
+                        const count = fieldCounts[item.day] || 0;
+                        const shouldDisplayRemoveButton = index !== 0 && count > 1;
                         return (
                           <React.Fragment key={index}>
                             <tr>
@@ -570,15 +492,14 @@ const EditSchedule = () => {
                               <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                                 <div className="form-control-select">
                                   <DatePicker
-                                    // selected={new Date("2023-07-04T22:45:00.238Z")}
-                                    selected={item.time_in ? new Date(item.time_in) : null}
+                                    selected={item.time_in}
                                     onChange={(date) => {
                                       handleFormChange({ target: { name: "time_in", value: date } }, index);
                                     }}
                                     name="time_in"
                                     showTimeSelect
                                     showTimeSelectOnly
-                                    // value={item.start_time}
+                                    value={item.start_time}
                                     timeIntervals={15}
                                     timeCaption="Time"
                                     dateFormat="h:mm aa"
@@ -591,14 +512,14 @@ const EditSchedule = () => {
                               <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                                 <div className="form-control-select">
                                   <DatePicker
-                                    selected={item.break_in ? new Date(item.break_in) : null}
+                                    selected={item.break_in}
                                     onChange={(date) => {
                                       handleFormChange({ target: { name: "break_in", value: date } }, index);
                                     }}
                                     name="break_in"
                                     showTimeSelect
                                     showTimeSelectOnly
-                                    // value={item.break_in}
+                                    value={item.break_in}
                                     timeIntervals={15}
                                     timeCaption="Time"
                                     dateFormat="h:mm aa"
@@ -614,14 +535,14 @@ const EditSchedule = () => {
                                 {" "}
                                 <div className="form-control-select">
                                   <DatePicker
-                                    selected={item.break_out ? new Date(item.break_out) : null}
+                                    selected={item.break_out}
                                     onChange={(date) => {
                                       handleFormChange({ target: { name: "break_out", value: date } }, index);
                                     }}
                                     name="break_out"
                                     showTimeSelect
                                     showTimeSelectOnly
-                                    // value={item.break_out}
+                                    value={item.break_out}
                                     timeIntervals={15}
                                     timeCaption="Time"
                                     dateFormat="h:mm aa"
@@ -636,14 +557,14 @@ const EditSchedule = () => {
                               <StyledTableData style={{ textAlign: "center", verticalAlign: "middle" }}>
                                 <div className="form-control-select">
                                   <DatePicker
-                                    selected={item.time_out ? new Date(item.time_out) : null}
+                                    selected={item.time_out}
                                     onChange={(date) => {
                                       handleFormChange({ target: { name: "time_out", value: date } }, index);
                                     }}
                                     name="time_out"
                                     showTimeSelect
                                     showTimeSelectOnly
-                                    // value={item.time_out}
+                                    value={item.time_out}
                                     timeIntervals={15}
                                     timeCaption="Time"
                                     dateFormat="h:mm aa"
@@ -670,16 +591,84 @@ const EditSchedule = () => {
                                       <Icon name="plus" />
                                     </Button>
                                   </Col>
-                                  <Col className="m-2" sm="3">
-                                    <Button
-                                      onClick={() => removeFields(index)}
-                                      className="btn-square btn-icon"
-                                      color="danger"
-                                      size="sm"
-                                    >
-                                      <Icon name="minus" />
-                                    </Button>
-                                  </Col>
+                                  {item.day === "Monday" && mondayCount > 1 ? (
+                                    <Col className="m-2" sm="3">
+                                      <Button
+                                        onClick={() => removeFields(index)}
+                                        className="btn-square btn-icon"
+                                        color="danger"
+                                        size="sm"
+                                      >
+                                        <Icon name="minus" />
+                                      </Button>
+                                    </Col>
+                                  ) : item.day === "Tuesday" && tuesdayCount > 1 ? (
+                                    <Col className="m-2" sm="3">
+                                      <Button
+                                        onClick={() => removeFields(index)}
+                                        className="btn-square btn-icon"
+                                        color="danger"
+                                        size="sm"
+                                      >
+                                        <Icon name="minus" />
+                                      </Button>
+                                    </Col>
+                                  ) : item.day === "Wednesday" && wednesdayCount > 1 ? (
+                                    <Col className="m-2" sm="3">
+                                      <Button
+                                        onClick={() => removeFields(index)}
+                                        className="btn-square btn-icon"
+                                        color="danger"
+                                        size="sm"
+                                      >
+                                        <Icon name="minus" />
+                                      </Button>
+                                    </Col>
+                                  ) : item.day === "Thursday" && thursdayCount > 1 ? (
+                                    <Col className="m-2" sm="3">
+                                      <Button
+                                        onClick={() => removeFields(index)}
+                                        className="btn-square btn-icon"
+                                        color="danger"
+                                        size="sm"
+                                      >
+                                        <Icon name="minus" />
+                                      </Button>
+                                    </Col>
+                                  ) : item.day === "Friday" && fridayCount > 1 ? (
+                                    <Col className="m-2" sm="3">
+                                      <Button
+                                        onClick={() => removeFields(index)}
+                                        className="btn-square btn-icon"
+                                        color="danger"
+                                        size="sm"
+                                      >
+                                        <Icon name="minus" />
+                                      </Button>
+                                    </Col>
+                                  ) : item.day === "Saturday" && saturdayCount > 1 ? (
+                                    <Col className="m-2" sm="3">
+                                      <Button
+                                        onClick={() => removeFields(index)}
+                                        className="btn-square btn-icon"
+                                        color="danger"
+                                        size="sm"
+                                      >
+                                        <Icon name="minus" />
+                                      </Button>
+                                    </Col>
+                                  ) : item.day === "Sunday" && sundayCount > 1 ? (
+                                    <Col className="m-2" sm="3">
+                                      <Button
+                                        onClick={() => removeFields(index)}
+                                        className="btn-square btn-icon"
+                                        color="danger"
+                                        size="sm"
+                                      >
+                                        <Icon name="minus" />
+                                      </Button>
+                                    </Col>
+                                  ) : null}
                                 </Row>
                               </StyledTableData>
                             </tr>
@@ -707,7 +696,6 @@ const EditSchedule = () => {
                                         handleFormChange(event, index);
                                       }}
                                       className="form-control"
-                                      value={item.comments}
                                     ></textarea>
                                   </div>
                                 </div>
@@ -723,13 +711,8 @@ const EditSchedule = () => {
             <div className="m-2">
               <Row className="g-4">
                 <Col xl="12">
-                  <Button
-                    color="primary"
-                    size="lg"
-                    type="submit"
-                    onClick={() => onEditSubmit(formFields, formFields[0].driver_id)}
-                  >
-                    Save Changes
+                  <Button color="primary" size="lg" type="submit" onClick={() => onEditSubmit(formFields, driverId)}>
+                    Create Schedule
                   </Button>
                 </Col>
               </Row>
@@ -748,4 +731,4 @@ const StyledTableData = styled.td`
   text-align: center;
   vertical-align: middle;
 `;
-export default EditSchedule;
+export default CreateMasterSchedule;
