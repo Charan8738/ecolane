@@ -314,27 +314,41 @@ const EditSchedule = () => {
   const getImportedData = async () => {
     const response = await axios.get("/getMasterDriverSchedule?driver_id=" + dId + "&m_id=" + masterId);
     if (response.status === 200) {
-      const newData = [...response.data]; // Create a copy of the response data array
+      const newData = response.data; // Use the response data directly, no need to create a copy
 
-      // Loop through the new data and update the fields in the copied state
-      newData.forEach((newSchedule) => {
-        const existingSchedule = setFormData.find((schedule) => schedule.day === newSchedule.day);
-        if (existingSchedule) {
-          // Update specific fields in the existing schedule object
-          existingSchedule.coach_no = newSchedule.coach_no;
-          existingSchedule.line_no = newSchedule.line_no;
-          existingSchedule.time_in = newSchedule.time_in;
-          existingSchedule.time_out = newSchedule.time_out;
-          existingSchedule.break_in = newSchedule.break_in;
-          existingSchedule.break_out = newSchedule.break_out;
-          existingSchedule.total_hours = newSchedule.total_hours;
-          existingSchedule.comments = newSchedule.comments;
+      // Loop through the new data and update the fields in the formData array
+      const updatedFormData = formData.map((existingSchedule) => {
+        const newSchedule = newData.find(
+          (schedule) => schedule.day === existingSchedule.day && schedule.driver_id === existingSchedule.driver_id
+        );
+
+        if (newSchedule) {
+          // Create a new object with the updated fields
+          return {
+            ...existingSchedule,
+            coach_no: newSchedule.coach_no,
+            line_no: newSchedule.line_no,
+            time_in: newSchedule.time_in,
+            time_out: newSchedule.time_out,
+            break_in: newSchedule.break_in,
+            break_out: newSchedule.break_out,
+            total_hours: newSchedule.total_hours,
+            comments: newSchedule.comments,
+          };
+        } else {
+          // If there's no matching new schedule, return the existing schedule as is
+          return existingSchedule;
         }
       });
 
-      // Update the state with the updated copied data
-      setFormData(newData);
-      setFormFields(newData);
+      // Update the state with the updated data
+      setFormData({
+        ...formData,
+        schedules: updatedFormData,
+      });
+
+      // You can also update the formFields if needed
+      setFormFields(updatedFormData);
     }
   };
 
