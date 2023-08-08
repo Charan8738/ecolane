@@ -40,7 +40,7 @@ import { user_id } from "../redux/userSlice";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import backgroundImage from "../assets/images/fleet_tracking.png";
-
+import TimeDifference from "../components/TimeDifference";
 import axios from "axios";
 const FleetTracker = () => {
   const history = useHistory();
@@ -58,7 +58,7 @@ const FleetTracker = () => {
   const [formData, setFormData] = useState({});
   const [isLoading, setLoading] = useState(false);
   const [onSearchText, setSearchText] = useState("");
-  const [trackers, setTrackers] = useState([]); 
+  const [trackers, setTrackers] = useState([]);
   const [sm, updateSm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [diagnoseImei, setDiagnoseImei] = useState();
@@ -76,14 +76,13 @@ const FleetTracker = () => {
     });
   };
   const onFilterChange = (e) => {
-    const searchText=e.target.value;
+    const searchText = e.target.value;
     setSearchText(searchText);
-    if(e.nativeEvent.inputType==="deleteContentBackward" && searchText.length===0){
-      setTrackers([...initialTrackers.current])
-    }
-    else{
-      const filteredData = initialTrackers.current.filter((item)=>
-      item.vehicleNo.toLowerCase().includes(searchText.toLowerCase())
+    if (e.nativeEvent.inputType === "deleteContentBackward" && searchText.length === 0) {
+      setTrackers([...initialTrackers.current]);
+    } else {
+      const filteredData = initialTrackers.current.filter((item) =>
+        item.vehicleNo.toLowerCase().includes(searchText.toLowerCase())
       );
       setTrackers(filteredData);
     }
@@ -185,7 +184,7 @@ const FleetTracker = () => {
     } else {
       setTrackers([...initialTrackers.current]);
     }
-     setCurrentPage(1);
+    setCurrentPage(1);
   }, [onSearchText]);
   useEffect(() => {
     const getTrackers = async () => {
@@ -334,55 +333,59 @@ const FleetTracker = () => {
                       <th className="d-none d-sm-table-cell">IMEI</th>
                       <th className="d-none d-sm-table-cell">Sim No</th>
                       <th>Device Mode</th>
+                      <th>Last Updated</th>
                       <th className="d-none d-sm-table-cell">Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {currentItems.length > 0
-                      ? currentItems.map((item) => {
-                          return (
-                            <tr key={item.vehicleNo} className="tb-tnx-item">
-                              <td style={{ padding: "0.75rem 0.25rem" }}>
-                                <span style={{ fontWeight: "bold" }}>{item.vehicleNo}</span>
-                                {/* <span className="d-block d-md-none">{VEHICLE_TYPES[item.vehicleType]}</span> */}
-                              </td>
-                              <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
-                                {VEHICLE_TYPES[item.vehicleType]}
-                              </td>
-                              {/* <td className="d-sm-none" style={{ padding: "0.75rem 0.25rem" }}>
+                    {currentItems.length > 0 ? (
+                      currentItems.map((item) => {
+                        return (
+                          <tr key={item.vehicleNo} className="tb-tnx-item">
+                            <td style={{ padding: "0.75rem 0.25rem" }}>
+                              <span style={{ fontWeight: "bold" }}>{item.vehicleNo}</span>
+                              {/* <span className="d-block d-md-none">{VEHICLE_TYPES[item.vehicleType]}</span> */}
+                            </td>
+                            <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-md-table-cell">
+                              {VEHICLE_TYPES[item.vehicleType]}
+                            </td>
+                            {/* <td className="d-sm-none" style={{ padding: "0.75rem 0.25rem" }}>
                                 <span className="d-block">{item.imei}</span>
                               </td> */}
-                              <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
-                                {item.imei}
-                              </td>
-                              <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
-                                {item.simno}
-                              </td>
-                              <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-sm-table-cell">
-                                <span className="tb-sub">
-                                  <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
-                                    {item?.Devicemode.toString().toUpperCase()}
-                                  </Badge>
-                                </span>
-                              </td>
-                              <td style={{ padding: "0.75rem 0.25rem" }}>
-                                <span className="tb-sub d-block d-sm-none ">
-                                  <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
-                                    {item?.Devicemode.toString().toUpperCase()}
-                                  </Badge>
-                                </span>
-                                <UncontrolledDropdown>
-                                  <DropdownToggle
-                                    tag="a"
-                                    href="#more"
-                                    onClick={(ev) => ev.preventDefault()}
-                                    className="dropdown-toggle btn btn-icon btn-trigger"
-                                  >
-                                    <Icon name="more-h"></Icon>
-                                  </DropdownToggle>
-                                  <DropdownMenu right>
-                                    <ul className="link-list-opt no-bdr">
-                                      {/* <li>
+                            <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
+                              {item.imei}
+                            </td>
+                            <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
+                              {item.simno}
+                            </td>
+                            <td style={{ padding: "0.75rem 0.25rem" }} className="d-none d-sm-table-cell">
+                              <span className="tb-sub">
+                                <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
+                                  {item?.Devicemode.toString().toUpperCase()}
+                                </Badge>
+                              </span>
+                            </td>
+                            <td className="d-none d-sm-table-cell" style={{ padding: "0.75rem 0.25rem" }}>
+                              <TimeDifference timestamp={item.details[0].timestamp} />
+                            </td>
+                            <td style={{ padding: "0.75rem 0.25rem" }}>
+                              <span className="tb-sub d-block d-sm-none ">
+                                <Badge color={DEVICE_MODE_BADGE[item?.Devicemode.toString().toUpperCase()]}>
+                                  {item?.Devicemode.toString().toUpperCase()}
+                                </Badge>
+                              </span>
+                              <UncontrolledDropdown>
+                                <DropdownToggle
+                                  tag="a"
+                                  href="#more"
+                                  onClick={(ev) => ev.preventDefault()}
+                                  className="dropdown-toggle btn btn-icon btn-trigger"
+                                >
+                                  <Icon name="more-h"></Icon>
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                  <ul className="link-list-opt no-bdr">
+                                    {/* <li>
                                         <DropdownItem
                                           tag="a"
                                           href="#edit"
@@ -410,36 +413,40 @@ const FleetTracker = () => {
                                           <span>Diagonise</span>
                                         </DropdownItem>
                                       </li> */}
-                                      <li>
-                                        <DropdownItem
-                                          tag="a"
-                                          href="#more"
-                                          onClick={(ev) => {
-                                            ev.preventDefault();
-                                            redirectToWidget(item.imei);
-                                          }}
-                                        >
-                                          <Icon name="more-v-alt" />
-                                          <span>View more</span>
-                                        </DropdownItem>
-                                      </li>
-                                    </ul>
-                                  </DropdownMenu>
-                                </UncontrolledDropdown>
-                              </td>
-                            </tr>
-                          );
-                        }
-                        ) : (
-                          <tr>
-                            <td colSpan="7" className="text-center" style={{fontSize:15.5,paddingTop:18,paddingBottom:0}}>
-                              {viewOption === "Moving" && <span>No moving vehicles</span>}
-                              {viewOption === "Idle" && <span>No idle vehicles</span>}
-                              {viewOption === "Parked" && <span>No parked vehicles</span>}
-                              {viewOption === "Offline" && <span>No offline vehicles</span>}
+                                    <li>
+                                      <DropdownItem
+                                        tag="a"
+                                        href="#more"
+                                        onClick={(ev) => {
+                                          ev.preventDefault();
+                                          redirectToWidget(item.imei);
+                                        }}
+                                      >
+                                        <Icon name="more-v-alt" />
+                                        <span>View more</span>
+                                      </DropdownItem>
+                                    </li>
+                                  </ul>
+                                </DropdownMenu>
+                              </UncontrolledDropdown>
                             </td>
                           </tr>
-                        )}
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="7"
+                          className="text-center"
+                          style={{ fontSize: 15.5, paddingTop: 18, paddingBottom: 0 }}
+                        >
+                          {viewOption === "Moving" && <span>No moving vehicles</span>}
+                          {viewOption === "Idle" && <span>No idle vehicles</span>}
+                          {viewOption === "Parked" && <span>No parked vehicles</span>}
+                          {viewOption === "Offline" && <span>No offline vehicles</span>}
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
 
