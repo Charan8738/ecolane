@@ -25,7 +25,7 @@ import {
   Col,
   BlockBetween,
 } from "../components/Component";
-const home = () => {
+const Home = () => {
   let val;
 
   const userId = useSelector(user_id);
@@ -259,4 +259,4 @@ const home = () => {
   );
 };
 
-export default home;
+export default Home;

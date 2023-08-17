@@ -42,7 +42,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { successAlert } from "../utils/Utils";
 
-const failure = (msg) => {
+const failureAlert = (msg) => {
   Swal.fire({
     icon: "error",
     title: "Oops...",
