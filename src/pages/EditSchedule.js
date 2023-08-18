@@ -174,6 +174,7 @@ const EditSchedule = () => {
       break_in: "",
       break_out: "",
       total_hours: "",
+      comments: "",
     };
     console.log(newField);
 

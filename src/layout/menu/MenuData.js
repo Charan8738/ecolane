@@ -251,6 +251,18 @@ const menu = [
     link: "/lima-analytics",
     page: 36,
   },
+    {
+    icon: "property-alt",
+    text: "Test Page",
+    link: "/Testpage",
+    page: 36,
+  },
+  {
+    icon: "property-alt",
+    text: "Fare Page",
+    link: "/faretable",
+    page: 36,
+  },
   {
     icon: "cc-alt2-fill",
     text: "All Venues",

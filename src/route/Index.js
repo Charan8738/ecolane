@@ -58,6 +58,8 @@ const Analytics = React.lazy(() => import("../pages/Analytics"));
 const LimaAnalytics = React.lazy(() => import("../pages/LimaAnalytics"));
 const VehicleSetup = React.lazy(() => import("../pages/VehicleSetup"));
 const DeviceSetup = React.lazy(() => import("../pages/DeviceSetup"));
+const Testpage = React.lazy(() => import("../pages/Testpage"));
+const FarePage = React.lazy(() => import("../pages/FareTable"));
 // const EvolutionConfig = React.lazy(() => import("../pages/EvolutionConfig"));
 const Pages = ({ currentAccess }) => {
   const homepage = useSelector(selectHomepage) || currentAccess[0];
@@ -98,6 +100,8 @@ const Pages = ({ currentAccess }) => {
     { page: 34, pathname: "attendance", component: Attendance },
     { page: 35, pathname: "tickets-booth", component: tickets },
     { page: 36, pathname: "lima-analytics", component: LimaAnalytics },
+    { page: 36, pathname: "Testpage", component: Testpage },
+    { page: 36, pathname: "faretable", component: FarePage },
     // { page: 30, pathname: "run", component: RunCut },
     // { page: 30, pathname: "run-cutting-scheduler", component: RunCutting },
     // { page: 30, pathname: "driver-schedule", component: DriverSchedule },
