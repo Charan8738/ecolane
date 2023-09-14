@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import Content from "../layout/content/Content";
 import "moment-timezone";
-import { Nav, NavItem, NavLink, TabContent, TabPane, FormGroup, Label, ButtonGroup } from "reactstrap";
+import { Nav, Badge, NavItem, NavLink, TabContent, TabPane, FormGroup, Label, ButtonGroup, label } from "reactstrap";
 import Moment from "react-moment";
 import Nouislider from "nouislider-react";
+import "./total.css";
 import classNames from "classnames";
 import Swal from "sweetalert2";
 import { SketchPicker } from "react-color";
-import { toast } from "react-toastify";
 import Head from "../layout/head/Head";
 import {
   PreviewCard,
@@ -40,45 +40,12 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+
 const successAlert = () => {
   Swal.fire({
     icon: "success",
     title: "Success",
     text: "Venue updated successfully",
-  });
-};
-const successAuthAlert = () => {
-  Swal.fire({
-    icon: "success",
-    title: "Success",
-    text: "Authenticated successfully",
-  });
-};
-const CloseButton = () => {
-  return (
-    <span className="btn-trigger toast-close-button" role="button">
-      <Icon name="cross"></Icon>
-    </span>
-  );
-};
-const CustomAuthToast = () => {
-  return (
-    <div className="toastr-text">
-      <h5>Authenticated Successfully</h5>
-      <p>Your have Access to update.</p>
-    </div>
-  );
-};
-const messageAuthToast = () => {
-  toast.success(<CustomAuthToast />, {
-    position: "bottom-right",
-    autoClose: false,
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: false,
-    closeButton: <CloseButton />,
   });
 };
 const failureAlert = () => {
@@ -90,19 +57,9 @@ const failureAlert = () => {
     timer: 1500,
   });
 };
-const failureAuthAlert = () => {
-  Swal.fire({
-    icon: "error",
-    title: "Oops...",
-    text: "Authentication Failed",
-    showConfirmButton: false,
-    timer: 1500,
-  });
-};
 const AllVenues = () => {
   const client_id = useSelector(user_id);
   const [formData, setFormData] = useState({});
-  const [authFormData, setAuthFormData] = useState({});
 
   const [data, setData] = useState([]);
   const initialData = useRef([]);
@@ -119,10 +76,22 @@ const AllVenues = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const { errors, register, handleSubmit } = useForm();
   const [view, setView] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-
-
+  const [approvedChecked, setApprovedChecked] = useState(false);
+  const [pendingChecked, setPendingChecked] = useState(false);
+  const [enabledChecked, setEnabledChecked] = useState(false);
+  const [disabledChecked, setDisabledChecked] = useState(false);
+  const handleApprovedChange = () => {
+    setApprovedChecked(!approvedChecked);
+  };
+  const handlePendingChange = () => {
+    setPendingChecked(!pendingChecked);
+  };
+  const handleApprovedChange2 = () => {
+    setEnabledChecked(!enabledChecked);
+  };
+  const handlePendingChange2 = () => {
+    setDisabledChecked(!disabledChecked);
+  };
   const getRssiValueFromFt = (x) => {
     return -45 - 5 * x;
   };
@@ -134,23 +103,23 @@ const AllVenues = () => {
     setView(false);
     resetForm();
   };
-  const onAuthFormCancel = () => {
-    setShowAuthModal(false);
-    setAuthFormData({});
-  };
   const onInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  const onAuthInputChange = (e) => {
-    setAuthFormData({ ...authFormData,[e.target.name]: e.target.value });
-    console.log(authFormData);
-  };
-  
   const resetForm = () => {
     setFormData({});
   };
   const onFilterChange = (e) => {
-    setSearchText(e.target.value);
+    const searchText = e.target.value;
+    setSearchText(searchText);
+    if (e.nativeEvent.inputType === "deleteContentBackward" && searchText.length === 0) {
+      setData([...initialData.current]);
+    } else {
+      const filteredData = initialData.current.filter((item) =>
+        item.Clientname.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setData(filteredData);
+    }
   };
   const onEditClick = (id) => {
     console.log(id);
@@ -175,35 +144,7 @@ const AllVenues = () => {
     });
     setView(true);
   };
-
-  const checkAuthentication = async () => {
-    // if (activeTab && !isAuthenticated) {
-      setShowAuthModal(true);
-    //   console.log("Not Authenticated, Please Authenticate");
-    //   return false;
-    // }
-
-    console.log("Authenticated!");
-    //return true;
-  };
-
-  const onAuthSubmit = () => {
-    //console.log(authFormData.userName);
-    if (authFormData.userName.toLowerCase() === "Karthik@zed.digital".toLowerCase() && authFormData.userPasscode === "Polgara!@12") {
-      console.log("Authenticated Successfully");
-      setShowAuthModal(false);
-      messageAuthToast();
-      onEditSubmit();
-    }
-    else {
-      console.log("Authentication has Failed");
-      failureAuthAlert();
-    }
-  };
-
   const onEditSubmit = async () => {
-
-
     let submittedData = {
       ...formData,
 
@@ -270,6 +211,25 @@ const AllVenues = () => {
       setError(true);
     }
   }, []);
+  useEffect(() => {
+    let filteredData = [...initialData.current];
+  
+    if (approvedChecked && !pendingChecked) {
+      filteredData = filteredData.filter((item) => item.Status);
+    } else if (!approvedChecked && pendingChecked) {
+      filteredData = filteredData.filter((item) => !item.Status);
+    }
+  
+    if (enabledChecked && !disabledChecked) {
+      filteredData = filteredData.filter((item) => item.Smart_Venues);
+    } else if (!enabledChecked && disabledChecked) {
+      filteredData = filteredData.filter((item) => !item.Smart_Venues);
+    }
+  
+    setData(filteredData);
+    setCurrentPage(1);
+  }, [approvedChecked, pendingChecked, enabledChecked, disabledChecked]);
+  
   return (
     <React.Fragment>
       <Head title=" venues"></Head>
@@ -280,6 +240,24 @@ const AllVenues = () => {
               <BlockTitle page tag="h3">
                 Venues Config
               </BlockTitle>
+              <div className="checkbox" >
+                <div className="select  " style={{ paddingTop: -10 }}>
+                  <h6>Status :</h6>
+                </div>
+                <input type="checkbox" checked={approvedChecked} onChange={handleApprovedChange} />
+               <label style={{ marginLeft: '3px' }}>Active</label> 
+                <input style={{ marginLeft: '13px' }} type="checkbox" checked={pendingChecked} onChange={handlePendingChange} />
+                <label style={{ marginLeft: '3px' }}>Inactive</label>
+              </div>
+              <div className="checkbox">
+              <div className="select  " >
+                  <h6>Smart Venues :</h6>
+                </div>
+  <input type="checkbox" checked={enabledChecked} onChange={handleApprovedChange2} />
+  <label style={{ marginLeft: '3px' }}>Enabled</label> 
+  <input style={{ marginLeft: '13px' }} type="checkbox" checked={disabledChecked} onChange={handlePendingChange2} />
+  <label style={{ marginLeft: '3px' }}>Disabled</label>
+</div>
             </BlockHeadContent>
             <BlockHeadContent>
               <div className="toggle-wrap nk-block-tools-toggle">
@@ -316,96 +294,101 @@ const AllVenues = () => {
           </BlockBetween>
         </BlockHead>
         <Block>
-          <Card>
+          <Card className="card-bordered card-preview" >
             <div className="card-inner-group">
               <div className="card-inner p-0">
-                <DataTableBody>
-                  <DataTableHead>
-                    <DataTableRow size="sm">
-                      <span>Client Name</span>
-                    </DataTableRow>
-                    <DataTableRow>
-                      <span>Latitude {"&"} Longitude</span>
-                    </DataTableRow>
-                    <DataTableRow>
-                      <span>Status</span>
-                    </DataTableRow>
-                    <DataTableRow>
-                      <span>BibobRssi</span>
-                    </DataTableRow>
-                    <DataTableRow>
-                      <span>RssValue</span>
-                    </DataTableRow>
-                    <DataTableRow>
-                      <span>Active Date</span>
-                    </DataTableRow>
-                    <DataTableRow className="nk-tb-col-tools">
-                      <span>Actions</span>
-                    </DataTableRow>
-                  </DataTableHead>
+                <table style={{ width: "100%", tableLayout: "auto", textAlign: "center" }} className="table">
+                  <thead className="table-light">
+                    <tr>
+                      <th className="d-none d-md-table-cell">Client Name</th>
+                      <th className="d-none d-md-table-cell">Latitude {"&"} Longitude</th>
+                      <th className="d-none d-sm-table-cell">Status</th>
+                      <th classname="d-none d-sm-table-cell">Smart Venues</th> 
+                      
+                      <th className="d-none d-sm-table-cell">Active Date</th>
+                      <th className="d-none d-sm-table-cell">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
 
-                  {currentItems.length > 0
-                    ? currentItems.map((item) => {
+                    {currentItems.length > 0
+                      ? currentItems.map((item,idx) => {
                         return (
-                          <DataTableItem key={item.id}>
-                            <DataTableRow size="sm">
-                              <span className="tb-product">
-                                <span className="title">{item.Clientname.length > 0 ? item.Clientname : "NA"}</span>
-                              </span>
-                            </DataTableRow>
-                            <DataTableRow>
-                              <span className="tb-sub">
-                                {item.Clientlat}
-                                <br />
-                                {item.Clientlng}
-                              </span>
-                            </DataTableRow>
-                            <DataTableRow>
-                              <span className="tb-sub">{item.Status}</span>
-                            </DataTableRow>
-                            <DataTableRow>
-                              <span className="tb-sub">{item.BibobRssi}</span>
-                            </DataTableRow>
+                          <tr key={idx} className="tb-tnx-item">
+                            <td style={{ padding: "0.75rem 0.25rem" }} >
 
-                            <DataTableRow>
-                              <span className="tb-sub">{item.Rssvalue}</span>
-                            </DataTableRow>
-                            <DataTableRow>
-                              <span className="tb-odr-date">
-                                <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                                  {item.Activatedate}
-                                </Moment>
-                              </span>
-                            </DataTableRow>
-                            <DataTableRow className="nk-tb-col-tools">
-                              <ul className="gx-1 my-n1">
-                                <li className="">
-                                  <UncontrolledDropdown>
-                                    <DropdownToggle
-                                      tag="a"
-                                      href="#more"
-                                      onClick={(ev) => ev.preventDefault()}
-                                      className="dropdown-toggle btn btn-icon btn-trigger"
-                                    >
-                                      <Icon name="more-h"></Icon>
-                                    </DropdownToggle>
-                                    <DropdownMenu right>
-                                      <ul className="link-list-opt no-bdr">
-                                        <li>
-                                          <DropdownItem
-                                            tag="a"
-                                            href="#edit"
-                                            onClick={(ev) => {
-                                              ev.preventDefault();
-                                              onEditClick(item.Id);
-                                            }}
-                                          >
-                                            <Icon name="edit-fill"></Icon>
-                                            <span>Edit</span>
-                                          </DropdownItem>
-                                        </li>
+                              <strong>{item.Clientname.length > 0 ? item.Clientname : "NA"}</strong>
+                            </td>
 
-                                        {/* <li>
+                            <td style={{ padding: "0.75rem 0.25rem" }}>
+
+                              {item.Clientlat}
+                              <br />
+                              {item.Clientlng}
+                            </td>
+
+                            <td style={{ padding: "0.75rem 0.25rem" }}>
+                              {item.Status ? (
+                                
+                                <Badge pill color="success">
+                                   <strong>
+                                  Active
+                                  </strong>
+                                </Badge>
+                               
+                              ) : (
+                                <Badge pill color="warning">
+                                  inactive
+                                </Badge>
+                              )}
+                            </td>
+                             <td style={{padding: "0.75rem 0.25rem"}}>
+                            {item.Smart_Venues ? (
+                                <Badge pill color="success">
+                                  Enabled
+                                </Badge>
+                              ) : (
+                                <Badge pill color="warning ">
+                                  Disabled
+                                </Badge>
+                              )}
+
+                            </td> 
+                            
+                            <td style={{ padding: "0.75rem 0.25rem" }}>
+
+                              <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                                {item.Activatedate}
+                              </Moment>
+                            </td>
+
+                            <td style={{ padding: "0.75rem 0.25rem" }}>
+                              <UncontrolledDropdown>
+                                <DropdownToggle
+                                  tag="a"
+                                  href="#more"
+                                  onClick={(ev) => ev.preventDefault()}
+                                  className="dropdown-toggle btn btn-icon btn-trigger"
+                                >
+                                  <Icon name="more-h"></Icon>
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                  <ul className="link-list-opt no-bdr">
+                                    <li>
+                                      <DropdownItem
+                                        tag="a"
+                                        href="#edit"
+                                        onClick={(ev) => {
+                                          ev.preventDefault();
+                                          onEditClick(item.Id);
+                                        }}
+                                      >
+                                        <Icon name="edit-fill"></Icon>
+                                        <span>Edit</span>
+                                      </DropdownItem>
+                                    </li>
+
+                                    {/* <li>
                                           <DropdownItem
                                             tag="a"
                                             href="#remove"
@@ -417,19 +400,19 @@ const AllVenues = () => {
                                             <span>Remove </span>
                                           </DropdownItem>
                                         </li> */}
-                                      </ul>
-                                    </DropdownMenu>
-                                  </UncontrolledDropdown>
-                                </li>
-                              </ul>
-                            </DataTableRow>
-                          </DataTableItem>
+                                  </ul>
+                                </DropdownMenu>
+                              </UncontrolledDropdown>
+
+                            </td>
+                          </tr>
                         );
                       })
-                    : null}
-                </DataTableBody>
+                      : null}
+                  </tbody>
+                </table>
 
-                <div className="card-inner">
+                <div className="pagination-container">
                   {data.length > 0 ? (
                     <PaginationComponent
                       itemPerPage={itemPerPage}
@@ -447,7 +430,7 @@ const AllVenues = () => {
             </div>
           </Card>
         </Block>
-        <Modal isOpen={view} toggle={() => onFormCancel()} style={{zIndex:1000}} className="modal-dialog-centered" size="xl">
+        <Modal isOpen={view} toggle={() => onFormCancel()} className="modal-dialog-centered" size="xl">
           <ModalBody>
             <a href="#cancel" className="close">
               {" "}
@@ -461,7 +444,7 @@ const AllVenues = () => {
             </a>
             <div className="p-2">
               <h5 className="title">Edit</h5>
-              <form onSubmit={handleSubmit(checkAuthentication)}>
+              <form onSubmit={handleSubmit(onEditSubmit)}>
                 <PreviewCard>
                   <Nav tabs>
                     {[
@@ -470,7 +453,6 @@ const AllVenues = () => {
                       { title: "Device Setup", tab: "3" },
                       { title: "Branding", tab: "4" },
                       { title: "Rssi", tab: "5" },
-                      { title: "Config", tab: "6" },
                     ].map((item, idx) => (
                       <NavItem style={{ cursor: "pointer" }}>
                         <NavLink
@@ -606,7 +588,7 @@ const AllVenues = () => {
                             </label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.Status === 0}
                                   onClick={(e) => {
@@ -615,7 +597,7 @@ const AllVenues = () => {
                                 >
                                   Enable
                                 </Button>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.Status === 1}
                                   onClick={(e) => {
@@ -633,8 +615,8 @@ const AllVenues = () => {
                           { title: "Enable Ticket", name: "EnableTicket" },
                           { title: "Enable Trip Planner", name: "EnableTripPlanner" },
                           { title: "Free Ticket", name: "freeticket" },
-                        ].map((item) => (
-                          <Col sm="3" key={item.name}>
+                        ].map((item,idx) => (
+                          <Col sm="3" key={idx}>
                             <FormGroup>
                               <Label htmlFor={item.name} className="form-label">
                                 {item.title}
@@ -799,28 +781,28 @@ const AllVenues = () => {
                             <label className="form-label">A Validation Mode</label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.Validationmode !== 0}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode: 0 }))}
                                 >
                                   Dual Connection
                                 </Button>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.Validationmode !== 1}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode: 1 }))}
                                 >
                                   MQTT Mode
                                 </Button>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.Validationmode !== 2}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode: 2 }))}
                                 >
                                   BLE Mode
                                 </Button>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.Validationmode !== 3}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode: 3 }))}
@@ -836,28 +818,28 @@ const AllVenues = () => {
                             <label className="form-label">B Validation Mode</label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.Validationmode_B !== 0}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode_B: 0 }))}
                                 >
                                   Dual Connection
                                 </Button>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.Validationmode_B !== 1}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode_B: 1 }))}
                                 >
                                   MQTT Mode
                                 </Button>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.Validationmode_B !== 2}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode_B: 2 }))}
                                 >
                                   BLE Mode
                                 </Button>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.Validationmode_B !== 3}
                                   onClick={() => setFormData((prev) => ({ ...prev, Validationmode_B: 3 }))}
@@ -872,20 +854,20 @@ const AllVenues = () => {
                           <ul className="custom-control-group custom-control-vertical w-100">
                             {formData?.Macaddresslist?.length > 0
                               ? formData?.Macaddresslist?.map((item) => (
-                                  <li>
-                                    <div className="custom-control custom-control-sm custom-radio custom-control-pro">
-                                      <input
-                                        type="radio"
-                                        className="custom-control-input"
-                                        checked
-                                        id={item.Bus_serialno}
-                                      />
-                                      <label className="custom-control-label" htmlFor="paymentCheck1">
-                                        <span>{item.Bus_serialno} </span>
-                                      </label>
-                                    </div>
-                                  </li>
-                                ))
+                                <li>
+                                  <div className="custom-control custom-control-sm custom-radio custom-control-pro">
+                                    <input
+                                      type="radio"
+                                      className="custom-control-input"
+                                      checked
+                                      id={item.Bus_serialno}
+                                    />
+                                    <label className="custom-control-label" htmlFor="paymentCheck1">
+                                      <span>{item.Bus_serialno} </span>
+                                    </label>
+                                  </div>
+                                </li>
+                              ))
                               : null}
                           </ul>
                         </Col>
@@ -977,8 +959,8 @@ const AllVenues = () => {
                           { title: "Secondary Color Code", name: "SecondaryColorcode" },
                           { title: "Client Primary Color Code", name: "ClientPrimaryColorcode" },
                           { title: "Client Secondary Color Code", name: "ClientSecondaryColorcode" },
-                        ].map((item) => (
-                          <Col sm="3" key={item.name}>
+                        ].map((item,idx) => (
+                          <Col sm="3" key={idx}>
                             <FormGroup>
                               <Label htmlFor={item.name} className="form-label">
                                 {item.title}
@@ -1241,12 +1223,10 @@ const AllVenues = () => {
                           </div>
                         </Col>
                       </Row>
-                    </TabPane>
-                    <TabPane tabId="6">
                       <br></br>
                       <Row>
-                        <Col sm="3">
-                          <Label htmlFor="service_enable" className="form-label">
+                        <Col sm="2">
+                          <Label htmlFor="Clientpayment" className="form-label">
                             Service Enable
                           </Label>
                           <div className="form-control-wrap">
@@ -1276,7 +1256,7 @@ const AllVenues = () => {
                             </label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.ibeacon_Status === 0}
                                   onClick={(e) => {
@@ -1285,7 +1265,7 @@ const AllVenues = () => {
                                 >
                                   Enable
                                 </Button>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.ibeacon_Status === 1}
                                   onClick={(e) => {
@@ -1305,7 +1285,7 @@ const AllVenues = () => {
                             </label>
                             <div className="form-control-wrap">
                               <ButtonGroup>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.ibeaconAndroidStatus === 0}
                                   onClick={(e) => {
@@ -1314,7 +1294,7 @@ const AllVenues = () => {
                                 >
                                   Enable
                                 </Button>
-                                <Button type="button"
+                                <Button
                                   color="primary"
                                   outline={formData?.ibeaconAndroidStatus === 1}
                                   onClick={(e) => {
@@ -1327,39 +1307,8 @@ const AllVenues = () => {
                             </div>
                           </FormGroup>
                         </Col>
-                        <Col sm="3">
-                          <FormGroup>
-                            <label className="form-label" htmlFor="Smart_Venues">
-                              Smart Venues
-                            </label>
-                            <div className="form-control-wrap">
-                              <ButtonGroup>
-                                <Button type="button"
-                                  color="primary"
-                                  outline={formData?.Smart_Venues === 0}
-                                  onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, Smart_Venues: 1 }));
-                                  }}
-                                >
-                                  Enable
-                                </Button>
-                                <Button type="button"
-                                  color="primary"
-                                  outline={formData?.Smart_Venues === 1}
-                                  onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, Smart_Venues: 0 }));
-                                  }}
-                                >
-                                  Disable
-                                </Button>
-                              </ButtonGroup>
-                            </div>
-                          </FormGroup>
-                        </Col>
-                        </Row>
-                      <br></br>
-                      <Row className="gy-4">
-                        <Col sm="3">
+
+                        <Col sm="2">
                           <div className="form-group">
                             <label className="form-label">Avg RSSI Value</label>
                             <div className="form-control-wrap">
@@ -1376,7 +1325,7 @@ const AllVenues = () => {
                             </div>
                           </div>
                         </Col>
-                        <Col sm="3">
+                        <Col sm="2">
                           <div className="form-group">
                             <label className="form-label">TX Power</label>
                             <div className="form-control-wrap">
@@ -1393,7 +1342,7 @@ const AllVenues = () => {
                             </div>
                           </div>
                         </Col>
-                        <Col sm="3">
+                        <Col sm="2">
                           <div className="form-group">
                             <label className="form-label">Distance</label>
                             <div className="form-control-wrap">
@@ -1410,7 +1359,7 @@ const AllVenues = () => {
                             </div>
                           </div>
                         </Col>
-                        <Col sm="3">
+                        <Col sm="2">
                           <div className="form-group">
                             <label className="form-label">Measure Power</label>
                             <div className="form-control-wrap">
@@ -1427,7 +1376,7 @@ const AllVenues = () => {
                             </div>
                           </div>
                         </Col>
-                        <Col sm="3">
+                        <Col sm="2">
                           <div className="form-group">
                             <label className="form-label">Power Value</label>
                             <div className="form-control-wrap">
@@ -1444,7 +1393,7 @@ const AllVenues = () => {
                             </div>
                           </div>
                         </Col>
-                        <Col sm="3">
+                        <Col sm="2">
                           <div className="form-group">
                             <label className="form-label">Distance Times</label>
                             <div className="form-control-wrap">
@@ -1461,389 +1410,6 @@ const AllVenues = () => {
                             </div>
                           </div>
                         </Col>
-                        <Col sm="3">
-                          <div className="form-group">
-                            <label className="form-label" htmlFor="Frequency_Interval_Line">Freq Interval Line</label>
-                            <div className="form-control-wrap">
-                              <input
-                                ref={register({ required: true })}
-                                className="form-control"
-                                type="text"
-                                id="Frequency_Interval_Line"
-                                name="Frequency_Interval_Line"
-                                onChange={(e) => onInputChange(e)}
-                                value={formData?.Frequency_Interval_Line}
-                              />
-                              {errors.Frequency_Interval_Line && <span className="invalid">This field is required</span>}
-                            </div>
-                          </div>
-                        </Col>
-                        <Col sm="3">
-                          <div className="form-group">
-                            <label className="form-label" htmlFor="Frequency_Interval_Realtime_Bus">Freq Interval Realtime Bus</label>
-                            <div className="form-control-wrap">
-                              <input
-                                ref={register({ required: true })}
-                                className="form-control"
-                                type="text"
-                                id="Frequency_Interval_Realtime_Bus"
-                                name="Frequency_Interval_Realtime_Bus"
-                                onChange={(e) => onInputChange(e)}
-                                value={formData?.Frequency_Interval_Realtime_Bus}
-                              />
-                              {errors.Frequency_Interval_Realtime_Bus && <span className="invalid">This field is required</span>}
-                            </div>
-                          </div>
-                        </Col>
-                        
-                      </Row>
-                      <br></br>
-                      <Row className="gy-4">
-                        <Col sm="3">
-                            <div className="form-group">
-                              <label className="form-label">BLE Rssi 4</label>
-                              <div className="form-control-wrap">
-                                <input
-                                  ref={register({ required: true })}
-                                  className="form-control"
-                                  type="text"
-                                  id="ble_rssi_4"
-                                  name="ble_rssi_4"
-                                  onChange={(e) => onInputChange(e)}
-                                  value={formData?.ble_rssi_4}
-                                />
-                                {errors.ble_rssi_4 && <span className="invalid">This field is required</span>}
-                              </div>
-                            </div>
-                          </Col>
-                          <Col sm="3">
-                            <div className="form-group">
-                              <label className="form-label">BLE Rssi 5a</label>
-                              <div className="form-control-wrap">
-                                <input
-                                  ref={register({ required: true })}
-                                  className="form-control"
-                                  type="text"
-                                  id="ble_rssi_5a"
-                                  name="ble_rssi_5a"
-                                  onChange={(e) => onInputChange(e)}
-                                  value={formData?.ble_rssi_5a}
-                                />
-                                {errors.ble_rssi_5a && <span className="invalid">This field is required</span>}
-                              </div>
-                            </div>
-                          </Col>
-                          <Col sm="3">
-                            <div className="form-group">
-                              <label className="form-label">BLE Rssi 5b</label>
-                              <div className="form-control-wrap">
-                                <input
-                                  ref={register({ required: true })}
-                                  className="form-control"
-                                  type="text"
-                                  id="ble_rssi_5b"
-                                  name="ble_rssi_5b"
-                                  onChange={(e) => onInputChange(e)}
-                                  value={formData?.ble_rssi_5b}
-                                />
-                                {errors.ble_rssi_5b && <span className="invalid">This field is required</span>}
-                              </div>
-                            </div>
-                          </Col>
-                          <Col sm="3">
-                            <div className="form-group">
-                              <label className="form-label">BLE Rssi 5c</label>
-                              <div className="form-control-wrap">
-                                <input
-                                  ref={register({ required: true })}
-                                  className="form-control"
-                                  type="text"
-                                  id="ble_rssi_5c"
-                                  name="ble_rssi_5c"
-                                  onChange={(e) => onInputChange(e)}
-                                  value={formData?.ble_rssi_5c}
-                                />
-                                {errors.ble_rssi_5c && <span className="invalid">This field is required</span>}
-                              </div>
-                            </div>
-                          </Col>
-                        </Row>
-                        <hr className="preview-hr"></hr>
-                      <BlockTitle tag="h5">Suggested Route</BlockTitle>
-                      <Row className="gy-4">
-                        <Col sm="3">
-                          <FormGroup>
-                            <Label htmlFor="Uber_Status" className="form-label">
-                              Uber Status
-                            </Label>
-                            <div className="form-control-wrap">
-                              <div className="custom-control custom-switch">
-                                <input
-                                  type="checkbox"
-                                  className="custom-control-input form-control"
-                                  id="Uber_Status"
-                                  name="Uber_Status"
-                                  placeholder=""
-                                  onChange={(e) =>
-                                    setFormData((prev) => ({
-                                      ...prev,
-                                      Uber_Status: !formData?.Uber_Status,
-                                    }))
-                                  }
-                                  checked={formData?.Uber_Status}
-                                />
-                                <label className="custom-control-label" htmlFor="Uber_Status">
-                                  {formData?.Uber_Status ? "True" : "False"}
-                                </label>
-                              </div>
-                            </div>
-                          </FormGroup>
-                        </Col>
-                        <Col sm="3">
-                          <div className="form-group">
-                            <label className="form-label" htmlFor="Lyft_Status">
-                              Lyft Status
-                            </label>
-                            <div className="form-control-wrap">
-                              <div className="custom-control custom-switch">
-                                <input
-                                  ref={register()}
-                                  type="checkbox"
-                                  className="custom-control-input form-control"
-                                  id="Lyft_Status"
-                                  name="Lyft_Status"
-                                  checked={formData?.Lyft_Status}
-                                  onChange={(e) =>
-                                    setFormData((prev) => ({ ...prev, Lyft_Status: !formData?.Lyft_Status }))
-                                  }
-                                  placeholder=""
-                                />
-                                <label className="custom-control-label" htmlFor="Lyft_Status">
-                                  {formData?.Lyft_Status ? "True" : "False"}
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </Col>
-                        <Col sm="3">
-                          <div className="form-group">
-                            <label className="form-label" htmlFor="Louvelo_Status">
-                              Louvelo Status
-                            </label>
-                            <div className="form-control-wrap">
-                              <div className="custom-control custom-switch">
-                                <input
-                                  ref={register()}
-                                  type="checkbox"
-                                  className="custom-control-input form-control"
-                                  id="Louvelo_Status"
-                                  name="Louvelo_Status"
-                                  checked={formData?.Louvelo_Status}
-                                  onChange={(e) =>
-                                    setFormData((prev) => ({ ...prev, Louvelo_Status: !formData?.Louvelo_Status }))
-                                  }
-                                  placeholder=""
-                                />
-                                <label className="custom-control-label" htmlFor="Louvelo_Status">
-                                  {formData?.Louvelo_Status ? "True" : "False"}
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </Col>
-                        <Col sm="3">
-                          <FormGroup>
-                            <label className="form-label" htmlFor="Enable_Payment">
-                              Enable Payment
-                            </label>
-                            <div className="form-control-wrap">
-                              <ButtonGroup>
-                                <Button type="button"
-                                  color="primary"
-                                  outline={formData?.Enable_Payment === 0}
-                                  onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, Enable_Payment: 1 }));
-                                  }}
-                                >
-                                  Enable
-                                </Button>
-                                <Button type="button"
-                                  color="primary"
-                                  outline={formData?.Enable_Payment === 1}
-                                  onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, Enable_Payment: 0 }));
-                                  }}
-                                >
-                                  Disable
-                                </Button>
-                              </ButtonGroup>
-                            </div>
-                          </FormGroup>
-                        </Col>
-                        <Col sm="3">
-                          <FormGroup>
-                            <label className="form-label" htmlFor="Microtransit_Full_Trip">
-                              Microtransit Full Trip
-                            </label>
-                            <div className="form-control-wrap">
-                              <ButtonGroup>
-                                <Button type="button"
-                                  color="primary"
-                                  outline={formData?.Microtransit_Full_Trip === 0}
-                                  onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, Microtransit_Full_Trip: 1 }));
-                                  }}
-                                >
-                                  Show
-                                </Button>
-                                <Button type="button"
-                                  color="primary"
-                                  outline={formData?.Microtransit_Full_Trip === 1}
-                                  onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, Microtransit_Full_Trip: 0 }));
-                                  }}
-                                >
-                                  Hide
-                                </Button>
-                              </ButtonGroup>
-                            </div>
-                          </FormGroup>
-                        </Col>
-                        <Col sm="3">
-                          <FormGroup>
-                            <label className="form-label" htmlFor="Microtransit_First_Mile">
-                              Microtransit First Mile
-                            </label>
-                            <div className="form-control-wrap">
-                              <ButtonGroup>
-                                <Button type="button"
-                                  color="primary"
-                                  outline={formData?.Microtransit_First_Mile === 0}
-                                  onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, Microtransit_First_Mile: 1 }));
-                                  }}
-                                >
-                                  Show
-                                </Button>
-                                <Button type="button"
-                                  color="primary"
-                                  outline={formData?.Microtransit_First_Mile === 1}
-                                  onClick={(e) => {
-                                    setFormData((prev) => ({ ...prev, Microtransit_First_Mile: 0 }));
-                                  }}
-                                >
-                                  Hide
-                                </Button>
-                              </ButtonGroup>
-                            </div>
-                          </FormGroup>
-                        </Col>
-                        {/* <Col sm="3">
-                          <FormGroup>
-                            <Label htmlFor="freeticket" className="form-label">
-                              Free Ticket
-                            </Label>
-                            <div className="form-control-wrap">
-                              <input
-                                ref={register({ required: true, min: 0 })}
-                                className="form-control"
-                                type="number"
-                                id="freeticket"
-                                name="freeticket"
-                                onChange={(e) => setFormData((prev) => ({ ...prev, freeticket: +e.target.value }))}
-                                value={formData?.freeticket}
-                              />
-                              {errors.freeticket && <span className="invalid">This field is required</span>}
-                            </div>
-                          </FormGroup>
-                        </Col> */}
-                        </Row>
-                        <hr className="preview-hr"></hr>
-                      <BlockTitle tag="h5">Permission</BlockTitle>
-                      <Row className="gy-4">
-                        <Col sm="3">
-                          <div className="form-group">
-                            <label className="form-label" htmlFor="Force_Permission">
-                              Force Permission
-                            </label>
-                            <div className="form-control-wrap">
-                              <div className="custom-control custom-switch">
-                                <input
-                                  ref={register()}
-                                  type="checkbox"
-                                  className="custom-control-input form-control"
-                                  id="Force_Permission"
-                                  name="Force_Permission"
-                                  checked={formData?.Force_Permission}
-                                  onChange={(e) =>
-                                    setFormData((prev) => ({ ...prev, Force_Permission: !formData?.Force_Permission }))
-                                  }
-                                  placeholder=""
-                                />
-                                <label className="custom-control-label" htmlFor="Force_Permission">
-                                  {formData?.Force_Permission ? "True" : "False"}
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </Col>
-                        <Col sm="3">
-                          <FormGroup>
-                            <Label htmlFor="Permission_Title" className="form-label">
-                              Permission Title
-                            </Label>
-                            <div className="form-control-wrap">
-                              <input
-                                ref={register({ required: true })}
-                                className="form-control"
-                                type="text"
-                                id="Permission_Title"
-                                name="Permission_Title"
-                                value={formData?.Permission_Title ?? "NA"}
-                                onChange={(e) => onInputChange(e)}
-                              />
-                              {errors.Permission_Title && <span className="invalid">This field is required</span>}
-                            </div>
-                          </FormGroup>
-                        </Col>
-                        <Col sm="3">
-                          <FormGroup>
-                            <Label htmlFor="Permission_Message" className="form-label">
-                              Permission Message
-                            </Label>
-                            <div className="form-control-wrap">
-                              <input
-                                ref={register({ required: true })}
-                                className="form-control"
-                                type="text"
-                                id="Permission_Message"
-                                name="Permission_Message"
-                                value={formData?.Permission_Message ?? "NA"}
-                                onChange={(e) => onInputChange(e)}
-                              />
-                              {errors.Permission_Message && <span className="invalid">This field is required</span>}
-                            </div>
-                          </FormGroup>
-                        </Col>
-                        <Col sm="3">
-                          <FormGroup>
-                            <Label htmlFor="Permission_Description" className="form-label">
-                              Permission Description
-                            </Label>
-                            <div className="form-control-wrap">
-                              <input
-                                ref={register({ required: true })}
-                                className="form-control"
-                                type="text"
-                                id="Permission_Description"
-                                name="Permission_Description"
-                                value={formData?.Permission_Description ?? "NA"}
-                                onChange={(e) => onInputChange(e)}
-                              />
-                              {errors.Permission_Description && <span className="invalid">This field is required</span>}
-                            </div>
-                          </FormGroup>
-                        </Col>
                       </Row>
                     </TabPane>
                   </TabContent>
@@ -1858,64 +1424,6 @@ const AllVenues = () => {
                     </FormGroup>
                   </Col>
                 </Row>
-              </form>
-            </div>
-          </ModalBody>
-        </Modal>
-        <Modal isOpen={showAuthModal} toggle={() => onAuthFormCancel()} style={{zIndex:5000}} className="modal-dialog-centered" size="m">
-          <ModalBody>
-            <a href="#cancel" className="close">
-              {" "}
-              <Icon
-                name="cross-sm"
-                onClick={(ev) => {
-                  ev.preventDefault();
-                  onAuthFormCancel();
-                }}
-              ></Icon>
-            </a>
-            <div className="p-2">
-              <h5 className="title">Authentication</h5>
-              <form onSubmit={handleSubmit(onAuthSubmit)}>
-                <FormGroup>
-                  <Label htmlFor="userName" className="form-label">
-                    User Name
-                  </Label>
-                  <div className="form-control-wrap">
-                    <input
-                      ref={register({ required: true })}
-                      className="form-control"
-                      type="text"
-                      id="userName"
-                      name="userName"
-                      onChange={(e) => onAuthInputChange(e)}
-                      // value={formData?.userName}
-                    />
-                    {errors.userName && <span className="invalid">This field is required</span>}
-                  </div>
-                </FormGroup>
-                <FormGroup>
-                  <Label htmlFor="userPasscode" className="form-label">
-                    Password
-                  </Label>
-                  <div className="form-control-wrap">
-                    <input
-                      ref={register({ required: true })}
-                      className="form-control"
-                      type="password"
-                      id="userPasscode"
-                      name="userPasscode"
-                      onChange={(e) => onAuthInputChange(e)}
-                      //value={formData?.userPasscode}
-                    />
-                    {errors.userPasscode && <span className="invalid">This field is required</span>}
-                  </div>
-                </FormGroup>
-                <FormGroup className="mt-2">
-                  <Button color="primary" size="lg" type="submit">
-                    Submit
-                  </Button>
-                </FormGroup>
               </form>
             </div>
           </ModalBody>
