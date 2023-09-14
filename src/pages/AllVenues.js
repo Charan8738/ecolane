@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Content from "../layout/content/Content";
 import "moment-timezone";
-import { Nav, NavItem, NavLink, TabContent, TabPane, FormGroup, Label, ButtonGroup } from "reactstrap";
+import { Nav, NavItem, NavLink, TabContent, TabPane, FormGroup, Label, ButtonGroup,Badge } from "reactstrap";
 import Moment from "react-moment";
 import Nouislider from "nouislider-react";
 import classNames from "classnames";
@@ -25,6 +25,7 @@ import {
   DataTableRow,
   DataTableItem,
   PaginationComponent,
+  CheckboxRadio,
 } from "../components/Component";
 import { useSelector } from "react-redux";
 import { user_id } from "../redux/userSlice";
@@ -40,6 +41,7 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import './total.css'
 const successAlert = () => {
   Swal.fire({
     icon: "success",
@@ -121,7 +123,22 @@ const AllVenues = () => {
   const [view, setView] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-
+  const [approvedChecked, setApprovedChecked] = useState(false);
+  const [pendingChecked, setPendingChecked] = useState(false);
+  const [enabledChecked, setEnabledChecked] = useState(false);
+  const [disabledChecked, setDisabledChecked] = useState(false);
+  const handleApprovedChange = () => {
+    setApprovedChecked(!approvedChecked);
+  };
+  const handlePendingChange = () => {
+    setPendingChecked(!pendingChecked);
+  };
+  const handleApprovedChange2 = () => {
+    setEnabledChecked(!enabledChecked);
+  };
+  const handlePendingChange2 = () => {
+    setDisabledChecked(!disabledChecked);
+  };
   const getRssiValueFromFt = (x) => {
     return -45 - 5 * x;
   };
@@ -149,7 +166,16 @@ const AllVenues = () => {
     setFormData({});
   };
   const onFilterChange = (e) => {
-    setSearchText(e.target.value);
+    const searchText = e.target.value;
+    setSearchText(searchText);
+    if (e.nativeEvent.inputType === "deleteContentBackward" && searchText.length === 0) {
+      setData([...initialData.current]);
+    } else {
+      const filteredData = initialData.current.filter((item) =>
+        item.Clientname.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setData(filteredData);
+    }
   };
   const onEditClick = (id) => {
     console.log(id);
@@ -254,7 +280,10 @@ const AllVenues = () => {
     } else {
       setData([...initialData.current]);
     }
+    setCurrentPage(1)
   }, [onSearchText]);
+  
+  
   useEffect(() => {
     const getMuseumData = async () => {
       setLoading(true);
@@ -272,7 +301,25 @@ const AllVenues = () => {
       setError(true);
     }
   }, []);
-  return (
+  useEffect(() => {
+    let filteredData = [...initialData.current];
+  
+    if (approvedChecked && !pendingChecked) {
+      filteredData = filteredData.filter((item) => item.Status);
+    } else if (!approvedChecked && pendingChecked) {
+      filteredData = filteredData.filter((item) => !item.Status);
+    }
+  
+    if (enabledChecked && !disabledChecked) {
+      filteredData = filteredData.filter((item) => item.Smart_Venues);
+    } else if (!enabledChecked && disabledChecked) {
+      filteredData = filteredData.filter((item) => !item.Smart_Venues);
+    }
+  
+    setData(filteredData);
+    setCurrentPage(1);
+  }, [approvedChecked, pendingChecked, enabledChecked, disabledChecked]);
+  return (  
     <React.Fragment>
       <Head title=" venues"></Head>
       <Content>
@@ -282,6 +329,27 @@ const AllVenues = () => {
               <BlockTitle page tag="h3">
                 Venues Config
               </BlockTitle>
+              <div className="checkbox-container">
+  <div className="checkbox">
+    <div className="select">
+      <h6>Status :</h6>
+    </div>
+    <input type="checkbox"  checked={approvedChecked} onChange={handleApprovedChange} />
+    <label style={{ marginLeft: '3px' }}>Active</label>
+    <input style={{ marginLeft: '11px' }} type="checkbox" checked={pendingChecked} onChange={handlePendingChange} />
+    <label style={{ marginLeft: '3px' }}>Inactive</label>
+  </div>
+  <div className="checkbox">
+    <div className="select">
+      <h6>Smart Venues :</h6>
+    </div>
+    <input type="checkbox" checked={enabledChecked} onChange={handleApprovedChange2} />
+    <label style={{ marginLeft: '3px' }}>Enabled</label>
+    <input style={{ marginLeft: '11px' }} type="checkbox" checked={disabledChecked} onChange={handlePendingChange2} />
+    <label style={{ marginLeft: '3px' }}>Disabled</label>
+  </div>
+</div>
+
             </BlockHeadContent>
             <BlockHeadContent>
               <div className="toggle-wrap nk-block-tools-toggle">
@@ -321,92 +389,98 @@ const AllVenues = () => {
           <Card>
             <div className="card-inner-group">
               <div className="card-inner p-0">
-                <DataTableBody>
-                  <DataTableHead>
-                    <DataTableRow size="sm">
-                      <span>Client Name</span>
-                    </DataTableRow>
-                    <DataTableRow>
-                      <span>Latitude {"&"} Longitude</span>
-                    </DataTableRow>
-                    <DataTableRow>
-                      <span>Status</span>
-                    </DataTableRow>
-                    <DataTableRow>
-                      <span>Smart Venues</span>
-                    </DataTableRow>
-                    {/* <DataTableRow>
-                      <span>RssValue</span>
-                    </DataTableRow> */}
-                    <DataTableRow>
-                      <span>Active Date</span>
-                    </DataTableRow>
-                    <DataTableRow className="nk-tb-col-tools">
-                      <span>Actions</span>
-                    </DataTableRow>
-                  </DataTableHead>
+              <table style={{ width: "100%", tableLayout: "auto", textAlign: "center" }} className="table">
+                  <thead className="table-light">
+                    <tr>
+                      <th className="d-none d-md-table-cell">Client Name</th>
+                      <th className="d-none d-md-table-cell">Latitude {"&"} Longitude</th>
+                      <th className="d-none d-sm-table-cell">Status</th>
+                      <th classname="d-none d-sm-table-cell">Smart Venues</th> 
+                      
+                      <th className="d-none d-sm-table-cell">Active Date</th>
+                      <th className="d-none d-sm-table-cell">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
 
-                  {currentItems.length > 0
-                    ? currentItems.map((item) => {
+                    {currentItems.length > 0
+                      ? currentItems.map((item,idx) => {
                         return (
-                          <DataTableItem key={item.id}>
-                            <DataTableRow size="sm">
-                              <span className="tb-product">
-                                <span className="title">{item.Clientname.length > 0 ? item.Clientname : "NA"}</span>
-                              </span>
-                            </DataTableRow>
-                            <DataTableRow>
-                              <span className="tb-sub">
-                                {item.Clientlat}
-                                <br />
-                                {item.Clientlng}
-                              </span>
-                            </DataTableRow>
-                            <DataTableRow>
-                              <span className="tb-sub">{item.Status ? "Active" : "InActive"}</span>
-                            </DataTableRow>
-                            <DataTableRow>
-                              <span className="tb-sub">{item.Smart_Venues ? "Enabled" : "Disabled"}</span>
-                            </DataTableRow>
-                            {/* <DataTableRow>
-                              <span className="tb-sub">{item.Rssvalue}</span>
-                            </DataTableRow> */}
-                            <DataTableRow>
-                              <span className="tb-odr-date">
-                                <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
-                                  {item.Activatedate}
-                                </Moment>
-                              </span>
-                            </DataTableRow>
-                            <DataTableRow className="nk-tb-col-tools">
-                              <ul className="gx-1 my-n1">
-                                <li className="">
-                                  <UncontrolledDropdown>
-                                    <DropdownToggle
-                                      tag="a"
-                                      href="#more"
-                                      onClick={(ev) => ev.preventDefault()}
-                                      className="dropdown-toggle btn btn-icon btn-trigger"
-                                    >
-                                      <Icon name="more-h"></Icon>
-                                    </DropdownToggle>
-                                    <DropdownMenu right>
-                                      <ul className="link-list-opt no-bdr">
-                                        <li>
-                                          <DropdownItem
-                                            tag="a"
-                                            href="#edit"
-                                            onClick={(ev) => {
-                                              ev.preventDefault();
-                                              onEditClick(item.Id);
-                                            }}
-                                          >
-                                            <Icon name="edit-fill"></Icon>
-                                            <span>Edit</span>
-                                          </DropdownItem>
-                                        </li>
+                          <tr key={idx} className="tb-tnx-item">
+                            <td style={{ padding: "0.75rem 0.25rem" }} >
 
-                                        {/* <li>
+                              <strong>{item.Clientname.length > 0 ? item.Clientname : "NA"}</strong>
+                            </td>
+
+                            <td style={{ padding: "0.75rem 0.25rem" }}>
+
+                              {item.Clientlat}
+                              <br />
+                              {item.Clientlng}
+                            </td>
+
+                            <td style={{ padding: "0.75rem 0.25rem" }}>
+                              {item.Status ? (
+                                
+                                <Badge pill color="success">
+                                   <strong>
+                                  Active
+                                  </strong>
+                                </Badge>
+                               
+                              ) : (
+                                <Badge pill color="warning">
+                                  inactive
+                                </Badge>
+                              )}
+                            </td>
+                             <td style={{padding: "0.75rem 0.25rem"}}>
+                            {item.Smart_Venues ? (
+                                <Badge pill color="success">
+                                  Enabled
+                                </Badge>
+                              ) : (
+                                <Badge pill color="warning ">
+                                  Disabled
+                                </Badge>
+                              )}
+
+                            </td> 
+                            
+                            <td style={{ padding: "0.75rem 0.25rem" }}>
+
+                              <Moment utc tz="America/New_York" format="MMMM Do YYYY, h:mm a">
+                                {item.Activatedate}
+                              </Moment>
+                            </td>
+
+                            <td style={{ padding: "0.75rem 0.25rem" }}>
+                              <UncontrolledDropdown>
+                                <DropdownToggle
+                                  tag="a"
+                                  href="#more"
+                                  onClick={(ev) => ev.preventDefault()}
+                                  className="dropdown-toggle btn btn-icon btn-trigger"
+                                >
+                                  <Icon name="more-h"></Icon>
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                  <ul className="link-list-opt no-bdr">
+                                    <li>
+                                      <DropdownItem
+                                        tag="a"
+                                        href="#edit"
+                                        onClick={(ev) => {
+                                          ev.preventDefault();
+                                          onEditClick(item.Id);
+                                        }}
+                                      >
+                                        <Icon name="edit-fill"></Icon>
+                                        <span>Edit</span>
+                                      </DropdownItem>
+                                    </li>
+
+                                    {/* <li>
                                           <DropdownItem
                                             tag="a"
                                             href="#remove"
@@ -418,17 +492,17 @@ const AllVenues = () => {
                                             <span>Remove </span>
                                           </DropdownItem>
                                         </li> */}
-                                      </ul>
-                                    </DropdownMenu>
-                                  </UncontrolledDropdown>
-                                </li>
-                              </ul>
-                            </DataTableRow>
-                          </DataTableItem>
+                                  </ul>
+                                </DropdownMenu>
+                              </UncontrolledDropdown>
+
+                            </td>
+                          </tr>
                         );
                       })
-                    : null}
-                </DataTableBody>
+                      : null}
+                  </tbody>
+                </table>
 
                 <div className="card-inner">
                   {data.length > 0 ? (
@@ -2560,4 +2634,4 @@ const AllVenues = () => {
     </React.Fragment>
   );
 };
-export default AllVenues;
+export default AllVenues;   

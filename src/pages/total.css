@@ -63,3 +63,12 @@
   .pagination-dots {
   margin: 0 9px; /* Adjust the spacing as per your preference */
 }
+.checkbox-container {
+    display: flex;
+    align-items: center; /* Vertically center items */
+  }
+  
+  .checkbox {
+    margin-right: 65px; /* Add some spacing between the checkboxes */
+  }
+  
