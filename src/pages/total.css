@@ -55,3 +55,11 @@
     white-space: nowrap;
     padding-right: 10px;
 }
+.react-datepicker-wrapper .react-datepicker__input-container input {
+    padding-left: 20px; /* Adjust the left padding as needed */
+    padding-right: 10px;
+    margin-right: 20px; /* Adjust the right padding as needed */
+  }
+  .pagination-dots {
+  margin: 0 9px; /* Adjust the spacing as per your preference */
+}
