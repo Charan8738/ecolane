@@ -102,10 +102,11 @@ const failureAuthAlert = () => {
   });
 };
 const AllVenues = () => {
-  const imageBaseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
-
-// Construct the URL for your PNG image
-const imageUrl = `${imageBaseUrl}Ecolane-Logo-copy.png`;
+  const siteUrl = process.env.SITE_URL;
+  const imagePath = process.env.IMAGE_PATH;
+  
+  // Combine siteUrl and imagePath to construct the image URL
+  const imageUrl = `${siteUrl}${imagePath}`;
   const client_id = useSelector(user_id);
   const [formData, setFormData] = useState({});
   const [authFormData, setAuthFormData] = useState({});
