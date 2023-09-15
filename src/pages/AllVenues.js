@@ -102,6 +102,10 @@ const failureAuthAlert = () => {
   });
 };
 const AllVenues = () => {
+  const imageBaseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
+
+// Construct the URL for your PNG image
+const imageUrl = `${imageBaseUrl}Ecolane-Logo-copy.png`;
   const client_id = useSelector(user_id);
   const [formData, setFormData] = useState({});
   const [authFormData, setAuthFormData] = useState({});
@@ -329,6 +333,11 @@ const AllVenues = () => {
               <BlockTitle page tag="h3">
                 Venues Config
               </BlockTitle>
+              <div>
+              <img src={imageUrl} alt="Your Image" />
+
+      
+    </div>
               <div className="checkbox-container">
   <div className="checkbox">
     <div className="select">
