@@ -102,11 +102,8 @@ const failureAuthAlert = () => {
   });
 };
 const AllVenues = () => {
-  const siteUrl = process.env.SITE_URL;
-  const imagePath = process.env.IMAGE_PATH;
-  
-  // Combine siteUrl and imagePath to construct the image URL
-  const imageUrl = `${siteUrl}${imagePath}`;
+  const imageUrl = `${process.env.REACT_APP_IMAGE_BASE_URL}${process.env.REACT_APP_IMAGE_PATH}`;
+ 
   const client_id = useSelector(user_id);
   const [formData, setFormData] = useState({});
   const [authFormData, setAuthFormData] = useState({});
